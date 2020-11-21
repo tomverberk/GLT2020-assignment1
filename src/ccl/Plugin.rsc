@@ -8,13 +8,13 @@ import ccl::Parser;
 * First, it calls the parser (Parser.rsc). Then, it transforms the resulting parse tree of the previous program and calls the function cst2ast (CST2AST.rsc), responsible for transforming a parse tree into an abstract syntax tree.
 * Finally, the resulting AST is used to evaluate the well-formedness of the ccl program using the check function (Check.rsc).
 */
-bool tests(loc fil) {
+bool checkWellformedness(loc fil) {
 	// Parsing
 	&T resource = parserCCL(fil);
 	// Transform the parse tree into an abstract syntax tree
 	&T ast = cst2ast(r);
 	// Check the well-formedness of the program
-	return check(ResourceAST);
+	return checkCloudConfiguration(ResourceAST);
 }
 
 /*

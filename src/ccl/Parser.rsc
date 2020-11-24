@@ -9,6 +9,4 @@ import ccl::Syntax;
  * This function receives as parameter the path of the file to parse represented as a loc, and returns a parse tree that represents the parsed program.
  */
  
- public Prog parserccl(path p) = parse(#Prog, l);
- 
- &T<:Tree parseCCL(type[&T<:Tree] begin, loc input);
+ public Prog parserccl(loc l) = parse(#Prog, l);

@@ -1,7 +1,8 @@
 module ccl::Parser
 
-import ParseTree;
+
 import ccl::Syntax;
+import ParseTree;
 
 
  /*
@@ -9,4 +10,4 @@ import ccl::Syntax;
  * This function receives as parameter the path of the file to parse represented as a loc, and returns a parse tree that represents the parsed program.
  */
  
- public Prog parserccl(loc l) = parse(#Prog, l);
+ public Program parserccl(loc l) = parse(#Program, l);

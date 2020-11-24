@@ -10,4 +10,4 @@ import ParseTree;
  * This function receives as parameter the path of the file to parse represented as a loc, and returns a parse tree that represents the parsed program.
  */
  
- public Program parserccl(loc l) = parse(#Program, l);
+ public Program parserCCL(loc l) = parse(#Program, l);

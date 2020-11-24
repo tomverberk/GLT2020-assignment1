@@ -1,20 +1,19 @@
 module ccl::Syntax
 
-import Integer;
-
 /*
  * Define concrete syntax for CCL. The language's specification is available in the PDF (Section 3)
 */
 
-start syntax Program = "resource" Resource*;
+start syntax Program = "resource" Resource;
 
 
 syntax Resource = 
-"Resource" Id "{" MI* "my_server }";
+Id "{" MI* "my_server }";
 
 syntax MI 
 = "storage" Id "{" SMI "}"  
-| "computing" Id "{" CMI "}";
+| "computing" Id "{" CMI "}"
+| Id;
 
 syntax SMI =
 "region:" Region ","
@@ -46,7 +45,7 @@ syntax Engine
 | "SQL Server";
 
 syntax CPU =
-Integer;
+Natural;
 
 // TODO max 64
 syntax Memory = 
@@ -69,4 +68,6 @@ syntax OS
 | "Windows Server 2019";
 
 lexical Id = [A-Za-Z][A-Za-z0-9\-]*;
+
+lexical Natural = [0-9]+ !>> [0-9];
 

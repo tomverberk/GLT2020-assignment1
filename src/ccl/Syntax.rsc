@@ -16,7 +16,7 @@ syntax MI
 | Id;
 
 syntax SMI =
-SMIelement* "," SMIlastElement;
+SMIelement* SMIlastElement;
 
 syntax SMIelement =
 SMIlastElement ",";
@@ -30,12 +30,18 @@ syntax SMIlastElement
 | "storage:" Storage "GB";
 
 syntax CMI = 
-"region: " Region ","
-"OS: " OS ","
-"IPV6: " IPV6 ","
-"storage: " Storage "GB,"
-"CPU: " CPU "cores,"
-"memory: " Memory "GB";
+CMIelement* CMIlastElement;
+
+syntax CMIelement 
+= CMIlastElement ",";
+
+syntax CMIlastElement
+= "region: " Region
+| "OS: " OS
+| "IPV6: " IPV6
+| "storage: " Storage
+| "CPU: " CPU "cores"
+| "memory: " Memory "GB";
 
 syntax Region 
 =  "California"

@@ -1,1 +1,1 @@
-parse(#Resource, "resourceId { computing idComp { region: Bogota, IPV6: Yes}, storage storID { region: Bogota, engine: MySQL, CPU: 2 cores, memory: 2 GB, IPV6: no, storage: BLS of 16 GB }}")
+parse(#Resource, "resourceId { computing idComp { region: Bogota, IPV6: yes}, storage storID { region: Bogota, engine: MySQL, CPU: 2 cores, memory: 2 GB, IPV6: no, storage: BLS of 16 GB } }")

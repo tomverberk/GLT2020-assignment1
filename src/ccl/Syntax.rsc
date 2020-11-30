@@ -16,7 +16,7 @@ syntax MI
 | Id ",";
 
 syntax MIlastElement 
-= "storage" Id "{" SMI "}"  
+= "storage" Id "{" SMI "}"
 | "computing" Id "{" CMI "}"
 | Id;
 
@@ -28,27 +28,27 @@ syntax SMIelement
 = SMIlastElement ",";
 
 syntax SMIlastElement
-= "region: " Region 
-| "engine: " Engine
-| "CPU: " CPU "cores"
-| "memory: " Memory "GB"
-| "IPV6: " IPV6
+= "region:" Region 
+| "engine:" Engine
+| "CPU:" CPU "cores"
+| "memory:" Memory "GB"
+| "IPV6:" IPV6
 | "storage:" Storage "GB";
 
 // Minimaal 1 CMI element
-syntax CMI = 
-CMIelement* CMIlastElement;
+syntax CMI 
+= CMIelement* CMIlastElement;
 
 syntax CMIelement 
 = CMIlastElement ",";
 
 syntax CMIlastElement
-= "region: " Region
-| "OS: " OS
-| "IPV6: " IPV6
-| "storage: " Storage
-| "CPU: " CPU "cores"
-| "memory: " Memory "GB";
+= "region:" Region
+| "OS:" OS
+| "IPV6:" IPV6
+| "storage:" Storage "GB"
+| "CPU:" CPU "cores"
+| "memory:" Memory "GB";
 
 syntax Region 
 =  "California"
@@ -85,6 +85,9 @@ syntax OS
 | "Red Hat enterprises"
 | "Ubuntu Server"
 | "Windows Server 2019";
+
+syntax Natnum
+= Natural;
 
 lexical Id = [A-Za-z0-9\-]+;
 

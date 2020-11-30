@@ -16,19 +16,26 @@ syntax MI
 | Id;
 
 syntax SMI =
-"region:" Region ","
-"engine:" Engine ","
-"CPU:" CPU "cores" ","
-"memory:" Memory "GB" ","
-"IPV6:" IPV6 ","
-"Storage:" Storage "GB";
+SMIelement* "," SMIlastElement;
+
+syntax SMIelement =
+SMIlastElement ",";
+
+syntax SMIlastElement
+= "region: " Region 
+| "engine: " Engine
+| "CPU: " CPU "cores"
+| "memory: " Memory "GB"
+| "IPV6: " IPV6
+| "storage:" Storage "GB";
 
 syntax CMI = 
-"region:" Region ","
-"OS:" OS ","
-"IPV6:" IPV6 ","
-"Storage:" Storage "GB" ","
-"CPU:" CPU "cores";
+"region: " Region ","
+"OS: " OS ","
+"IPV6: " IPV6 ","
+"storage: " Storage "GB,"
+"CPU: " CPU "cores,"
+"memory: " Memory "GB";
 
 syntax Region 
 =  "California"
@@ -49,7 +56,7 @@ Natural;
 
 // TODO max 64
 syntax Memory = 
-[0-64];
+Natural;
 
 // TODO Boolean
 syntax IPV6 =
@@ -58,8 +65,7 @@ syntax IPV6 =
 
 // TODO storage int ish
 syntax Storage =
-("BLS " | "SSD ") "of" 
-[25-1000];
+("BLS" | "SSD") "of" Natural;
 
 syntax OS 
 = "Linux"
@@ -70,4 +76,11 @@ syntax OS
 lexical Id = [A-Za-Z][A-Za-z0-9\-]*;
 
 lexical Natural = [0-9]+ !>> [0-9];
+
+layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
+
+lexical WhitespaceAndComment 
+=[\ \t\n\r] 
+| "%" ![%]+ "%"
+| "%%" ![%]* $ ;
 

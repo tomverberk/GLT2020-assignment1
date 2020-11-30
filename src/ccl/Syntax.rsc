@@ -28,12 +28,12 @@ syntax SMIelement
 = SMIlastElement ",";
 
 syntax SMIlastElement
-= "region:" Region 
-| "engine:" Engine
-| "CPU:" CPU "cores"
-| "memory:" Memory "GB"
-| "IPV6:" IPV6
-| "storage:" Storage "GB";
+= "region:" Region reg
+| "engine:" Engine eng
+| "CPU:" CPU "cores" cpu
+| "memory:" Memory "GB" mem
+| "IPV6:" IPV6 ipv6
+| "storage:" Storage "GB" sto;
 
 // Minimaal 1 CMI element
 syntax CMI 
@@ -43,12 +43,12 @@ syntax CMIelement
 = CMIlastElement ",";
 
 syntax CMIlastElement
-= "region:" Region
-| "OS:" OS
-| "IPV6:" IPV6
-| "storage:" Storage "GB"
-| "CPU:" CPU "cores"
-| "memory:" Memory "GB";
+= "region:" Region reg
+| "OS:" OS os
+| "IPV6:" IPV6 ipv6
+| "storage:" Storage "GB" sto
+| "CPU:" CPU "cores" cpu
+| "memory:" Memory "GB" mem;
 
 syntax Region 
 =  "California"

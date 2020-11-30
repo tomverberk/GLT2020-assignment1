@@ -6,33 +6,37 @@ module ccl::AST
  * - make sure there is an almost one-to-one correspondence with the grammar (Syntax.rsc)
  */
  
- public alias resourceId = str;
- public alias miId = str;
+ public alias AresourceId = str;
+ public alias AmiId = str;
  
- data Program = program(RESOURCE);
+ data AProgram 
+ = Aprogram(ARESOURCE resource);
  
- data RESOURCE = resource(resourceId id, list[MI] mis);
- data MI 
- = mi(miId id, SMI smi) 
- | mi(miId id, CMI cmi);
+ data ARESOURCE 
+ = Aresource(AresourceId id, list[AMI] mis);
  
- data SMI = smi(list[SMIelement]);
+ data AMI 
+ = Ami(AmiId id, ASMI smi) 
+ | Ami(AmiId id, ACMI cmi);
  
- data SMIelement 
- = region(str Reg)
- |engine(str Eng)
- | CPU(int iVal)
- |memory(int iVal)
- |IPV6(bool IBool)
- | storage(int iVal);
+ data ASMI = Asmi(list[ASMIelement]);
  
- data CMI = cmi(list[CMIelement]);
+ data ASMIelement 
+ = Aregion(str reg)
+ | Aengine(str eng)
+ | ACPU(int iVal)
+ | Amemory(int iVal)
+ | AIPV6(bool ipv6)
+ | Astorage(int iVal);
  
- data CMIelement 
- = region(str sVal)
- | OS(str sVal)
- |IPV6(bool IBool)
- |storage(int iVal)
- |CPU(int iVal)
- |memory(int iVal);
+ data ACMI 
+ = Acmi(list[ACMIelement]);
+ 
+ data ACMIelement 
+ = Aregion(str sVal)
+ | AOS(str sVal)
+ | AIPV6(bool ipv6)
+ | Astorage(int iVal)
+ | ACPU(int iVal)
+ | Amemory(int iVal);
  

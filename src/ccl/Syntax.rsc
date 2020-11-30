@@ -6,20 +6,26 @@ module ccl::Syntax
 
 start syntax Program = "resource" Resource;
 
+// Dat er minimaal 1 resource is
+syntax Resource 
+= Id "{" MI* MIlastElement "}";
 
-syntax Resource = 
-Id "{" MI* "my_server }";
+syntax MI
+= "storage" Id "{" SMI "},"  
+| "computing" Id "{" CMI "},"
+| Id ",";
 
-syntax MI 
+syntax MIlastElement 
 = "storage" Id "{" SMI "}"  
 | "computing" Id "{" CMI "}"
 | Id;
 
-syntax SMI =
-SMIelement* SMIlastElement;
+// Minimaal 1 SMI element
+syntax SMI 
+= SMIelement* SMIlastElement;
 
-syntax SMIelement =
-SMIlastElement ",";
+syntax SMIelement 
+= SMIlastElement ",";
 
 syntax SMIlastElement
 = "region: " Region 
@@ -29,6 +35,7 @@ syntax SMIlastElement
 | "IPV6: " IPV6
 | "storage:" Storage "GB";
 
+// Minimaal 1 CMI element
 syntax CMI = 
 CMIelement* CMIlastElement;
 
@@ -79,7 +86,7 @@ syntax OS
 | "Ubuntu Server"
 | "Windows Server 2019";
 
-lexical Id = [A-Za-Z][A-Za-z0-9\-]*;
+lexical Id = [A-Za-z0-9\-]+;
 
 lexical Natural = [0-9]+ !>> [0-9];
 

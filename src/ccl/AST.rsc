@@ -34,8 +34,6 @@ data AType(loc src = |tmp:///|)
  | AIPV6(str ipv6)
  | Astorage(int iVal);
 
-//data Aregion
-//= Aregion(str reg);
  
  data ACMI 
  = Acmi(list[ACMIelement]);

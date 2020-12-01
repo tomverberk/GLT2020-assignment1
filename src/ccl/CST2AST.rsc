@@ -58,7 +58,7 @@ ASMIelement cst2ast(SMIlastElement smi) {
 	case (SMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
 	//ADD MAYBE STRING TO BOOLEAN
 	case (SMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
-	case (SMIlastElement)`storage: <Storage sto>`:return Astorage(toInt("<sto>"));
+	case (SMIlastElement)`storage: <Storage sto>`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
 		default: throw "Unhandled expression: <smi>";
 	}
 }
@@ -79,7 +79,7 @@ ACMIelement cst2ast(CMIlastElement cmi) {
 		case (CMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
 		case (CMIlastElement)`OS: <OS os>`: return AOS("<os>");
 		case (CMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
-		case (CMIlastElement)`storage: <Storage sto>`:return Astorage(toInt("<sto>"));
+		case (CMIlastElement)`storage: <Storage sto>`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
 		case (CMIlastElement)`CPU: <CPU cpu> GB`: return ACPU(toInt("<cpu>"));
 		case (CMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
 		default: throw "Unhandled expression: <cmi>";

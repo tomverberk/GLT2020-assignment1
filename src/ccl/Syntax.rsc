@@ -49,47 +49,30 @@ syntax CMIlastElement
 | "memory:" Memory "GB" mem;
 
 syntax Region 
-=  "California"
-| "Cape Town"
-| "Frankfurt"
-| "Bogota"
-| "Seoul";
+= String;
 
 syntax Engine 
-=  "MySQL"
-| "PostgreSQL"
-| "MariaDB"
-| "Oracle"
-| "SQL Server";
+= String;
 
 syntax CPU =
-Natural;
+Integer;
 
 // TODO max 64
 syntax Memory = 
-Natural;
+Integer;
 
 // TODO Boolean
-syntax IPV6 =
-"yes" 
-| "no";
+syntax IPV6 
+= String;
 
 // TODO storage int ish
-syntax Storage =
-("BLS" | "SSD") "of" Natural;
+syntax Storage 
+= ("BLS" | "SSD") val1 "of" Integer val2;
 
 syntax OS 
-= "Linux"
-| "Red Hat enterprises"
-| "Ubuntu Server"
-| "Windows Server 2019";
-
-syntax Natnum
-= Natural;
+= String;
 
 lexical Id = [A-Za-z0-9\-]+;
-
-lexical Natural = [0-9]+ !>> [0-9];
 
 layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
 
@@ -97,4 +80,12 @@ lexical WhitespaceAndComment
 =[\ \t\n\r] 
 | "%" ![%]+ "%"
 | "%%" ![%]* $ ;
+
+syntax Type = "string" | "integer" | "boolean";  
+
+lexical String str = [A-Za-z0-9\-]+;
+
+lexical Integer = [0] | [+\-]?[1-9][0-9]*;
+
+lexical Boolean = "true" | "false";
 

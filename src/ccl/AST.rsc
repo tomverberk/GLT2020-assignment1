@@ -32,7 +32,7 @@ data AType(loc src = |tmp:///|)
  | ACPU(int iVal)
  | Amemory(int iVal)
  | AIPV6(str ipv6)
- | Astorage(int iVal);
+ | Astorage(str sVal, int iVal);
 
 //data Aregion
 //= Aregion(str reg);
@@ -44,7 +44,7 @@ data AType(loc src = |tmp:///|)
  = Aregion(str sVal)
  | AOS(str sVal)
  | AIPV6(str ipv6)
- | Astorage(int iVal)
+ | Astorage(str sVal, int iVal)
  | ACPU(int iVal)
  | Amemory(int iVal);
  

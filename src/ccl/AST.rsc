@@ -14,14 +14,15 @@ data AType(loc src = |tmp:///|)
     = string() | integer() | boolean();
  
  data AProgram 
- = Aprogram(ARESOURCE resource);
+ = Aprogram(AResource resource);
  
- data ARESOURCE 
+ data AResource
  = Aresource(AresourceId id, list[AMI] mis);
  
  data AMI 
- = Ami(AmiId id, ASMI smi) 
- | Ami(AmiId id, ACMI cmi);
+ = Ami(AId id, ASMI smi) 
+ | Ami(AId id, ACMI cmi)
+ | Ami(AId id);
  
  data ASMI = Asmi(list[ASMIelement]);
  
@@ -46,4 +47,7 @@ data AType(loc src = |tmp:///|)
  | Astorage(int iVal)
  | ACPU(int iVal)
  | Amemory(int iVal);
+ 
+ data AId
+= Aid(str name);
  

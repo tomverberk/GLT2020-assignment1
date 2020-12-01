@@ -17,12 +17,36 @@ import List;
  */
 
  
-//Program cst2ast(start[Program] pr) {
-	
-//}
+AProgram cst2ast(start[Program] pr) {
+	AProgram program = Aprogram(cst2ast(pr.resource));
+	return program; 
+}
 
-list[ASMIelement] toList(SMIlastElement* smielements) {
-    return [cst2ast(e) | SMIlastElement e <- smielements];
+AResource cst2ast(Resource resource) {
+	AResource Resource = Aresource("<resource.id>", toList(resource.mis));
+	return Resource; 
+}
+
+list[AMI] toList(MI* mis){
+	return [cst2ast(mi.milast) | MI mi <- mis];
+}
+
+AMI cst2ast(MIlastElement mi) {
+    switch (mi) {
+    case (MIlastElement)`storage <Id id> { <SMI smi> }`: return Ami(cst2ast(id), cst2ast(smi));
+    case (MIlastElement)`computing <Id id> { <CMI cmi> }`: return Ami(cst2ast(id), cst2ast(cmi));
+    case (MIlastElement)`<Id id>`: return Ami(cst2ast(id));
+        default: throw "Unhandled expression: <mi>"; 
+    } 
+}
+
+
+ASMI cst2ast(SMI smi){
+	return Asmi(toList(smi.smiElements));
+}
+
+list[ASMIelement] toList(SMIelement* smielements) {
+    return [cst2ast(e.element) | SMIelement e <- smielements];
 }
 
 
@@ -41,18 +65,13 @@ ASMIelement cst2ast(SMIlastElement smi) {
 
 
 ACMI cst2ast(CMI cmi){
-	
-	
-	
 	return Acmi(toList(cmi.cmiElements));
 }
 
 
-list[ACMIelement] toList(CMIlastElement* cmielements) {
-    return [cst2ast(e) | CMIlastElement e <- cmielements];
+list[ACMIelement] toList(CMIelement* cmielements) {
+    return [cst2ast(e.element) | CMIelement e <- cmielements];
 }
-
-
 
 
 ACMIelement cst2ast(CMIlastElement cmi) {
@@ -65,4 +84,8 @@ ACMIelement cst2ast(CMIlastElement cmi) {
 		case (CMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
 		default: throw "Unhandled expression: <cmi>";
 	}
+}
+
+AId cst2ast(Id id){
+	return Aid("<id>");
 }

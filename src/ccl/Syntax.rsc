@@ -4,14 +4,14 @@ module ccl::Syntax
  * Define concrete syntax for CCL. The language's specification is available in the PDF (Section 3)
 */
 
-start syntax Program = "resource" Resource;
+start syntax Program = "resource" Resource resource;
 
 syntax Resource 
-= Id "{" MI* MIlastElement "}";
+= Id id "{" MI* mis "}";
 
 syntax MI
-= MIlastElement "," !>> "}"
-| MIlastElement >> "}";
+= MIlastElement milast "," !>> "}"
+| MIlastElement milast >> "}";
 
 syntax MIlastElement 
 = "storage" Id "{" SMI "}"
@@ -19,8 +19,8 @@ syntax MIlastElement
 | Id;
 
 syntax SMIelement 
-= SMIlastElement "," !>> "}"
-| SMIlastElement >> "}";
+= SMIlastElement element "," !>> "}"
+| SMIlastElement element >> "}";
 
 syntax SMI 
 = SMIelement* smiElements;
@@ -37,8 +37,8 @@ syntax CMI
 = CMIelement* cmiElements;
 
 syntax CMIelement 
-= CMIlastElement dab "," !>> "}"
-| CMIlastElement dab >> "}";
+= CMIlastElement element "," !>> "}"
+| CMIlastElement element >> "}";
 
 syntax CMIlastElement
 = "region:" Region reg

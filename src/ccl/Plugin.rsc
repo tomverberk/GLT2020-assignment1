@@ -12,9 +12,9 @@ bool checkWellformedness(loc fil) {
 	// Parsing
 	&T resource = parserCCL(fil);
 	// Transform the parse tree into an abstract syntax tree
-	&T ast = cst2ast(r);
+	&T ast = cst2ast(resource);
 	// Check the well-formedness of the program
-	return checkCloudConfiguration(ResourceAST);
+	return checkCloudConfiguration(ast);
 }
 
 /*

@@ -9,6 +9,10 @@ module ccl::AST
  public alias AresourceId = str;
  public alias AmiId = str;
  
+ // Datatypes
+data AType(loc src = |tmp:///|)
+    = string() | integer() | boolean();
+ 
  data AProgram 
  = Aprogram(ARESOURCE resource);
  
@@ -26,8 +30,11 @@ module ccl::AST
  | Aengine(str eng)
  | ACPU(int iVal)
  | Amemory(int iVal)
- | AIPV6(bool ipv6)
+ | AIPV6(str ipv6)
  | Astorage(int iVal);
+
+//data Aregion
+//= Aregion(str reg);
  
  data ACMI 
  = Acmi(list[ACMIelement]);
@@ -35,7 +42,7 @@ module ccl::AST
  data ACMIelement 
  = Aregion(str sVal)
  | AOS(str sVal)
- | AIPV6(bool ipv6)
+ | AIPV6(str ipv6)
  | Astorage(int iVal)
  | ACPU(int iVal)
  | Amemory(int iVal);

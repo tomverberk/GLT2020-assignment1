@@ -3,10 +3,11 @@ module ccl::CST2AST
 import ccl::AST;
 import ccl::Syntax;
 
-import ParseTree;
+//import ParseTree;
 import String;
-import Integer;
-import Boolean;
+import List;
+//import Integer;
+//import ccl::Boolean;
 
 /*
  * -Implement a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
@@ -20,14 +21,48 @@ import Boolean;
 	
 //}
 
+list[ASMIelement] toList(SMIlastElement* smielements) {
+    return [cst2ast(e) | SMIlastElement e <- smielements];
+}
 
-ASMIlastElement cst2ast(SMIlastElement smi) {
+
+ASMIelement cst2ast(SMIlastElement smi) {
 	switch (smi) {
-		case (SMIlastElement)`region: <Region reg>`: return Aregion(str reg);
-		case (SMIlastElement)`Engine`: return Aengine(str eng);
+	case (SMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
+	case (SMIlastElement)`Engine: <Engine eng>`: return Aengine("<eng>");
+	case (SMIlastElement)`CPU: <CPU cpu> GB`: return ACPU(toInt("<cpu>"));
+	case (SMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
+	//ADD MAYBE STRING TO BOOLEAN
+	case (SMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
+	case (SMIlastElement)`storage: <Storage sto>`:return Astorage(toInt("<sto>"));
+		default: throw "Unhandled expression: <smi>";
 	}
 }
 
-ARegion cst2ast(Region reg) {
+
+ACMI cst2ast(CMI cmi){
 	
+	
+	
+	return Acmi(toList(cmi.cmiElements));
+}
+
+
+list[ACMIelement] toList(CMIlastElement* cmielements) {
+    return [cst2ast(e) | CMIlastElement e <- cmielements];
+}
+
+
+
+
+ACMIelement cst2ast(CMIlastElement cmi) {
+	switch (cmi) {
+		case (CMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
+		case (CMIlastElement)`OS: <OS os>`: return AOS("<os>");
+		case (CMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
+		case (CMIlastElement)`storage: <Storage sto>`:return Astorage(toInt("<sto>"));
+		case (CMIlastElement)`CPU: <CPU cpu> GB`: return ACPU(toInt("<cpu>"));
+		case (CMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
+		default: throw "Unhandled expression: <cmi>";
+	}
 }

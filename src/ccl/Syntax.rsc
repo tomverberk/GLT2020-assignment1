@@ -6,26 +6,24 @@ module ccl::Syntax
 
 start syntax Program = "resource" Resource;
 
-// Dat er minimaal 1 resource is
 syntax Resource 
 = Id "{" MI* MIlastElement "}";
 
 syntax MI
-= "storage" Id "{" SMI "},"  
-| "computing" Id "{" CMI "},"
-| Id ",";
+= MIlastElement "," !>> "}"
+| MIlastElement >> "}";
 
 syntax MIlastElement 
 = "storage" Id "{" SMI "}"
 | "computing" Id "{" CMI "}"
 | Id;
 
-// Minimaal 1 SMI element
-syntax SMI 
-= SMIelement* SMIlastElement;
-
 syntax SMIelement 
-= SMIlastElement ",";
+= SMIlastElement "," !>> "}"
+| SMIlastElement >> "}";
+
+syntax SMI 
+= SMIelement* smiElements;
 
 syntax SMIlastElement
 = "region:" Region reg
@@ -35,12 +33,12 @@ syntax SMIlastElement
 | "IPV6:" IPV6 ipv6
 | "storage:" Storage "GB" sto;
 
-// Minimaal 1 CMI element
 syntax CMI 
-= CMIelement* CMIlastElement;
+= CMIelement* cmiElements;
 
 syntax CMIelement 
-= CMIlastElement ",";
+= CMIlastElement dab "," !>> "}"
+| CMIlastElement dab >> "}";
 
 syntax CMIlastElement
 = "region:" Region reg

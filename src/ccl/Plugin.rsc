@@ -4,6 +4,7 @@ import util::IDE;
 import ccl::Parser;
 import ccl::Check;
 import ccl::CST2AST;
+import ParseTree;
 
 /*
 * This function is defined to test the functionality of the whole assignment. It receives a file path as a parameter and returns true if the program satisfies the specification or false otherwise.
@@ -18,6 +19,7 @@ bool checkWellformedness(loc fil) {
 	// Check the well-formedness of the program
 	return checkCloudConfiguration(ast);
 }
+
 
 /*
 * This is the main function of the project. This function enables the editor's syntax highlighting.

@@ -4,6 +4,19 @@ module ccl::Syntax
  * Define concrete syntax for CCL. The language's specification is available in the PDF (Section 3)
 */
 
+lexical String = [A-Za-z0-9\-]+;
+lexical Integer = [0] | [+\-]?[1-9][0-9]*;
+lexical Boolean = "true" | "false";
+
+layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
+
+lexical WhitespaceAndComment 
+=[\ \t\n\r] 
+| "%" ![%]+ "%"
+| "%%" ![%]* $ ;
+
+lexical Id = [A-Za-z0-9\-]+;
+
 start syntax Program = "resource" Resource resource;
 
 syntax Resource 
@@ -11,7 +24,7 @@ syntax Resource
 
 syntax MI
 = MIlastElement milast "," !>> "}"
-| MIlastElement milast >> "}";
+| MIlastElement milast !>> ",";
 
 syntax MIlastElement 
 = "storage" Id "{" SMI "}"
@@ -20,7 +33,7 @@ syntax MIlastElement
 
 syntax SMIelement 
 = SMIlastElement element "," !>> "}"
-| SMIlastElement element >> "}";
+| SMIlastElement element !>> ",";
 
 syntax SMI 
 = SMIelement* smiElements;
@@ -38,7 +51,7 @@ syntax CMI
 
 syntax CMIelement 
 = CMIlastElement element "," !>> "}"
-| CMIlastElement element >> "}";
+| CMIlastElement element !>> ",";
 
 syntax CMIlastElement
 = "region:" Region reg
@@ -72,20 +85,4 @@ syntax Storage
 syntax OS 
 = String;
 
-lexical Id = [A-Za-z0-9\-]+;
-
-layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
-
-lexical WhitespaceAndComment 
-=[\ \t\n\r] 
-| "%" ![%]+ "%"
-| "%%" ![%]* $ ;
-
 syntax Type = "string" | "integer" | "boolean";  
-
-lexical String = [A-Za-z0-9\-]+;
-
-lexical Integer = [0] | [+\-]?[1-9][0-9]*;
-
-lexical Boolean = "true" | "false";
-

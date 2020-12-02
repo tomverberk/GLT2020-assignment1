@@ -1,0 +1,10 @@
+resource incorrectcluster {
+	computing ineedmorememory {
+		region: Seoul,
+		OS: Linux,
+		IPV6: yes,
+		storage: SSD of 512 GB,
+		CPU: 8 cores,
+		memory: 65 GB
+	}
+}

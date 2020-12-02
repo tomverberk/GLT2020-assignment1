@@ -1,0 +1,10 @@
+resource incorrectresource {
+	storage wrongengine {
+		region: Seoul,
+		engine: thisisnotacorrectengine,
+		IPV6: yes,
+		storage: SSD of 512 GB,
+		CPU: 2 cores,
+		memory: 1 GB
+	}
+}

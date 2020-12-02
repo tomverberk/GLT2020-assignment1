@@ -1,5 +1,5 @@
-resource correctcluster {
-	storage correctstorage {
+resource incorrectcluster {
+	storage duplicateMI1 {
 		region: Seoul,
 		engine: MariaDB,
 		IPV6: yes,
@@ -7,13 +7,12 @@ resource correctcluster {
 		CPU: 2 cores,
 		memory: 1 GB
 	},
-	computing correctcomputing {
+	storage duplicateMI2 {
 		region: Seoul,
-		OS: Linux,
+		engine: MariaDB,
 		IPV6: yes,
 		storage: SSD of 512 GB,
-		CPU: 8 cores,
-		memory: 8 GB
-	},
-	correctcomputing
+		CPU: 2 cores,
+		memory: 1 GB
+	}
 }

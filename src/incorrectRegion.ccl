@@ -1,0 +1,10 @@
+resource incorrectcluster {
+	computing whereintheworld {
+		region: Eindhoven,
+		OS: Linux,
+		IPV6: yes,
+		storage: SSD of 512 GB,
+		CPU: 8 cores,
+		memory: 8 GB
+	}
+}

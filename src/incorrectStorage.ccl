@@ -1,0 +1,10 @@
+resource incorrectcluster {
+	computing thatsnotenoughstorage {
+		region: Eindhoven,
+		OS: Linux,
+		IPV6: yes,
+		storage: SSD of -200 GB,
+		CPU: 8 cores,
+		memory: 8 GB
+	}
+}

@@ -1,5 +1,6 @@
 module ccl::Plugin
 
+import ParseTree;
 import util::IDE;
 import ccl::Parser;
 import ccl::Check;

@@ -22,31 +22,58 @@ import ccl::AST;
 
 //Checks all the stuff
 bool checkCloudConfiguration(AProgram ast){
-	if ( checkUniquenessMILabels(ast)
-	|| storageSizeMax(ast)
-	|| memorySizeMax(ast)
-	|| MIRegionInCorrect(ast)
-	|| DBEngineInValid(ast)
-	|| OSResourceInCorrect(ast)
-	|| MIInResourceInSameRegion(ast)
-	|| sameMIDifferentLabel(ast)
-	|| support(ast)
-	){
-		return true;
-	} else {
-		return false;
-	}
+	//if ( checkUniquenessMILabels(ast)
+	//|| storageSizeMax(ast)
+	//|| memorySizeMax(ast)
+	//|| MIRegionInCorrect(ast)
+	//|| DBEngineInValid(ast)
+	//|| OSResourceInCorrect(ast)
+	//|| MIInResourceInSameRegion(ast)
+	//|| sameMIDifferentLabel(ast)
+	//|| support(ast)
+	//){
+	//	return true;
+	//} else {
+	//	return false;
+	//}
+	return true;
 }
 
-// Check MI’s labels must be unique.
-//bool checkUniquenessMILabels(AProgram ast){
-//	AResource Aresource = ast.resource;
-//	visit(Aresource.mis) {
-//		case(Asmi(AID id, ASMI smi): 
-//
-//	}
-//	return true;
-//}
+ //Check MI’s labels must be unique.
+bool checkUniquenessMILabels(AProgram ast){
+	AResource Aresource = ast.resource;
+	visit(Aresource.mis) {
+		case Asmi(AId id, ASMI smi): checkMI(smi);
+		case Acmi(AId id, ACMI cmi): checkMI(cmi);
+	}
+	return false;
+}
+
+bool checkMI(ASMI asmi){
+	hasError = false;
+	visit(asmi.elements) {
+		case Aregion(str reg): hasError = (hasError || MIRegionInCorrect(Aregion(reg)));
+		case Aengine(str eng): hasError = (hasError || DBEngineInValid(Aengine(eng)));
+		case ACPU(int cpu): ;
+		case Amemory(int size): hasError = (hasError || memorySizeMax(Amemory(size)));
+		case AIPV6(str ivp6): ;
+		case Astorage(str kind, int size): hasError = (hasError || storageSizeMax(Astorage(kind, size)));
+		}
+	return hasError;
+}
+
+bool checkMI(ACMI acmi){
+	hasError = false;
+	visit(acmi.elements) {
+		case Aregion(str reg): hasError = (hasError || MIRegionInCorrect(Aregion(reg)));
+		case AOS(str os): hasError = (hasError || OSResourceInCorrect(AOS(os)));
+		case AIPV6(str ivp6): ;
+		case Astorage(str kind, int size): hasError = (hasError || storageSizeMax(Astorage(kind, size)));
+		case ACPU(int cpu): ;
+		case Amemory(int size): hasError = (hasError || memorySizeMax(Amemory(size)));
+		}
+	return hasError;
+}
 
 // Check The storage size must be greater than zero but less than or equal to 1000 GB.
 bool storageSizeMax(ASMIelement storage){
@@ -127,7 +154,7 @@ bool DBEngineInValid(ASMIelement engine){
 }
 // can't be ACMI element
 
-// check All MIs in a resource element must be dened in the same region.
+// check All MIs in a resource element must be defined in the same region.
 //TODO
 bool MIInResourceInSameRegion(AProgram ast){
 
@@ -152,7 +179,7 @@ bool OSResourceInCorrect(ACMIelement os){
 }
 // Can't be ASMIelement
 
-// check Do not accept duplicate MIs with the exact same conguration and dierent labels.
+// check Do not accept duplicate MIs with the exact same connfguration and different labels.
 // TODO
 bool sameMIDifferentLabel(AProgram ast){
 

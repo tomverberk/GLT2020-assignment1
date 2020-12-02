@@ -18,9 +18,13 @@ import List;
 
  
 AProgram cst2ast(start[Program] pr) {
-	AProgram program = Aprogram(cst2ast(pr.resource));
+	AProgram program = Aprogram(toList(pr.resource));
 	return program; 
 }
+
+list[AResource] toList(Resource* resources){
+	return [cst2ast(resource) | Resource resource <- resources];
+}	
 
 AResource cst2ast(Resource resource) {
 	AResource Resource = Aresource("<resource.id>", toList(resource.mis));

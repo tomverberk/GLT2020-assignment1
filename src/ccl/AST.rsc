@@ -14,7 +14,7 @@ data AType(loc src = |tmp:///|)
     = string() | integer() | boolean();
  
  data AProgram 
- = Aprogram(AResource resource);
+ = Aprogram(list[AResource] resource);
  
  data AResource
  = Aresource(AresourceId id, list[AMI] mis);
@@ -24,7 +24,7 @@ data AType(loc src = |tmp:///|)
  | Acmi(AId id, ACMI cmi)
  | Ami(AId id);
  
- data ASMI = Asmi(list[ASMIelement]);
+ data ASMI = Asmi(list[ASMIelement] elements);
  
  data ASMIelement 
  = Aregion(str reg)
@@ -36,7 +36,7 @@ data AType(loc src = |tmp:///|)
 
  
  data ACMI 
- = Acmi(list[ACMIelement]);
+ = Acmi(list[ACMIelement] elements);
  
  data ACMIelement 
  = Aregion(str reg)

@@ -33,8 +33,8 @@ list[AMI] toList(MI* mis){
 
 AMI cst2ast(MIlastElement mi) {
     switch (mi) {
-    case (MIlastElement)`storage <Id id> { <SMI smi> }`: return Ami(cst2ast(id), cst2ast(smi));
-    case (MIlastElement)`computing <Id id> { <CMI cmi> }`: return Ami(cst2ast(id), cst2ast(cmi));
+    case (MIlastElement)`storage <Id id> { <SMI smi> }`: return Asmi(cst2ast(id), cst2ast(smi));
+    case (MIlastElement)`computing <Id id> { <CMI cmi> }`: return Acmi(cst2ast(id), cst2ast(cmi));
     case (MIlastElement)`<Id id>`: return Ami(cst2ast(id));
         default: throw "Unhandled expression: <mi>"; 
     } 

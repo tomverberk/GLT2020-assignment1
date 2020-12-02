@@ -20,8 +20,8 @@ data AType(loc src = |tmp:///|)
  = Aresource(AresourceId id, list[AMI] mis);
  
  data AMI 
- = Ami(AId id, ASMI smi) 
- | Ami(AId id, ACMI cmi)
+ = Asmi(AId id, ASMI smi) 
+ | Acmi(AId id, ACMI cmi)
  | Ami(AId id);
  
  data ASMI = Asmi(list[ASMIelement]);
@@ -29,22 +29,22 @@ data AType(loc src = |tmp:///|)
  data ASMIelement 
  = Aregion(str reg)
  | Aengine(str eng)
- | ACPU(int iVal)
- | Amemory(int iVal)
+ | ACPU(int cpu)
+ | Amemory(int size)
  | AIPV6(str ipv6)
- | Astorage(str sVal, int iVal);
+ | Astorage(str kind, int size);
 
  
  data ACMI 
  = Acmi(list[ACMIelement]);
  
  data ACMIelement 
- = Aregion(str sVal)
- | AOS(str sVal)
+ = Aregion(str reg)
+ | AOS(str os)
  | AIPV6(str ipv6)
- | Astorage(str sVal, int iVal)
- | ACPU(int iVal)
- | Amemory(int iVal);
+ | Astorage(str kind, int size)
+ | ACPU(int size)
+ | Amemory(int size);
  
  data AId
 = Aid(str name);

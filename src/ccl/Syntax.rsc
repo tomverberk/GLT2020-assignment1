@@ -83,7 +83,7 @@ lexical WhitespaceAndComment
 
 syntax Type = "string" | "integer" | "boolean";  
 
-lexical String str = [A-Za-z0-9\-]+;
+lexical String = [A-Za-z0-9\-]+;
 
 lexical Integer = [0] | [+\-]?[1-9][0-9]*;
 

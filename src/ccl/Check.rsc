@@ -22,30 +22,26 @@ import ccl::AST;
 
 //Checks all the stuff
 bool checkCloudConfiguration(AProgram ast){
-	//if ( checkUniquenessMILabels(ast)
-	//|| storageSizeMax(ast)
-	//|| memorySizeMax(ast)
-	//|| MIRegionInCorrect(ast)
-	//|| DBEngineInValid(ast)
-	//|| OSResourceInCorrect(ast)
-	//|| MIInResourceInSameRegion(ast)
-	//|| sameMIDifferentLabel(ast)
-	//|| support(ast)
-	//){
-	//	return true;
-	//} else {
-	//	return false;
-	//}
-	return true;
+	hasError = false;
+	visit(ast.resources) {
+		case Aresource(AresourceId id, list[AMI] mis): 
+			hasError = (hasError || checkResource(Aresource(id, mis)));
+	}
+	return hasError;
+}
+
+bool checkResource(AResource resource){
+	hasError = false;
+		visit(resource.mis) {
+			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi));
+			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi));
+		}
+	return hasError;
 }
 
  //Check MI’s labels must be unique.
 bool checkUniquenessMILabels(AProgram ast){
-	AResource Aresource = ast.resource;
-	visit(Aresource.mis) {
-		case Asmi(AId id, ASMI smi): checkMI(smi);
-		case Acmi(AId id, ACMI cmi): checkMI(cmi);
-	}
+	
 	return false;
 }
 

@@ -4,10 +4,10 @@ module ccl::Syntax
  * Define concrete syntax for CCL. The language's specification is available in the PDF (Section 3)
 */
 
-start syntax Program = Resource* resource;
+start syntax Program = "resource" Resource resource;
 
 syntax Resource 
-= "resource" Id id "{" MI* mis "}";
+= Id id "{" MI* mis "}";
 
 syntax MI
 = MIlastElement milast "," !>> "}"

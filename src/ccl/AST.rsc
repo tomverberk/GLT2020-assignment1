@@ -14,7 +14,7 @@ data AType(loc src = |tmp:///|)
     = string() | integer() | boolean();
  
  data AProgram 
- = Aprogram(list[AResource] resource);
+ = Aprogram(AResource resource);
  
  data AResource
  = Aresource(AresourceId id, list[AMI] mis);

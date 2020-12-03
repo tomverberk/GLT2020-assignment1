@@ -1,0 +1,19 @@
+resource correct_cluster {
+    computing correct_computing {
+        region: Seoul,
+        OS: Linux,
+        IPV6: yes,
+        storage: SSD of 512 GB,
+        CPU: 8 cores,
+        memory: 8 GB
+    },
+    computing correct_computing {
+        region: Seoul,
+        OS: Linux,
+        IPV6: yes,
+        storage: SSD of 512 GB,
+        CPU: 8 cores,
+        memory: 8 GB
+    },
+    correct_computing
+}

@@ -1,6 +1,7 @@
 module ccl::Check
 
 import ccl::AST;
+import IO;
 
 /*
  * -Implement a well-formedness checker for the CCL language. For this you must use the AST. 
@@ -24,10 +25,10 @@ import ccl::AST;
 bool checkCloudConfiguration(AProgram ast){
 	hasError = false;
 	visit(ast.resource) {
-		case Aresource(AresourceId id, list[AMI] mis): 
+		case Aresource(AId id, list[AMI] mis): 
 			hasError = (hasError || checkResource(Aresource(id, mis)));
 	}
-	return hasError;
+	return !hasError;
 }
 
 bool checkResource(AResource resource){
@@ -39,31 +40,37 @@ bool checkResource(AResource resource){
 	// ALL OTHER CHECKS
 	
 		visit(resource.mis) {
-			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi) || comparisonCheck(smi,id,resource.mis));
-			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi) || comparisonCheck(cmi,id,resource.mis));
+			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi) || comparisonCheck(smi,id,resource.mis) );
+			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi) || comparisonCheck(cmi,id,resource.mis) );
 			default: ;
 		}
 	return hasError;
 }
 
+
+// 
+// 
+
 bool comparisonCheck(ASMI og_asmi, AId og_id, list[AMI] mis){
+	bool hasError = false;
 	visit(mis)
 		{
-			case Asmi(AId id, ASMI smi): CompareSMI(og_asmi, smi, og_id, id);
-			case Acmi(AId id, ACMI cmi): IdIsSame(id.name, og_id.name);
+			case Asmi(AId id, ASMI smi): hasError = hasError || CompareSMI(og_asmi, smi, og_id, id);
+			case Acmi(AId id, ACMI cmi): hasError = hasError || IdIsSame(id.name, og_id.name);
 			default: ;
 		}
-	return true;
+	return hasError;
 }
 
 bool comparisonCheck(ACMI og_acmi, AId og_id, list[AMI] mis){
+	bool hasError = false;
 	visit(mis)
 		{
-			case Asmi(AId id, ASMI smi): IdIsSame(id.name, og_id.name);
-			case Acmi(AId id, ACMI cmi): CompareCMI(og_acmi, cmi, og_id, id) ;
+			case Asmi(AId id, ASMI smi): hasError = hasError || IdIsSame(id.name, og_id.name);
+			case Acmi(AId id, ACMI cmi): hasError = hasError || CompareCMI(og_acmi, cmi, og_id, id) ;
 			default: ;
 		}
-	return true;
+	return hasError;
 }
 
 
@@ -72,11 +79,17 @@ bool CompareSMI(ASMI smi_1, ASMI smi_2, AId id_1, AId id_2){
 		if(!ContentIsSame(smi_1, smi_2) && IdIsSame(id_1.name, id_2.name)){
 			return true;
 		}
+		
+		////If content is the same but id is different
+		//if(!ContentIsSame(smi_1, smi_2)){
+		//	return true;
+		//}
+		
 		//If content is the same but id is different
-		if(ContentIsSame(smi_1, smi_2) && IdIsSame(id_1.name, id_2.name)){
+		if(ContentIsSame(smi_1, smi_2) && !IdIsSame(id_1.name, id_2.name)){
 			return true;
 		}
-	return false;	
+	return false;
 }
 
 bool CompareCMI(ACMI cmi_1, ACMI cmi_2, AId id_1, AId id_2){
@@ -84,8 +97,13 @@ bool CompareCMI(ACMI cmi_1, ACMI cmi_2, AId id_1, AId id_2){
 		if(!ContentIsSame(cmi_1, cmi_2) && IdIsSame(id_1.name, id_2.name)){
 			return true;
 		}
-		//If content is the same but id is different
-		if(ContentIsSame(cmi_1, cmi_2) && IdIsSame(id_1.name, id_2.name)){
+		////If content is the same but id is different
+		//if(!ContentIsSame(cmi_1, cmi_2)){
+		//	return true;
+		//}
+
+		
+		if(ContentIsSame(cmi_1, cmi_2) && !IdIsSame(id_1.name, id_2.name)){
 			return true;
 		}
 	return false;	
@@ -100,7 +118,7 @@ bool ContentIsSame(ACMI cmi_1, ACMI cmi_2){
 					matchElement1 = true;
 				}
 			}
-		if(matchElement1){
+		if(!matchElement1){
 			return false;
 		}
 	}
@@ -114,7 +132,7 @@ bool ContentIsSame(ASMI smi_1, ASMI smi_2){
 					matchElement1 = true;
 				}
 			}
-		if(matchElement1){
+		if(!matchElement1){
 			return false;
 		}
 	}
@@ -156,12 +174,12 @@ bool RegionCheck(AResource resource){
 			case Acmi(AId id, ACMI cmi): if(getRegion(cmi) != region) return true;	
 			default: ;
 		}
-	return true;
+	return false;
 }
 
 str getRegion(ASMI smi){
 	visit(smi.elements){
-			case Aregion(str reg): return reg;
+			case ASregion(str reg): return reg;
 			default: ;
 		}
 	return "";
@@ -169,7 +187,7 @@ str getRegion(ASMI smi){
 
 str getRegion(ACMI cmi){
 	visit(cmi.elements){
-			case Aregion(str reg): return reg;
+			case ACregion(str reg): return reg;
 			default: ;
 		}
 	return "";
@@ -185,12 +203,13 @@ str getRegion(ACMI cmi){
 bool checkMI(ASMI asmi){
 	hasError = false;
 	visit(asmi.elements) {
-		case Aregion(str reg): hasError = (hasError || MIRegionInCorrect(Aregion(reg)));
-		case Aengine(str eng): hasError = (hasError || DBEngineInValid(Aengine(eng)));
-		case ACPU(int cpu): ;
-		case Amemory(int size): hasError = (hasError || memorySizeMax(Amemory(size)));
-		case AIPV6(str ivp6): ;
-		case Astorage(str kind, int size): hasError = (hasError || storageSizeMax(Astorage(kind, size)));
+		case ASregion(str reg): hasError = (hasError || MIRegionInCorrect(ASregion(reg)));
+		case ASengine(str eng): hasError = (hasError || DBEngineInValid(ASengine(eng)));
+		case ASCPU(int cpu): ;
+		case ASmemory(int size): hasError = (hasError || memorySizeMax(ASmemory(size)));
+		case ASIPV6(str ivp6): ;
+		case ASstorage(str kind, int size): hasError = (hasError || storageSizeMax(ASstorage(kind, size)));
+		default: ;
 		}
 	return hasError;
 }
@@ -198,12 +217,13 @@ bool checkMI(ASMI asmi){
 bool checkMI(ACMI acmi){
 	hasError = false;
 	visit(acmi.elements) {
-		case Aregion(str reg): hasError = (hasError || MIRegionInCorrect(Aregion(reg)));
-		case AOS(str os): hasError = (hasError || OSResourceInCorrect(AOS(os)));
-		case AIPV6(str ivp6): ;
-		case Astorage(str kind, int size): hasError = (hasError || storageSizeMax(Astorage(kind, size)));
-		case ACPU(int cpu): ;
-		case Amemory(int size): hasError = (hasError || memorySizeMax(Amemory(size)));
+		case ACregion(str reg): hasError = (hasError || MIRegionInCorrect(ACregion(reg)));
+		case ACOS(str os): hasError = (hasError || OSResourceInCorrect(ACOS(os)));
+		case ACIPV6(str ivp6): ;
+		case ACstorage(str kind, int size): hasError = (hasError || storageSizeMax(ACstorage(kind, size)));
+		case ACCPU(int cpu): ;
+		case ACmemory(int size): hasError = (hasError || memorySizeMax(ACmemory(size)));
+		default:;
 		}
 	return hasError;
 }

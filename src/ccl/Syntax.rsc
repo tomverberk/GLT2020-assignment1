@@ -39,12 +39,12 @@ syntax SMI
 = SMIelement* smiElements;
 
 syntax SMIlastElement
-= "region:" Region reg
-| "engine:" Engine eng
-| "CPU:" CPU "cores" cpu
-| "memory:" Memory "GB" mem
-| "IPV6:" IPV6 ipv6
-| "storage:" Storage "GB" sto;
+= "region"":" Region reg
+| "engine"":" Engine eng
+| "CPU"":" CPU "cores" cpu
+| "memory"":" Memory "GB" mem
+| "IPV6"":" IPV6 ipv6
+| "storage"":" Storage "GB" sto;
 
 syntax CMI 
 = CMIelement* cmiElements;
@@ -54,12 +54,12 @@ syntax CMIelement
 | CMIlastElement element !>> ",";
 
 syntax CMIlastElement
-= "region:" Region reg
-| "OS:" OS os
-| "IPV6:" IPV6 ipv6
-| "storage:" Storage "GB" sto
-| "CPU:" CPU "cores" cpu
-| "memory:" Memory "GB" mem;
+= "region"":" Region reg
+| "OS"":" OS os
+| "IPV6"":" IPV6 ipv6
+| "storage"":" Storage "GB" sto
+| "CPU"":" CPU "cores" cpu
+| "memory"":" Memory "GB" mem;
 
 syntax Region 
 = String;

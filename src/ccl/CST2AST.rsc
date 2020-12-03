@@ -23,8 +23,12 @@ AProgram cst2ast(start[Program] pr) {
 }
 
 AResource cst2ast(Resource resource) {
-	AResource Resource = Aresource("<resource.id>", toList(resource.mis));
-	return Resource; 
+	switch(resource) {
+		case (Resource)`resource <Id id> { <Resource resource>}`: return Aresource("<resource.id>", toList(resource.mis));
+		//AResource Resource = "resource" Aresource("<resource.id>", toList(resource.mis));
+		default: throw "Unhandled expression: <resource>";
+	}
+	//return resource; 
 }
 
 list[AMI] toList(MI* mis){
@@ -53,7 +57,7 @@ list[ASMIelement] toList(SMIelement* smielements) {
 ASMIelement cst2ast(SMIlastElement smi) {
 	switch (smi) {
 	case (SMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
-	case (SMIlastElement)`Engine: <Engine eng>`: return Aengine("<eng>");
+	case (SMIlastElement)`engine: <Engine eng>`: return Aengine("<eng>");
 	case (SMIlastElement)`CPU: <CPU cpu> GB`: return ACPU(toInt("<cpu>"));
 	case (SMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
 	//ADD MAYBE STRING TO BOOLEAN

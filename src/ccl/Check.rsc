@@ -32,11 +32,12 @@ bool checkCloudConfiguration(AProgram ast){
 
 bool checkResource(AResource resource){
 	// TODO MAKE SURE ALL IS IN SAME REGION
-	RegionCheck(resource);
+	hasError = false;
+	hasError = (hasError || RegionCheck(resource));
 	// AND NOT 2 TIMES SAME MI BUT DIFFERENT LABELL
 	
 	// ALL OTHER CHECKS
-	hasError = false;
+	
 		visit(resource.mis) {
 			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi) || comparisonCheck(smi,id,resource.mis));
 			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi) || comparisonCheck(cmi,id,resource.mis));

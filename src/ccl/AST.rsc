@@ -6,9 +6,6 @@ module ccl::AST
  * - make sure there is an almost one-to-one correspondence with the grammar (Syntax.rsc)
  */
  
- public alias AresourceId = str;
- public alias AmiId = str;
- 
  // Datatypes
 data AType(loc src = |tmp:///|)
     = string() | integer() | boolean();
@@ -17,7 +14,7 @@ data AType(loc src = |tmp:///|)
  = Aprogram(AResource resource);
  
  data AResource
- = Aresource(AresourceId id, list[AMI] mis);
+ = Aresource(AId id, list[AMI] mis);
  
  data AMI 
  = Asmi(AId id, ASMI smi) 

@@ -1,19 +1,2 @@
 resource correctcluster {
-	storage correctstorage {
-		region: Seoul,
-		engine: MariaDB,
-		IPV6: yes,
-		storage: SSD of 512 GB,
-		CPU: 2 cores,
-		memory: 1 GB
-	},
-	computing correctcomputing {
-		region: Seoul,
-		OS: Linux,
-		IPV6: yes,
-		storage: SSD of 512 GB,
-		CPU: 8 cores,
-		memory: 8 GB
-	},
-	correctcomputing
 }

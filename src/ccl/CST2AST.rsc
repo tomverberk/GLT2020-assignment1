@@ -5,8 +5,6 @@ import ccl::Syntax;
 
 //import ParseTree;
 import String;
-import List;
-//import Integer;
 //import ccl::Boolean;
 
 /*
@@ -17,18 +15,18 @@ import List;
  */
 
  
-AProgram cst2ast(start[Program] pr) {
-	AProgram program = Aprogram(cst2ast(pr.resource));
-	return program; 
+AProgram cst2ast(Program pr) { 
+	switch(pr) {
+		case (Program)`resource <Resource resource>`: return Aprogram(cst2ast(pr.resource));
+		default: throw "Unhandled expression: <pr>";
+	}
 }
 
 AResource cst2ast(Resource resource) {
 	switch(resource) {
-		case (Resource)`resource <Id id> { <Resource resource>}`: return Aresource("<resource.id>", toList(resource.mis));
-		//AResource Resource = "resource" Aresource("<resource.id>", toList(resource.mis));
+		case (Resource)`<Id id> { <MI* mis> }`: return Aresource(cst2ast(id), toList(mis));
 		default: throw "Unhandled expression: <resource>";
 	}
-	//return resource; 
 }
 
 list[AMI] toList(MI* mis){
@@ -58,11 +56,11 @@ ASMIelement cst2ast(SMIlastElement smi) {
 	switch (smi) {
 	case (SMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
 	case (SMIlastElement)`engine: <Engine eng>`: return Aengine("<eng>");
-	case (SMIlastElement)`CPU: <CPU cpu> GB`: return ACPU(toInt("<cpu>"));
+	case (SMIlastElement)`CPU: <CPU cpu> cores`: return ACPU(toInt("<cpu>"));
 	case (SMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
 	//ADD MAYBE STRING TO BOOLEAN
 	case (SMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
-	case (SMIlastElement)`storage: <Storage sto>`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
+	case (SMIlastElement)`storage: <Storage sto> GB`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
 		default: throw "Unhandled expression: <smi>";
 	}
 }
@@ -83,8 +81,8 @@ ACMIelement cst2ast(CMIlastElement cmi) {
 		case (CMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
 		case (CMIlastElement)`OS: <OS os>`: return AOS("<os>");
 		case (CMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
-		case (CMIlastElement)`storage: <Storage sto>`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
-		case (CMIlastElement)`CPU: <CPU cpu> GB`: return ACPU(toInt("<cpu>"));
+		case (CMIlastElement)`storage: <Storage sto> GB`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
+		case (CMIlastElement)`CPU: <CPU cpu> cores`: return ACPU(toInt("<cpu>"));
 		case (CMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
 		default: throw "Unhandled expression: <cmi>";
 	}

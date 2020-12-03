@@ -10,13 +10,6 @@ lexical String = [A-Za-z0-9\-]+;
 lexical Integer = [0] | [+\-]?[1-9][0-9]*;
 lexical Boolean = "true" | "false";
 
-//layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
-//
-//lexical WhitespaceAndComment 
-//=[\ \t\n\r] 
-//| "%" ![%]+ "%"
-//| "%%" ![%]* $ ;
-
 start syntax Program = "resource" Resource resource;
 
 syntax Resource 
@@ -27,8 +20,8 @@ syntax MI
 | MIlastElement milast !>> ",";
 
 syntax MIlastElement 
-= "storage" Id "{" SMI "}"
-| "computing" Id "{" CMI "}"
+= "storage" Id id "{" SMI smi "}"
+| "computing" Id id "{" CMI smi "}"
 | Id;
 
 syntax SMIelement 

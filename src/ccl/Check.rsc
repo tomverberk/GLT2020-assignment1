@@ -23,7 +23,7 @@ import ccl::AST;
 //Checks all the stuff
 bool checkCloudConfiguration(AProgram ast){
 	hasError = false;
-	visit(ast.resources) {
+	visit(ast.resource) {
 		case Aresource(AresourceId id, list[AMI] mis): 
 			hasError = (hasError || checkResource(Aresource(id, mis)));
 	}
@@ -31,19 +31,155 @@ bool checkCloudConfiguration(AProgram ast){
 }
 
 bool checkResource(AResource resource){
+	// TODO MAKE SURE ALL IS IN SAME REGION
+	RegionCheck(resource);
+	// AND NOT 2 TIMES SAME MI BUT DIFFERENT LABELL
+	
+	// ALL OTHER CHECKS
 	hasError = false;
 		visit(resource.mis) {
-			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi));
-			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi));
+			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi) || comparisonCheck(smi,id,resource.mis));
+			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi) || comparisonCheck(cmi,id,resource.mis));
+			default: ;
 		}
 	return hasError;
 }
 
- //Check MI’s labels must be unique.
-bool checkUniquenessMILabels(AProgram ast){
-	
-	return false;
+bool comparisonCheck(ASMI og_asmi, AId og_id, list[AMI] mis){
+	visit(mis)
+		{
+			case Asmi(AId id, ASMI smi): CompareSMI(og_asmi, smi, og_id, id);
+			case Acmi(AId id, ACMI cmi): IdIsSame(id.name, og_id.name);
+			default: ;
+		}
+	return true;
 }
+
+bool comparisonCheck(ACMI og_acmi, AId og_id, list[AMI] mis){
+	visit(mis)
+		{
+			case Asmi(AId id, ASMI smi): IdIsSame(id.name, og_id.name);
+			case Acmi(AId id, ACMI cmi): CompareCMI(og_acmi, cmi, og_id, id) ;
+			default: ;
+		}
+	return true;
+}
+
+
+bool CompareSMI(ASMI smi_1, ASMI smi_2, AId id_1, AId id_2){
+		// If content is different but name is the same
+		if(!ContentIsSame(smi_1, smi_2) && IdIsSame(id_1.name, id_2.name)){
+			return true;
+		}
+		//If content is the same but id is different
+		if(ContentIsSame(smi_1, smi_2) && IdIsSame(id_1.name, id_2.name)){
+			return true;
+		}
+	return false;	
+}
+
+bool CompareCMI(ACMI cmi_1, ACMI cmi_2, AId id_1, AId id_2){
+		// If content is different but name is the same
+		if(!ContentIsSame(cmi_1, cmi_2) && IdIsSame(id_1.name, id_2.name)){
+			return true;
+		}
+		//If content is the same but id is different
+		if(ContentIsSame(cmi_1, cmi_2) && IdIsSame(id_1.name, id_2.name)){
+			return true;
+		}
+	return false;	
+}
+
+//Returns true if two ACMI have the same elements
+bool ContentIsSame(ACMI cmi_1, ACMI cmi_2){
+	for(element_1 <- cmi_1.elements){
+		matchElement1 = false;
+			for(element_2 <- cmi_2.elements){
+				if(element_1 == element_2){
+					matchElement1 = true;
+				}
+			}
+		if(matchElement1){
+			return false;
+		}
+	}
+	return true;
+}
+bool ContentIsSame(ASMI smi_1, ASMI smi_2){
+	for(element_1 <- smi_1.elements){
+		matchElement1 = false;
+			for(element_2 <- smi_2.elements){
+				if(element_1 == element_2){
+					matchElement1 = true;
+				}
+			}
+		if(matchElement1){
+			return false;
+		}
+	}
+	return true;
+}
+
+
+
+//bool UniqueNessCheck(str id_og_name, list[AMI] mis){
+//	int count = 0;
+//	visit(mis)
+//		{
+//			case Asmi(AId id, ASMI smi): count += checkLabels(id.name, id_og_name);
+//			case Acmi(AId id, ACMI cmi): count += checkLabels(id.name, id_og_name);
+//			default: ;
+//		}
+//	if(count == 1){
+//		return false;
+//	}
+//	return true;
+//}
+
+bool IdIsSame(str id1, str id2){
+	if(id1 == id2){
+		return true;
+	}
+	return false;		
+}
+
+bool RegionCheck(AResource resource){
+	str region;
+	visit(resource.mis) {
+			case Asmi(AId id, ASMI smi): region = getRegion(smi);
+			case Acmi(AId id, ACMI cmi): region = getRegion(cmi);
+			default: ;
+		}
+	visit(resource.mis) {
+			case Asmi(AId id, ASMI smi): if(getRegion(smi) != region) return true;
+			case Acmi(AId id, ACMI cmi): if(getRegion(cmi) != region) return true;	
+			default: ;
+		}
+	return true;
+}
+
+str getRegion(ASMI smi){
+	visit(smi.elements){
+			case Aregion(str reg): return reg;
+			default: ;
+		}
+	return "";
+} 
+
+str getRegion(ACMI cmi){
+	visit(cmi.elements){
+			case Aregion(str reg): return reg;
+			default: ;
+		}
+	return "";
+} 
+
+
+ //Check MI’s labels must be unique.
+//bool checkUniquenessMILabels(AProgram ast){
+//	
+//	return false;
+//}
 
 bool checkMI(ASMI asmi){
 	hasError = false;
@@ -103,11 +239,6 @@ bool memorySizeMax(ACMIelement memory){
 
 //check MI region must be valid. In other words, the MI’s region have to be one of the locations
 //mentioned in Section 3.1.
-//  "California"
-// "Cape Town"
-// "Frankfurt"
-// "Bogota"
-// "Seoul";
 bool MIRegionInCorrect(ASMIelement region){
 	if(region.reg == "California"
 	|| region.reg == "Cape Town"
@@ -133,11 +264,6 @@ bool MIRegionInCorrect(ACMIelement region){
 //check DB engine must be valid. In other words, the name of the DB engine have to be one of
 //the engines mentioned in Section 3.1.
 
-// "MySQL"
-// "PostgreSQL"
-// "MariaDB"
-// "Oracle"
-// "SQL Server";
 bool DBEngineInValid(ASMIelement engine){
 	if(engine.eng == "MySQL"
 	|| engine.eng == "PostgreSQL" 
@@ -159,10 +285,6 @@ bool MIInResourceInSameRegion(AProgram ast){
 
 //Check OS resourceValid In other words the name of the 
 //OS has to be one of the OS mentioned in section 3.1
-// "Linux"
-// "Red Hat enterprises"
-// "Ubuntu Server"
-// "Windows Server 2019"
 
 bool OSResourceInCorrect(ACMIelement os){
 	if(os.os == "Linux" 
@@ -177,11 +299,11 @@ bool OSResourceInCorrect(ACMIelement os){
 
 // check Do not accept duplicate MIs with the exact same connfguration and different labels.
 // TODO
-bool sameMIDifferentLabel(AProgram ast){
-
-
-	return true; 
-}
+//bool sameMIDifferentLabel(AProgram ast){
+//
+//
+//	return true; 
+//}
 
 //check The language supports Booleans, integers and string types.
 // TODO to be fair idk of dit moet of niet

@@ -54,13 +54,13 @@ list[ASMIelement] toList(SMIelement* smielements) {
 
 ASMIelement cst2ast(SMIlastElement smi) {
 	switch (smi) {
-	case (SMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
-	case (SMIlastElement)`engine: <Engine eng>`: return Aengine("<eng>");
-	case (SMIlastElement)`CPU: <CPU cpu> cores`: return ACPU(toInt("<cpu>"));
-	case (SMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
+	case (SMIlastElement)`region: <Region reg>`: return ASregion("<reg>");
+	case (SMIlastElement)`engine: <Engine eng>`: return ASengine("<eng>");
+	case (SMIlastElement)`CPU: <CPU cpu> cores`: return ASCPU(toInt("<cpu>"));
+	case (SMIlastElement)`memory: <Memory mem> GB`: return ASmemory(toInt("<mem>"));
 	//ADD MAYBE STRING TO BOOLEAN
-	case (SMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
-	case (SMIlastElement)`storage: <Storage sto> GB`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
+	case (SMIlastElement)`IPV6: <IPV6 ipv6>`:return ASIPV6("<ipv6>");
+	case (SMIlastElement)`storage: <Storage sto> GB`:return ASstorage("<sto.val1>", toInt("<sto.val2>"));
 		default: throw "Unhandled expression: <smi>";
 	}
 }
@@ -78,12 +78,12 @@ list[ACMIelement] toList(CMIelement* cmielements) {
 
 ACMIelement cst2ast(CMIlastElement cmi) {
 	switch (cmi) {
-		case (CMIlastElement)`region: <Region reg>`: return Aregion("<reg>");
-		case (CMIlastElement)`OS: <OS os>`: return AOS("<os>");
-		case (CMIlastElement)`IPV6: <IPV6 ipv6> GB`:return AIPV6("<ipv6>");
-		case (CMIlastElement)`storage: <Storage sto> GB`:return Astorage("<sto.val1>", toInt("<sto.val2>"));
-		case (CMIlastElement)`CPU: <CPU cpu> cores`: return ACPU(toInt("<cpu>"));
-		case (CMIlastElement)`memory: <Memory mem> GB`: return Amemory(toInt("<mem>"));
+		case (CMIlastElement)`region: <Region reg>`: return ACregion("<reg>");
+		case (CMIlastElement)`OS: <OS os>`: return ACOS("<os>");
+		case (CMIlastElement)`IPV6: <IPV6 ipv6>`:return ACIPV6("<ipv6>");
+		case (CMIlastElement)`storage: <Storage sto> GB`:return ACstorage("<sto.val1>", toInt("<sto.val2>"));
+		case (CMIlastElement)`CPU: <CPU cpu> cores`: return ACCPU(toInt("<cpu>"));
+		case (CMIlastElement)`memory: <Memory mem> GB`: return ACmemory(toInt("<mem>"));
 		default: throw "Unhandled expression: <cmi>";
 	}
 }

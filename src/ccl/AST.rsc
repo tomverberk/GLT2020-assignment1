@@ -24,24 +24,24 @@ data AType(loc src = |tmp:///|)
  data ASMI = Asmi(list[ASMIelement] elements);
  
  data ASMIelement 
- = Aregion(str reg)
- | Aengine(str eng)
- | ACPU(int cpu)
- | Amemory(int size)
- | AIPV6(str ipv6)
- | Astorage(str kind, int size);
+ = ASregion(str reg) 
+ | ASengine(str eng)
+ | ASCPU(int cpu)
+ | ASmemory(int size)
+ | ASIPV6(str ipv6)
+ | ASstorage(str kind, int size);
 
  
  data ACMI 
  = Acmi(list[ACMIelement] elements);
  
  data ACMIelement 
- = Aregion(str reg)
- | AOS(str os)
- | AIPV6(str ipv6)
- | Astorage(str kind, int size)
- | ACPU(int size)
- | Amemory(int size);
+ = ACregion(str reg)
+ | ACOS(str os)
+ | ACIPV6(str ipv6)
+ | ACstorage(str kind, int size)
+ | ACCPU(int size)
+ | ACmemory(int size);
  
  data AId
 = Aid(str name);

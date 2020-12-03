@@ -1,4 +1,4 @@
-resource correctcluster {
+resource correct_cluster {
 	storage correctstorage {
 		region: Seoul,
 		engine: MariaDB,
@@ -7,12 +7,13 @@ resource correctcluster {
 		CPU: 2 cores,
 		memory: 1 GB
 	},
-	computing correctcomputing {
+	computing correct_computing {
 		region: Seoul,
 		OS: Linux,
 		IPV6: yes,
 		storage: SSD of 512 GB,
 		CPU: 8 cores,
 		memory: 8 GB
-	}
+	},
+	correct_computing
 }

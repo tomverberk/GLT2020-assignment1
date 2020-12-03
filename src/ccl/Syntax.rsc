@@ -1,5 +1,7 @@
 module ccl::Syntax
 
+extend lang::std::Id;
+extend lang::std::Layout;
 /*
  * Define concrete syntax for CCL. The language's specification is available in the PDF (Section 3)
 */
@@ -8,14 +10,12 @@ lexical String = [A-Za-z0-9\-]+;
 lexical Integer = [0] | [+\-]?[1-9][0-9]*;
 lexical Boolean = "true" | "false";
 
-layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
-
-lexical WhitespaceAndComment 
-=[\ \t\n\r] 
-| "%" ![%]+ "%"
-| "%%" ![%]* $ ;
-
-lexical Id = [A-Za-z0-9\-]+;
+//layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
+//
+//lexical WhitespaceAndComment 
+//=[\ \t\n\r] 
+//| "%" ![%]+ "%"
+//| "%%" ![%]* $ ;
 
 start syntax Program = "resource" Resource resource;
 
@@ -39,12 +39,12 @@ syntax SMI
 = SMIelement* smiElements;
 
 syntax SMIlastElement
-= "region:" Region reg
-| "engine:" Engine eng
-| "CPU:" CPU "cores" cpu
-| "memory:" Memory "GB" mem
-| "IPV6:" IPV6 ipv6
-| "storage:" Storage "GB" sto;
+= "region"":" Region reg
+| "engine"":" Engine eng
+| "CPU"":" CPU "cores" cpu
+| "memory"":" Memory "GB" mem
+| "IPV6"":" IPV6 ipv6
+| "storage"":" Storage "GB" sto;
 
 syntax CMI 
 = CMIelement* cmiElements;
@@ -54,12 +54,12 @@ syntax CMIelement
 | CMIlastElement element !>> ",";
 
 syntax CMIlastElement
-= "region:" Region reg
-| "OS:" OS os
-| "IPV6:" IPV6 ipv6
-| "storage:" Storage "GB" sto
-| "CPU:" CPU "cores" cpu
-| "memory:" Memory "GB" mem;
+= "region"":" Region reg
+| "OS"":" OS os
+| "IPV6"":" IPV6 ipv6
+| "storage"":" Storage "GB" sto
+| "CPU"":" CPU "cores" cpu
+| "memory"":" Memory "GB" mem;
 
 syntax Region 
 = String;

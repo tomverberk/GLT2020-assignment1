@@ -1,5 +1,7 @@
 module ccl::Syntax
 
+extend lang::std::Id;
+extend lang::std::Layout;
 /*
  * Define concrete syntax for CCL. The language's specification is available in the PDF (Section 3)
 */
@@ -8,14 +10,12 @@ lexical String = [A-Za-z0-9\-]+;
 lexical Integer = [0] | [+\-]?[1-9][0-9]*;
 lexical Boolean = "true" | "false";
 
-layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
-
-lexical WhitespaceAndComment 
-=[\ \t\n\r] 
-| "%" ![%]+ "%"
-| "%%" ![%]* $ ;
-
-lexical Id = [A-Za-z0-9\-]+;
+//layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
+//
+//lexical WhitespaceAndComment 
+//=[\ \t\n\r] 
+//| "%" ![%]+ "%"
+//| "%%" ![%]* $ ;
 
 start syntax Program = "resource" Resource resource;
 

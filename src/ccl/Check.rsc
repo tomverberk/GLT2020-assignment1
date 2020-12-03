@@ -23,7 +23,7 @@ import ccl::AST;
 //Checks all the stuff
 bool checkCloudConfiguration(AProgram ast){
 	hasError = false;
-	visit(ast.resources) {
+	visit(ast.resource) {
 		case Aresource(AresourceId id, list[AMI] mis): 
 			hasError = (hasError || checkResource(Aresource(id, mis)));
 	}

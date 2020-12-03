@@ -1,7 +1,10 @@
 module ccl::Plugin
 
+import ParseTree;
 import util::IDE;
+import ccl::Check;
 import ccl::Parser;
+import ccl::CST2AST;
 
 /*
 * This function is defined to test the functionality of the whole assignment. It receives a file path as a parameter and returns true if the program satisfies the specification or false otherwise.

@@ -44,9 +44,20 @@ bool checkResource(AResource resource){
 		visit(resource.mis) {
 			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi) || comparisonCheck(smi,id,resource.mis) );
 			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi) || comparisonCheck(cmi,id,resource.mis) );
+			case Ami(AId id): hasError = (hasError || !idExists(id, resource.mis));
 			default: ;
 		}
 	return hasError;
+}
+
+bool idExists(AId og_id, list[AMI] mis){
+	visit(mis)
+		{ 
+			case Asmi(AId id, ASMI smi): if(IdIsSame(og_id.name, id.name)) return true;
+			case Acmi(AId id, ACMI cmi): if(IdIsSame(og_id.name, id.name)) return true;
+			default:;
+		}
+	return false;
 }
 
 // Checking a storage MI

@@ -35,7 +35,6 @@ bool checkCloudConfiguration(AProgram ast){
 
 
 bool checkResource(AResource resource){
-	// TODO MAKE SURE ALL IS IN SAME REGION
 	hasError = false;
 	// Check if all regions are the same of all the MI's
 	hasError = (hasError || RegionCheck(resource));
@@ -44,6 +43,7 @@ bool checkResource(AResource resource){
 		visit(resource.mis) {
 			case Asmi(AId id, ASMI smi): hasError = (hasError || checkMI(smi) || comparisonCheck(smi,id,resource.mis) );
 			case Acmi(AId id, ACMI cmi): hasError = (hasError || checkMI(cmi) || comparisonCheck(cmi,id,resource.mis) );
+			//If there is only an idea make sure that there is also an ACMI or ASMI that it will link to.
 			case Ami(AId id): hasError = (hasError || !idExists(id, resource.mis));
 			default: ;
 		}

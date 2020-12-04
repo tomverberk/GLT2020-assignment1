@@ -274,9 +274,10 @@ bool memorySizeMax(ACMIelement memory){
 
 //check MI region must be valid. In other words, the MI’s region have to be one of the locations (Storage MI)
 //mentioned in Section 3.1.
+// We assume that Regions are inputted with _ instead of spaces
 bool MIRegionInCorrect(ASMIelement region){
 	if(region.reg == "California"
-	|| region.reg == "Cape Town"
+	|| region.reg == "Cape_Town"
 	|| region.reg == "Frankfurt"
 	|| region.reg == "Bogota"
 	|| region.reg == "Seoul"){
@@ -287,9 +288,10 @@ bool MIRegionInCorrect(ASMIelement region){
 
 //check MI region must be valid. In other words, the MI’s region have to be one of the locations (computing MI)
 //mentioned in Section 3.1.
+// We assume that Regions are inputted with _ instead of spaces
 bool MIRegionInCorrect(ACMIelement region){
 	if(region.reg == "California"
-	|| region.reg == "Cape Town"
+	|| region.reg == "Cape_Town"
 	|| region.reg == "Frankfurt"
 	|| region.reg == "Bogota"
 	|| region.reg == "Seoul"){
@@ -300,33 +302,26 @@ bool MIRegionInCorrect(ACMIelement region){
 
 //check DB engine must be valid. In other words, the name of the DB engine have to be one of
 //the engines mentioned in Section 3.1.
+// We assume that DB engines are inputted with _ instead of spaces
 bool DBEngineInValid(ASMIelement engine){
 	if(engine.eng == "MySQL"
 	|| engine.eng == "PostgreSQL" 
 	|| engine.eng == "MariaDB" 
 	|| engine.eng == "Oracle"
-	|| engine.eng == "SQL Server"){
+	|| engine.eng == "SQL_Server"){
 		return false;
 		}
 	return true;
 }
 
 //Check OS resourceValid In other words the name of the 
-//OS has to be one of the OS mentioned in section 3.1
+// We assume that OS systems are inputted with _ instead of spaces
 bool OSResourceInCorrect(ACMIelement os){
 	if(os.os == "Linux" 
-	|| os.os == "Red Hat Enterprise" 
-	|| os.os == "Ubuntu Server" 
-	|| os.os == "Windows Server 2019"){
+	|| os.os == "Red_Hat_Enterprise" 
+	|| os.os == "Ubuntu_Server" 
+	|| os.os == "Windows_Server_2019"){
 		return false;
 		}
-	return true;
-}
-
-//check The language supports Booleans, integers and string types.
-// TODO to be fair idk of dit moet of niet
-bool support(AProgram ast){
-
-
 	return true;
 }

@@ -33,7 +33,7 @@ resource allPossibleValuescheck {
 	},
 	storage storage5 {
 		region: Frankfurt,
-		engine: SQL Server,
+		engine: SQL_Server,
 		CPU: 4 cores,
 		memory: 8 GB,
 		IPV6: yes,
@@ -49,7 +49,7 @@ resource allPossibleValuescheck {
 	},
 	computing computing2 {
 		region: Frankfurt,
-		OS: Red Hat Enterprise,
+		OS: Red_Hat_Enterprise,
 		IPV6: yes,		
 		storage: SSD of 1 GB,
 		CPU: 4 cores,
@@ -57,7 +57,7 @@ resource allPossibleValuescheck {
 	},
 	computing computing3 {
 		region: Frankfurt,
-		OS: Ubuntu Server,
+		OS: Ubuntu_Server,
 		IPV6: yes,		
 		storage: SSD of 1 GB,
 		CPU: 4 cores,
@@ -65,7 +65,7 @@ resource allPossibleValuescheck {
 	},
 	computing computing4 {
 		region: Frankfurt,
-		OS: Windows Server 2019,
+		OS: Windows_Server_2019,
 		IPV6: yes,		
 		storage: SSD of 1 GB,
 		CPU: 4 cores,

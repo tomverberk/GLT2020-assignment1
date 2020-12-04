@@ -6,7 +6,7 @@ extend lang::std::Layout;
  * Define concrete syntax for CCL. The language's specification is available in the PDF (Section 3)
 */
 
-lexical String = [A-Za-z0-9\- ]+;
+lexical String = [A-Za-z0-9_\-]+;
 lexical Integer = [0] | [+\-]?[1-9][0-9]*;
 lexical Boolean = "true" | "false";
 

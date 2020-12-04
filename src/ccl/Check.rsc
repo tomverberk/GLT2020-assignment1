@@ -200,7 +200,7 @@ bool checkMI(ASMI asmi){
 	visit(asmi.elements) {
 		case ASregion(str reg): hasError = (hasError || MIRegionInCorrect(ASregion(reg)));
 		case ASengine(str eng): hasError = (hasError || DBEngineInValid(ASengine(eng)));
-		case ASCPU(int cpu): ;
+		case ASCPU(int size): hasError = (hasError || cpuSize(ASCPU(size)));
 		case ASmemory(int size): hasError = (hasError || memorySizeMax(ASmemory(size)));
 		case ASIPV6(str ivp6): ;
 		case ASstorage(str kind, int size): hasError = (hasError || storageSizeMax(ASstorage(kind, size)));
@@ -217,16 +217,32 @@ bool checkMI(ACMI acmi){
 		case ACOS(str os): hasError = (hasError || OSResourceInCorrect(ACOS(os)));
 		case ACIPV6(str ivp6): ;
 		case ACstorage(str kind, int size): hasError = (hasError || storageSizeMax(ACstorage(kind, size)));
-		case ACCPU(int cpu): ;
+		case ACCPU(int size): hasError = (hasError || cpuSize(ACCPU(size)));
 		case ACmemory(int size): hasError = (hasError || memorySizeMax(ACmemory(size)));
 		default:;
 		}
 	return hasError;
 }
 
+// Check if cpu size is greater than 0
+bool cpuSize(ASMIelement cpu) {
+	if(cpu.size > 0) {
+		return false;
+	}
+	return true;
+}
+
+// Check if cpu size is greater than 0
+bool cpuSize(ACMIelement cpu) {
+	if(cpu.size > 0) {
+		return false;
+	}
+	return true;
+}
+
 // Check The storage size must be greater than zero but less than or equal to 1000 GB. (Storage MI)
 bool storageSizeMax(ASMIelement storage){
-	if(storage.size <= 1000 && storage.size >= 0){
+	if(storage.size <= 1000 && storage.size > 0){
 		return false;
 	}
 	return true;
@@ -234,7 +250,7 @@ bool storageSizeMax(ASMIelement storage){
 
 // Check The storage size must be greater than zero but less than or equal to 1000 GB. (Computing MI)
 bool storageSizeMax(ACMIelement storage){
-	if(storage.size <= 1000 && storage.size >= 0){
+	if(storage.size <= 1000 && storage.size > 0){
 		return false;
 	}
 	return true;
@@ -242,7 +258,7 @@ bool storageSizeMax(ACMIelement storage){
 
 // Check The maximum memory size is greater than zero and but less or equal to 64 gb
 bool memorySizeMax(ASMIelement memory){
-	if(memory.size <= 64 && memory.size >= 0){
+	if(memory.size <= 64 && memory.size > 0){
 		return false;
 	}
 	return true;
@@ -250,7 +266,7 @@ bool memorySizeMax(ASMIelement memory){
 
 // Check The maximum memory size is greater than zero and but less or equal to 64 gb
 bool memorySizeMax(ACMIelement memory){
-	if(memory.size <= 64 && memory.size >= 0){
+	if(memory.size <= 64 && memory.size > 0){
 		return false;
 	}
 	return true;

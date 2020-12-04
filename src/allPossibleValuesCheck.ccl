@@ -1,0 +1,74 @@
+resource allPossibleValuescheck {
+	storage storage1 {
+		region: Frankfurt,
+		engine: MySQL,
+		CPU: 1 cores,
+		memory: 8 GB,
+		IPV6: yes,
+		storage: SSD of 256 GB
+	},
+	storage storage2 {
+		region: Frankfurt,
+		engine: PostgreSQL,
+		CPU: 1 cores,
+		memory: 1 GB,
+		IPV6: no,
+		storage: BLS of 1000 GB
+	},
+	storage storage3 {
+		region: Frankfurt,
+		engine: MariaDB,
+		CPU: 2 cores,
+		memory: 64 GB,
+		IPV6: yes,
+		storage: BLS of 1 GB
+	},
+	storage storage4 {
+		region: Frankfurt,
+		engine: Oracle,
+		CPU: 3 cores,
+		memory: 8 GB,
+		IPV6: no,
+		storage: SSD of 1000 GB
+	},
+	storage storage5 {
+		region: Frankfurt,
+		engine: SQL Server,
+		CPU: 4 cores,
+		memory: 8 GB,
+		IPV6: yes,
+		storage: SSD of 1 GB
+	},
+	computing computing1 {
+		region: Frankfurt,
+		OS: Linux,
+		IPV6: yes,		
+		storage: SSD of 1 GB,
+		CPU: 4 cores,
+		memory: 8 GB
+	},
+	computing computing2 {
+		region: Frankfurt,
+		OS: Red Hat Enterprise,
+		IPV6: yes,		
+		storage: SSD of 1 GB,
+		CPU: 4 cores,
+		memory: 8 GB
+	},
+	computing computing3 {
+		region: Frankfurt,
+		OS: Ubuntu Server,
+		IPV6: yes,		
+		storage: SSD of 1 GB,
+		CPU: 4 cores,
+		memory: 8 GB
+	},
+	computing computing4 {
+		region: Frankfurt,
+		OS: Windows Server 2019,
+		IPV6: yes,		
+		storage: SSD of 1 GB,
+		CPU: 4 cores,
+		memory: 8 GB
+	}
+}

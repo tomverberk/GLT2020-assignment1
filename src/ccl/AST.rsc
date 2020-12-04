@@ -31,7 +31,7 @@ data AType(loc src = |tmp:///|)
  data ASMIelement 
  = ASregion(str reg) 
  | ASengine(str eng)
- | ASCPU(int cpu)
+ | ASCPU(int size)
  | ASmemory(int size)
  | ASIPV6(str ipv6)
  | ASstorage(str kind, int size);

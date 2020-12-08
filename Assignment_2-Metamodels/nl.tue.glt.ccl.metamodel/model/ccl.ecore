@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ccl" nsURI="http://glt.tue.nl/ccl" nsPrefix="ccl">
+  <eClassifiers xsi:type="ecore:EClass" name="CloudResources">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resources" upperBound="-1"
+        eType="#//Resource" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Resource">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="machineImages" upperBound="-1"
+        eType="#//MachineImage" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MachineImage" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="region" lowerBound="1"
+        eType="#//Region"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vcpu" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="memory" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storageSize" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storageType" lowerBound="1"
+        eType="#//StorageType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComputingImage" eSuperTypes="#//MachineImage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="os" lowerBound="1" eType="#//OperatingSystem"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StorageImage" eSuperTypes="#//MachineImage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dbEngine" lowerBound="1"
+        eType="#//DBEngine"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Region">
+    <eLiterals name="CALIFORNIA"/>
+    <eLiterals name="CAPETOWN" value="1"/>
+    <eLiterals name="FRANKFURT" value="2"/>
+    <eLiterals name="BOGOTA" value="3"/>
+    <eLiterals name="SEOUL" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="OperatingSystem">
+    <eLiterals name="LINUX"/>
+    <eLiterals name="REDHAT" value="1"/>
+    <eLiterals name="UBUNTU" value="2"/>
+    <eLiterals name="WINDOWS" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="StorageType">
+    <eLiterals name="BLS"/>
+    <eLiterals name="SSD" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="DBEngine">
+    <eLiterals name="MYSQL"/>
+    <eLiterals name="POSTGRESQL" value="1"/>
+    <eLiterals name="MARIADB" value="2"/>
+    <eLiterals name="ORACLE" value="3"/>
+    <eLiterals name="SQLSERVER" value="4"/>
+  </eClassifiers>
+</ecore:EPackage>

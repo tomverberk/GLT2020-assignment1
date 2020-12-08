@@ -1,10 +1,10 @@
 module ccl::Plugin
 
-import ParseTree;
 import util::IDE;
-import ccl::Check;
 import ccl::Parser;
+import ccl::Check;
 import ccl::CST2AST;
+import ParseTree;
 
 /*
 * This function is defined to test the functionality of the whole assignment. It receives a file path as a parameter and returns true if the program satisfies the specification or false otherwise.
@@ -13,12 +13,15 @@ import ccl::CST2AST;
 */
 bool checkWellformedness(loc fil) {
 	// Parsing
+	
+	//Resource is actually a program :)
 	&T resource = parserCCL(fil);
 	// Transform the parse tree into an abstract syntax tree
 	&T ast = cst2ast(resource);
 	// Check the well-formedness of the program
 	return checkCloudConfiguration(ast);
 }
+
 
 /*
 * This is the main function of the project. This function enables the editor's syntax highlighting.

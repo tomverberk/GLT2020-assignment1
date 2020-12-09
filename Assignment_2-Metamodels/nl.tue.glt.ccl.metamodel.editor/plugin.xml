@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated ccl -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="nl.tue.glt.ccl.metamodel.ccl.presentation.CclModelWizardID"
+            name="%_UI_CclModelWizard_label"
+            class="nl.tue.glt.ccl.metamodel.ccl.presentation.CclModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/CclModelFile.gif">
+         <description>%_UI_CclModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated ccl -->
+      <editor
+            id="nl.tue.glt.ccl.metamodel.ccl.presentation.CclEditorID"
+            name="%_UI_CclEditor_label"
+            icon="icons/full/obj16/CclModelFile.gif"
+            extensions="ccl"
+            class="nl.tue.glt.ccl.metamodel.ccl.presentation.CclEditor"
+            contributorClass="nl.tue.glt.ccl.metamodel.ccl.presentation.CclActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

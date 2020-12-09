@@ -1,0 +1,83 @@
+modeltype CCL uses 'http://glt.tue.nl/ccl';
+modeltype GRAPH uses 'http://glt.tue.nl/graph';
+
+
+transformation NewTransformation(in ccl : CCL, out GRAPH);
+
+main() {
+	ccl.rootObjects()[CCL::CloudResources]->map ccl2graph();
+}
+
+mapping CCL::CloudResources::ccl2graph() : GRAPH::Graph {
+	nodes := self.resources->map resource2boxNode()->union(getResources()-> map resource2boxNode())
+}
+
+/*
+For each cloud resource (containing a collection of machine images), a box node shall be
+created labeled with the cloud resource label. There shall be outgoing solid edges from this
+node to the nodes created from the machine images contained in the cloud resource
+*/
+mapping CCL::Resource::resource2boxNode() : GRAPH::Node {
+	
+}
+
+/*
+For each region in the source model, a node in the result graph shall be created with label
+the name of the region. Recall that each machine image is associated to one region. Region
+nodes have box shape
+
+Each region node is connected to two other nodes (box-shaped): one labeled ‘Storage’ and
+one labeled ‘Computing’. The edges from a region node to these nodes are of solid style.
+These two nodes will further be connected to nodes that represent machine images of the
+given kind located in the region
+
+*/
+mapping CCL::Region::region2boxNode() : GRAPH::Node {
+	
+}
+
+/*
+For each machine image in the source model, a box node is created labeled with the
+machine image label. There is solid edge from the node that indicates the kind of the image
+to the node created from the image (see the previous bullet item)
+*/
+mapping CCL::MachineImage::machineImage2boxNode() : GRAPH::Node {
+	
+}
+
+/*
+For each node created from a storage image, there exist dashed outgoing edges to oval
+nodes that show (as labels) the type of the database engine and the size of the storage
+*/
+mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
+	
+}
+
+/*
+For each node created from a computing image, there exist dashed outgoing edges to oval
+nodes that show (as labels) the operating system of the image, the number of processor
+cores, and the memory size
+*/
+mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
+	
+}
+
+//#######################################
+// QUERIES
+//#######################################
+
+query getResources() : Sequence(CCL::Resource) {
+	return CCL::Resource.allInstances()->asSequence()
+}
+
+query getMachineImages() : Sequence(CCL::MachineImage) {
+	return CCL::MachineImage.allInstances()->asSequence()
+}
+
+query getComputingImage() : Sequence(CCL::ComputingImage) {
+	return CCL::ComputingImage.allInstances()->asSequence()
+}
+
+query getStorageImage() : Sequence(CCL::StorageImage) {
+	return CCL::StorageImage.allInstances()->asSequence()
+}

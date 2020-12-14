@@ -9,7 +9,7 @@ main() {
 }
 
 mapping CCL::CloudResources::ccl2graph() : GRAPH::Graph {
-	nodes := self.resources -> map resource2boxNode()
+	nodes := self.resources -> map resource2boxNode();
 }
 
 /*
@@ -18,8 +18,8 @@ created labeled with the cloud resource label. There shall be outgoing solid edg
 node to the nodes created from the machine images contained in the cloud resource
 */
 mapping CCL::Resource::resource2boxNode() : GRAPH::Node {
-	shape := a.Shape = BOX
-	label := a.label
+	shape := GRAPH::Shape::BOX;
+	label := self.label;
 }
 
 /*
@@ -27,8 +27,8 @@ For each region in the source model, a node in the result graph shall be created
 the name of the region. Recall that each machine image is associated to one region. Region
 nodes have box shape
 
-Each region node is connected to two other nodes (box-shaped): one labeled ‘Storage’ and
-one labeled ‘Computing’. The edges from a region node to these nodes are of solid style.
+Each region node is connected to two other nodes (box-shaped): one labeled â€˜Storageâ€™ and
+one labeled â€˜Computingâ€™. The edges from a region node to these nodes are of solid style.
 These two nodes will further be connected to nodes that represent machine images of the
 given kind located in the region
 
@@ -41,18 +41,36 @@ to the node created from the image (see the previous bullet item)
 */
 
 mapping CCL::MachineImage::machineImage2boxNode() : GRAPH::Node
-disjuncts CCL::StorageImage::storageattr2nodes, CCL::ComputingImage::computingattr2nodes{
-	Node := self.Region -> map region2boxNode()
-	Node := self.vcpu -> map vcpu2Node()
-}
+disjuncts CCL::StorageImage::storageattr2nodes, CCL::ComputingImage::computingattr2nodes{}
 
+	
 
 /*
 For each node created from a storage image, there exist dashed outgoing edges to oval
 nodes that show (as labels) the type of the database engine and the size of the storage
 */
 mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
+	label := self.label.toString();
+	shape := GRAPH::Shape::BOX;
+	object GRAPH::Node{label := "Storage"; shape:= GRAPH::Shape::BOX };
+	object GRAPH::Node{label := self.dbEngine.toString(); shape:= GRAPH::Shape::OVAL };
+	object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
+	self.region -> map region2boxNode();
+}
 
+/*
+For each node created from a computing image, there exist dashed outgoing edges to oval
+nodes that show (as labels) the operating system of the image, the number of processor
+cores, and the memory size
+*/
+mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
+	label := self.label.toString();
+	shape := GRAPH::Shape::BOX;
+	object GRAPH::Node{label := "Computing"; shape:= GRAPH::Shape::BOX };
+	object GRAPH::Node{label := self.vcpu.toString(); shape:= GRAPH::Shape::OVAL };
+	object GRAPH::Node{label := self.os.toString() + " cores"; shape:= GRAPH::Shape::OVAL };
+	object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
+	self.region -> map region2boxNode();
 }
 
 mapping CCL::MachineImage::vcpu2Node() : GRAPH::Node {
@@ -79,18 +97,13 @@ mapping CCL::Region::region2boxNode() : GRAPH::Node {
 //	region := 
 }
 
-/*
-For each node created from a computing image, there exist dashed outgoing edges to oval
-nodes that show (as labels) the operating system of the image, the number of processor
-cores, and the memory size
-*/
-mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
-	
-}
+
 
 //#######################################
 // QUERIES
 //#######################################
+
+
 
 query getResources() : Sequence(CCL::Resource) {
 	return CCL::Resource.allInstances()->asSequence()

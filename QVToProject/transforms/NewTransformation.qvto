@@ -88,8 +88,14 @@ cores, and the memory size
 mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
 	label := self.label.toString();
 	shape := GRAPH::Shape::BOX;
-	object GRAPH::Node{label := "Computing"; shape:= GRAPH::Shape::BOX };
+	//object GRAPH::Node{label := "Computing"; shape:= GRAPH::Shape::BOX };
+	//var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
 	
+	var typeOfNode := self.label -> map Type2boxNode();
+	
+	//Construct an edge from the type of node to this node
+	
+	//typeOfNode += typeEdge;
 	
 	var cpuNode := object GRAPH::Node{label := self.vcpu.toString(); shape:= GRAPH::Shape::OVAL};
 	var cpuEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= cpuNode;};
@@ -103,7 +109,17 @@ mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
 	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= memoryNode;};
 	outEdges += memoryEdge;
 	
+	
+	
 	self.region -> map region2boxNode();
+}
+
+mapping String::Type2boxNode(): GRAPH::Node{
+	label := "COMPUTING";
+	shape := GRAPH::Shape::BOX;
+	var machineLabel = self.getMachineImageFromLabel();
+	var typeEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= machineLabel};
+	outEdges += typeEdge;
 }
 
 mapping CCL::MachineImage::vcpu2Node() : GRAPH::Node {
@@ -127,7 +143,9 @@ mapping CCL::ComputingImage::os2Node() : GRAPH::Node {
 }
 
 mapping CCL::Region::region2boxNode() : GRAPH::Node {
-//	region := 
+	label := "I AM A REGION";
+	shape := GRAPH::Shape::BOX;
+//	outEdges := 
 }
 
 mapping CCL::StorageImage::vcpu2boxNode() : GRAPH::Node {
@@ -148,8 +166,22 @@ query getResources() : Sequence(CCL::Resource) {
 	return CCL::Resource.allInstances()->asSequence()
 }
 
+query String::getMachineImageFromLabel(): GRAPH::Node {
+	var machineImageNodes = getNodes();
+	machineImageNodes -> forEach(machineImageNode){
+		if(machineImageNode.label = self){
+			return machineImageNode;
+		}
+	};
+	return null;
+}
+
 query getMachineImages() : Sequence(CCL::MachineImage) {
 	return CCL::MachineImage.allInstances()->asSequence()
+}
+
+query getNodes(): Sequence(GRAPH::Node){
+	return GRAPH::Node.allInstances()->asSequence();
 }
 
 query getComputingImage() : Sequence(CCL::ComputingImage) {

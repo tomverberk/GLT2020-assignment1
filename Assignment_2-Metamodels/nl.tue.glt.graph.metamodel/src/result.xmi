@@ -11,11 +11,13 @@
     <outEdges style="DOTTED" target="/4"/>
     <outEdges style="DOTTED" target="/5"/>
   </graph:Node>
-  <graph:Node label="Computing"/>
+  <graph:Node label="COMPUTING">
+    <outEdges style="DOTTED" target="/1"/>
+  </graph:Node>
   <graph:Node label="10" shape="OVAL"/>
   <graph:Node label="LINUX cores" shape="OVAL"/>
   <graph:Node label="20 GB" shape="OVAL"/>
-  <graph:Node/>
+  <graph:Node label="I AM A REGION"/>
   <graph:Node label="StorageMachineImage">
     <outEdges style="DOTTED" target="/9"/>
     <outEdges style="DOTTED" target="/10"/>

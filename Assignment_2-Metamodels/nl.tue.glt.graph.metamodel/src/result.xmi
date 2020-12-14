@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:graph="http://glt.tue.nl/graph" xsi:schemaLocation="http://glt.tue.nl/graph ../model/graph.ecore">
+  <graph:Graph>
+    <nodes label="resourceLabel">
+      <outEdges target="/1"/>
+      <outEdges target="/7"/>
+    </nodes>
+  </graph:Graph>
+  <graph:Node label="ComputingMachineImage">
+    <outEdges style="DOTTED" target="/3"/>
+    <outEdges style="DOTTED" target="/4"/>
+    <outEdges style="DOTTED" target="/5"/>
+  </graph:Node>
+  <graph:Node label="Computing"/>
+  <graph:Node label="10" shape="OVAL"/>
+  <graph:Node label="LINUX cores" shape="OVAL"/>
+  <graph:Node label="20 GB" shape="OVAL"/>
+  <graph:Node/>
+  <graph:Node label="StorageMachineImage">
+    <outEdges style="DOTTED" target="/9"/>
+    <outEdges style="DOTTED" target="/10"/>
+  </graph:Node>
+  <graph:Node label="Storage">
+    <outEdges style="DOTTED" target="/7"/>
+  </graph:Node>
+  <graph:Node label="MYSQL" shape="OVAL"/>
+  <graph:Node label="25 GB" shape="OVAL"/>
+</xmi:XMI>

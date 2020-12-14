@@ -9,7 +9,7 @@ main() {
 }
 
 mapping CCL::CloudResources::ccl2graph() : GRAPH::Graph {
-	nodes := self.resources -> map resource2boxNode()
+	nodes := self.resources -> map resource2boxNode();
 }
 
 /*
@@ -18,8 +18,15 @@ created labeled with the cloud resource label. There shall be outgoing solid edg
 node to the nodes created from the machine images contained in the cloud resource
 */
 mapping CCL::Resource::resource2boxNode() : GRAPH::Node {
-	shape := a.Shape = BOX
-	label := a.label
+	shape := GRAPH::Shape::BOX;
+	label := self.label;
+	var machineImages := self.machineImages -> map machineImage2boxNode();
+	//make edges from the resource to all the machine images
+	machineImages -> forEach(machineImage){
+		var toAddEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= machineImage};
+		outEdges += toAddEdge;
+	}
+	
 }
 
 /*
@@ -42,17 +49,61 @@ to the node created from the image (see the previous bullet item)
 
 mapping CCL::MachineImage::machineImage2boxNode() : GRAPH::Node
 disjuncts CCL::StorageImage::storageattr2nodes, CCL::ComputingImage::computingattr2nodes{
-	Node := self.Region -> map region2boxNode()
-	Node := self.vcpu -> map vcpu2Node()
 }
 
+	
 
 /*
 For each node created from a storage image, there exist dashed outgoing edges to oval
 nodes that show (as labels) the type of the database engine and the size of the storage
 */
 mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
+	label := self.label.toString();
+	shape := GRAPH::Shape::BOX;
+	
+	//Construct a type of note which will display "Storage"
+	var typeOfNode = object GRAPH::Node{label := "Storage"; shape:= GRAPH::Shape::BOX };
+	
+	//Construct an edge from the type of node to this node
+	var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
+	typeOfNode.outEdges += typeEdge;
+	
+	var dbEngineNode = object GRAPH::Node{label := self.dbEngine.toString(); shape:= GRAPH::Shape::OVAL };
+	var dbEngineEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= dbEngineNode;};
+	outEdges += dbEngineEdge;
+	
+	var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
+	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= memoryNode;};
+	outEdges += memoryEdge;
+	
+	
+	self.region -> map region2boxNode();
+}
 
+/*
+For each node created from a computing image, there exist dashed outgoing edges to oval
+nodes that show (as labels) the operating system of the image, the number of processor
+cores, and the memory size
+*/
+mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
+	label := self.label.toString();
+	shape := GRAPH::Shape::BOX;
+	object GRAPH::Node{label := "Computing"; shape:= GRAPH::Shape::BOX };
+	
+	
+	var cpuNode := object GRAPH::Node{label := self.vcpu.toString(); shape:= GRAPH::Shape::OVAL};
+	var cpuEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= cpuNode;};
+	outEdges += cpuEdge;
+	
+	var osNode := object GRAPH::Node{label := self.os.toString() + " cores"; shape:= GRAPH::Shape::OVAL };
+	var osEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= osNode;};
+	outEdges += osEdge;
+	
+	var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
+	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= memoryNode;};
+	outEdges += memoryEdge;
+	
+	self.region -> map region2boxNode();
 }
 
 mapping CCL::MachineImage::vcpu2Node() : GRAPH::Node {
@@ -79,18 +130,19 @@ mapping CCL::Region::region2boxNode() : GRAPH::Node {
 //	region := 
 }
 
-/*
-For each node created from a computing image, there exist dashed outgoing edges to oval
-nodes that show (as labels) the operating system of the image, the number of processor
-cores, and the memory size
-*/
-mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
-	
+mapping CCL::StorageImage::vcpu2boxNode() : GRAPH::Node {
+	label := self.toString(); 
+	shape := GRAPH::Shape::OVAL
 }
+
+
+
 
 //#######################################
 // QUERIES
 //#######################################
+
+
 
 query getResources() : Sequence(CCL::Resource) {
 	return CCL::Resource.allInstances()->asSequence()

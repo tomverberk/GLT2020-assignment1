@@ -9,11 +9,27 @@ main() {
 }
 
 mapping CCL::CloudResources::ccl2graph() : GRAPH::Graph {
-	nodes := self.resources -> map resource2boxNode();
-	nodes += self.resources.machineImages -> map machineImage2boxNode();
-	nodes += self.resources.machineImages -> label.map TypeStorage2boxNode();
-	nodes += self.resources.machineImages -> label.map TypeComputing2boxNode();
-	nodes += self.resources.machineImages -> label.map TypeStorage2boxNode();
+    nodes := self.resources -> map resource2boxNode();
+    var machineImages := getMachineImages();
+    machineImages -> forEach(machineImage){
+        nodes += machineImage -> map machineImage2boxNode();
+        nodes += machineImage.region.map region2boxNode();
+        nodes += machineImage.memory.toString().map memory2Node();
+	};
+	var computingImages := getComputingImage();
+    computingImages -> forEach(computingImage){
+    	nodes += computingImage.label.map TypeComputing2boxNode();
+        nodes += computingImage.os.toString().map os2Node();
+        nodes += computingImage.vcpu.toString().map vcpu2Node();
+    };
+    var storageImages := getStorageImage();
+    storageImages -> forEach(storageImage){
+    	nodes += storageImage.label.map TypeStorage2boxNode();
+        nodes += storageImage.dbEngine.toString().map dbEngine2Node();
+    }
+    
+    
+
 }
 
 /*
@@ -74,11 +90,12 @@ mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
 //	var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
 //	typeOfNode.outEdges += typeEdge;
 	
-	var dbEngineNode = object GRAPH::Node{label := self.dbEngine.toString(); shape:= GRAPH::Shape::OVAL };
+	var dbEngineNode = self.dbEngine.toString().map dbEngine2Node();
 	var dbEngineEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= dbEngineNode;};
 	outEdges += dbEngineEdge;
 	
-	var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
+	var memoryNode = self.memory.toString().map memory2Node();
+	//var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
 	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= memoryNode;};
 	outEdges += memoryEdge;
 	
@@ -86,6 +103,8 @@ mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
 	addEdgeToRegion(region, typeNode);
 	
 }
+
+
 
 /*
 For each node created from a computing image, there exist dashed outgoing edges to oval
@@ -105,15 +124,18 @@ mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
 	
 	//typeOfNode += typeEdge;
 	
-	var cpuNode := object GRAPH::Node{label := self.vcpu.toString(); shape:= GRAPH::Shape::OVAL};
+	var cpuNode = self.vcpu.toString().map vcpu2Node();
+	//var cpuNode := object GRAPH::Node{label := self.vcpu.toString(); shape:= GRAPH::Shape::OVAL};
 	var cpuEdge := object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= cpuNode;};
 	outEdges += cpuEdge;
 	
-	var osNode := object GRAPH::Node{label := self.os.toString() + " cores"; shape:= GRAPH::Shape::OVAL };
+	var osNode = self.os.toString().map os2Node();
+	//var osNode := object GRAPH::Node{label := self.os.toString() + " cores"; shape:= GRAPH::Shape::OVAL };
 	var osEdge := object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= osNode;};
 	outEdges += osEdge;
 	
-	var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
+	var memoryNode = self.memory.toString().map memory2Node();
+	//var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
 	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= memoryNode;};
 	outEdges += memoryEdge;
 	
@@ -139,12 +161,19 @@ mapping String::TypeStorage2boxNode(): GRAPH::Node{
 	outEdges += typeEdge;
 }
 
-mapping CCL::MachineImage::vcpu2Node() : GRAPH::Node {
-
+mapping String::dbEngine2Node(): GRAPH::Node{
+	label := self; 
+	shape := GRAPH::Shape::OVAL 
 }
 
-mapping CCL::MachineImage::memory2Node() : GRAPH::Node {
-	
+mapping String::vcpu2Node() : GRAPH::Node {
+	label := self + " cores"; 
+	shape := GRAPH::Shape::OVAL 
+}
+
+mapping String::memory2Node() : GRAPH::Node {
+	label := self  + " GB"; 
+	shape := GRAPH::Shape::OVAL 
 }
 
 mapping CCL::MachineImage::storageSize2Node() : GRAPH::Node {
@@ -155,8 +184,9 @@ mapping CCL::MachineImage::storageType2Node() : GRAPH::Node {
 	
 }
 
-mapping CCL::ComputingImage::os2Node() : GRAPH::Node {
-	
+mapping String::os2Node() : GRAPH::Node {
+	label := self; 
+	shape := GRAPH::Shape::OVAL;
 }
 
 mapping CCL::Region::region2boxNode() : GRAPH::Node {
@@ -165,11 +195,6 @@ mapping CCL::Region::region2boxNode() : GRAPH::Node {
 //	var targetNode := self.label.map TypeComputing2boxNode();
 //	var Edge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= targetNode};
 //	outEdges += Edge;
-}
-
-mapping CCL::StorageImage::vcpu2boxNode() : GRAPH::Node {
-	label := self.toString(); 
-	shape := GRAPH::Shape::OVAL
 }
 
 //#######################################

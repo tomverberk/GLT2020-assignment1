@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <graph:Graph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:graph="http://glt.tue.nl/graph" xsi:schemaLocation="http://glt.tue.nl/graph ../model/graph.ecore">
   <nodes label="resourceLabel">
-    <outEdges target="//@nodes.4"/>
     <outEdges target="//@nodes.1"/>
+    <outEdges target="//@nodes.4"/>
   </nodes>
-  <nodes label="StorageMachineImage">
-    <outEdges style="DASHED" target="//@nodes.10"/>
+  <nodes label="ComputingMachineImage">
+    <outEdges style="DASHED" target="//@nodes.8"/>
+    <outEdges style="DASHED" target="//@nodes.7"/>
     <outEdges style="DASHED" target="//@nodes.3"/>
   </nodes>
   <nodes label="CALIFORNIA">
     <outEdges target="//@nodes.6"/>
     <outEdges target="//@nodes.9"/>
   </nodes>
-  <nodes label="25 GB" shape="OVAL"/>
-  <nodes label="ComputingMachineImage">
-    <outEdges style="DASHED" target="//@nodes.8"/>
-    <outEdges style="DASHED" target="//@nodes.7"/>
+  <nodes label="20 GB" shape="OVAL"/>
+  <nodes label="StorageMachineImage">
+    <outEdges style="DASHED" target="//@nodes.10"/>
     <outEdges style="DASHED" target="//@nodes.5"/>
   </nodes>
-  <nodes label="20 GB" shape="OVAL"/>
+  <nodes label="25 GB" shape="OVAL"/>
   <nodes label="COMPUTING">
-    <outEdges style="DOTTED" target="//@nodes.4"/>
+    <outEdges target="//@nodes.1"/>
   </nodes>
   <nodes label="LINUX" shape="OVAL"/>
   <nodes label="10 cores" shape="OVAL"/>
   <nodes label="STORAGE">
-    <outEdges style="DOTTED" target="//@nodes.1"/>
+    <outEdges target="//@nodes.4"/>
   </nodes>
   <nodes label="MYSQL" shape="OVAL"/>
 </graph:Graph>

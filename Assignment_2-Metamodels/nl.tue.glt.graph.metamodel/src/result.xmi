@@ -2,28 +2,31 @@
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:graph="http://glt.tue.nl/graph" xsi:schemaLocation="http://glt.tue.nl/graph ../model/graph.ecore">
   <graph:Graph>
     <nodes label="resourceLabel">
-      <outEdges target="/1"/>
-      <outEdges target="/7"/>
+      <outEdges target="/0/@nodes.1"/>
+      <outEdges target="/0/@nodes.2"/>
+    </nodes>
+    <nodes label="ComputingMachineImage">
+      <outEdges style="DASHED" target="/2"/>
+      <outEdges style="DASHED" target="/3"/>
+      <outEdges style="DASHED" target="/4"/>
+    </nodes>
+    <nodes label="StorageMachineImage">
+      <outEdges style="DASHED" target="/7"/>
+      <outEdges style="DASHED" target="/8"/>
     </nodes>
   </graph:Graph>
-  <graph:Node label="ComputingMachineImage">
-    <outEdges style="DOTTED" target="/3"/>
-    <outEdges style="DOTTED" target="/4"/>
-    <outEdges style="DOTTED" target="/5"/>
-  </graph:Node>
   <graph:Node label="COMPUTING">
-    <outEdges style="DOTTED" target="/1"/>
+    <outEdges style="DOTTED" target="/0/@nodes.1"/>
   </graph:Node>
   <graph:Node label="10" shape="OVAL"/>
   <graph:Node label="LINUX cores" shape="OVAL"/>
   <graph:Node label="20 GB" shape="OVAL"/>
-  <graph:Node label="I AM A REGION"/>
-  <graph:Node label="StorageMachineImage">
-    <outEdges style="DOTTED" target="/9"/>
-    <outEdges style="DOTTED" target="/10"/>
+  <graph:Node label="CALIFORNIA">
+    <outEdges target="/1"/>
+    <outEdges target="/6"/>
   </graph:Node>
-  <graph:Node label="Storage">
-    <outEdges style="DOTTED" target="/7"/>
+  <graph:Node label="STORAGE">
+    <outEdges style="DOTTED" target="/0/@nodes.2"/>
   </graph:Node>
   <graph:Node label="MYSQL" shape="OVAL"/>
   <graph:Node label="25 GB" shape="OVAL"/>

@@ -10,6 +10,10 @@ main() {
 
 mapping CCL::CloudResources::ccl2graph() : GRAPH::Graph {
 	nodes := self.resources -> map resource2boxNode();
+	nodes += self.resources.machineImages -> map machineImage2boxNode();
+	nodes += self.resources.machineImages -> label.map TypeStorage2boxNode();
+	nodes += self.resources.machineImages -> label.map TypeComputing2boxNode();
+	nodes += self.resources.machineImages -> label.map TypeStorage2boxNode();
 }
 
 /*
@@ -61,23 +65,26 @@ mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
 	label := self.label.toString();
 	shape := GRAPH::Shape::BOX;
 	
-	//Construct a type of note which will display "Storage"
-	var typeOfNode = object GRAPH::Node{label := "Storage"; shape:= GRAPH::Shape::BOX };
+	var typeNode := self.label.map TypeStorage2boxNode();
 	
-	//Construct an edge from the type of node to this node
-	var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
-	typeOfNode.outEdges += typeEdge;
+//	//Construct a type of note which will display "Storage"
+//	var typeOfNode = object GRAPH::Node{label := "Storage"; shape:= GRAPH::Shape::BOX };
+//	
+//	//Construct an edge from the type of node to this node
+//	var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
+//	typeOfNode.outEdges += typeEdge;
 	
 	var dbEngineNode = object GRAPH::Node{label := self.dbEngine.toString(); shape:= GRAPH::Shape::OVAL };
-	var dbEngineEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= dbEngineNode;};
+	var dbEngineEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= dbEngineNode;};
 	outEdges += dbEngineEdge;
 	
 	var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
-	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= memoryNode;};
+	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= memoryNode;};
 	outEdges += memoryEdge;
 	
+	var region := self.region.map region2boxNode();
+	addEdgeToRegion(region, typeNode);
 	
-	self.region -> map region2boxNode();
 }
 
 /*
@@ -91,33 +98,43 @@ mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
 	//object GRAPH::Node{label := "Computing"; shape:= GRAPH::Shape::BOX };
 	//var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
 	
-	var typeOfNode := self.label -> map Type2boxNode();
+	var typeNode := self.label.map TypeComputing2boxNode();
+	//var typeNode := self.label.oclAsType(self.label).map TypeComputing2boxNode();
 	
 	//Construct an edge from the type of node to this node
 	
 	//typeOfNode += typeEdge;
 	
 	var cpuNode := object GRAPH::Node{label := self.vcpu.toString(); shape:= GRAPH::Shape::OVAL};
-	var cpuEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= cpuNode;};
+	var cpuEdge := object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= cpuNode;};
 	outEdges += cpuEdge;
 	
 	var osNode := object GRAPH::Node{label := self.os.toString() + " cores"; shape:= GRAPH::Shape::OVAL };
-	var osEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= osNode;};
+	var osEdge := object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= osNode;};
 	outEdges += osEdge;
 	
 	var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
-	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= memoryNode;};
+	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= memoryNode;};
 	outEdges += memoryEdge;
 	
 	
+	var region := self.region.map region2boxNode();
+	addEdgeToRegion(region, typeNode);
 	
-	self.region -> map region2boxNode();
 }
 
-mapping String::Type2boxNode(): GRAPH::Node{
+mapping String::TypeComputing2boxNode(): GRAPH::Node{
 	label := "COMPUTING";
 	shape := GRAPH::Shape::BOX;
-	var machineLabel = self.getMachineImageFromLabel();
+	var machineLabel = self.getNodefromLabel();
+	var typeEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= machineLabel};
+	outEdges += typeEdge;
+}
+
+mapping String::TypeStorage2boxNode(): GRAPH::Node{
+	label := "STORAGE";
+	shape := GRAPH::Shape::BOX;
+	var machineLabel = self.getNodefromLabel();
 	var typeEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= machineLabel};
 	outEdges += typeEdge;
 }
@@ -143,9 +160,11 @@ mapping CCL::ComputingImage::os2Node() : GRAPH::Node {
 }
 
 mapping CCL::Region::region2boxNode() : GRAPH::Node {
-	label := "I AM A REGION";
+	label := self.toString();
 	shape := GRAPH::Shape::BOX;
-//	outEdges := 
+//	var targetNode := self.label.map TypeComputing2boxNode();
+//	var Edge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= targetNode};
+//	outEdges += Edge;
 }
 
 mapping CCL::StorageImage::vcpu2boxNode() : GRAPH::Node {
@@ -153,6 +172,14 @@ mapping CCL::StorageImage::vcpu2boxNode() : GRAPH::Node {
 	shape := GRAPH::Shape::OVAL
 }
 
+//#######################################
+// HELPERS
+//#######################################
+
+helper addEdgeToRegion(inout region: GRAPH::Node, in type: GRAPH::Node){
+	var newEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= type};
+	region.outEdges += newEdge;
+}
 
 
 
@@ -166,11 +193,25 @@ query getResources() : Sequence(CCL::Resource) {
 	return CCL::Resource.allInstances()->asSequence()
 }
 
-query String::getMachineImageFromLabel(): GRAPH::Node {
-	var machineImageNodes = getNodes();
-	machineImageNodes -> forEach(machineImageNode){
-		if(machineImageNode.label = self){
-			return machineImageNode;
+//query String::getStorageComputingNodeFromRegion(): GRAPH::Node {
+//		var machineImageNodes = getMachineImageNodeFromRegion();
+//}
+//
+//query String::getMachineImageNodeFromRegion(): CCL::StorageImage {
+//	var MIs = getStorageImage();
+//	MIs -> forEach(MI){
+//		if(MI.r = self){
+//			return node;
+//		}
+//	};
+//	return null;
+//}
+
+query String::getNodefromLabel(): GRAPH::Node {
+	var nodes = getNodes();
+	nodes -> forEach(node){
+		if(node.label = self){
+			return node;
 		}
 	};
 	return null;

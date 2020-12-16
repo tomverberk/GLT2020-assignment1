@@ -168,9 +168,19 @@ mapping CCL::Region::region2boxNode() : GRAPH::Node {
 //#######################################
 
 //Adds an edge from a source node to an targetNode
-mapping addEdgeToNode(inout sourceNode: GRAPH::Node, in targetNode: GRAPH::Node): GRAPH::Edge{
-	var newEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= targetNode};
-	sourceNode.outEdges += newEdge;
+helper addEdgeToNode(inout sourceNode: GRAPH::Node, in targetNode: GRAPH::Node){
+	//Check if this outEdge already exists for this node (to avoid duplicate Edges)
+	var isNew := true;
+	sourceNode.outEdges -> forEach(outEdge){
+		if(outEdge.target = targetNode){
+			isNew := false;
+		};
+	};
+	//If the edge is indeed new add the edge
+	if(isNew){
+		var newEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= targetNode};
+		sourceNode.outEdges += newEdge;
+	};
 }
 
 //#######################################

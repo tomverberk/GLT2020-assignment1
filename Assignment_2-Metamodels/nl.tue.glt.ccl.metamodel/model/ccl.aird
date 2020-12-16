@@ -4,6 +4,7 @@
     <semanticResources>ccl.ecore</semanticResources>
     <semanticResources>ccl.genmodel</semanticResources>
     <semanticResources>../src/CloudResources.xmi</semanticResources>
+    <semanticResources>../src/Input.xmi</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_3huBoDS9EeuDooWkpyxYeQ">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_3ip1wDS9EeuDooWkpyxYeQ" name="ccl" repPath="#_3igr0DS9EeuDooWkpyxYeQ" changeId="05d655e0-1fd2-4eac-9a96-c93d616422b4">

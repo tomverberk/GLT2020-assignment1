@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:graph="http://glt.tue.nl/graph" xsi:schemaLocation="http://glt.tue.nl/graph ../model/graph.ecore">
+  <graph:Graph>
+    <nodes label="Resource 1">
+      <outEdges target="/0/@nodes.7"/>
+      <outEdges target="/0/@nodes.11"/>
+      <outEdges target="/0/@nodes.13"/>
+    </nodes>
+    <nodes label="Resource 2">
+      <outEdges target="/0/@nodes.10"/>
+      <outEdges target="/0/@nodes.5"/>
+      <outEdges target="/0/@nodes.2"/>
+    </nodes>
+    <nodes label="storage 2.2">
+      <outEdges style="DASHED" target="/0/@nodes.22"/>
+      <outEdges style="DASHED" target="/0/@nodes.4"/>
+    </nodes>
+    <nodes label="FRANKFURT">
+      <outEdges target="/0/@nodes.21"/>
+      <outEdges target="/0/@nodes.15"/>
+    </nodes>
+    <nodes label="5 GB" shape="OVAL"/>
+    <nodes label="comp 2">
+      <outEdges style="DASHED" target="/0/@nodes.17"/>
+      <outEdges style="DASHED" target="/0/@nodes.16"/>
+      <outEdges style="DASHED" target="/0/@nodes.6"/>
+    </nodes>
+    <nodes label="2 GB" shape="OVAL"/>
+    <nodes label="comp 1">
+      <outEdges style="DASHED" target="/0/@nodes.17"/>
+      <outEdges style="DASHED" target="/0/@nodes.16"/>
+      <outEdges style="DASHED" target="/0/@nodes.9"/>
+    </nodes>
+    <nodes label="CALIFORNIA">
+      <outEdges target="/0/@nodes.18"/>
+      <outEdges target="/0/@nodes.23"/>
+    </nodes>
+    <nodes label="8 GB" shape="OVAL"/>
+    <nodes label="storage 2.1">
+      <outEdges style="DASHED" target="/0/@nodes.22"/>
+      <outEdges style="DASHED" target="/0/@nodes.4"/>
+    </nodes>
+    <nodes label="Comp 1.2">
+      <outEdges style="DASHED" target="/0/@nodes.20"/>
+      <outEdges style="DASHED" target="/0/@nodes.19"/>
+      <outEdges style="DASHED" target="/0/@nodes.12"/>
+    </nodes>
+    <nodes label="16 GB" shape="OVAL"/>
+    <nodes label="stor 1">
+      <outEdges style="DASHED" target="/0/@nodes.22"/>
+      <outEdges style="DASHED" target="/0/@nodes.14"/>
+    </nodes>
+    <nodes label="7 GB" shape="OVAL"/>
+    <nodes label="Computing">
+      <outEdges target="/0/@nodes.5"/>
+    </nodes>
+    <nodes label="LINUX" shape="OVAL"/>
+    <nodes label="4 cores" shape="OVAL"/>
+    <nodes label="Computing">
+      <outEdges target="/0/@nodes.7"/>
+      <outEdges target="/0/@nodes.11"/>
+    </nodes>
+    <nodes label="UBUNTU" shape="OVAL"/>
+    <nodes label="2 cores" shape="OVAL"/>
+    <nodes label="Storage">
+      <outEdges target="/0/@nodes.10"/>
+      <outEdges target="/0/@nodes.2"/>
+    </nodes>
+    <nodes label="MYSQL" shape="OVAL"/>
+    <nodes label="Storage">
+      <outEdges target="/0/@nodes.13"/>
+    </nodes>
+  </graph:Graph>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+  <graph:Edge/>
+</xmi:XMI>

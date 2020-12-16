@@ -25,14 +25,14 @@ mapping CCL::CloudResources::ccl2graph() : GRAPH::Graph {
 	//Add for each computingImage the node with label "Computing", the osNode and the vcpuNode
 	var computingImages := getComputingImage();
     computingImages -> forEach(computingImage){
-    	nodes += computingImage.label.map TypeComputing2boxNode();
+    	nodes += map TypeComputing2boxNode(computingImage.region);
         nodes += computingImage.os.map os2Node();
         nodes += computingImage.vcpu.toString().map vcpu2Node();
     };
     //Add for each storageImage the node with label "Storage" and the dbEngineNode
     var storageImages := getStorageImage();
     storageImages -> forEach(storageImage){
-    	nodes += storageImage.label.map TypeStorage2boxNode();
+    	nodes += map TypeStorage2boxNode(storageImage.region);
         nodes += storageImage.dbEngine.map dbEngine2Node();
     }
 }
@@ -68,7 +68,7 @@ mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
 	shape := GRAPH::Shape::BOX;
 	
 	//map to a node with label "Storage" an add this node to the outedges of that created node
-	var typeNode := self.label.map TypeStorage2boxNode();
+	var typeNode := map TypeStorage2boxNode(self.region);
 	addEdgeToNode(typeNode, result);
 	
 	//Create a node for the DBengine of this storageImage and add a edge from the DBEngineNode to this storageImageNode		
@@ -96,7 +96,7 @@ mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
 	shape := GRAPH::Shape::BOX;
 	
 	//map to a node with label "Computing" an add this node to the outedges of that created node	
-	var typeNode := self.label.map TypeComputing2boxNode();
+	var typeNode := map TypeComputing2boxNode(self.region);
 	addEdgeToNode(typeNode, result);
 	
 	//Create a node for the vcpu of this computingImage and add a edge from the cpuNode to this computingImagenode
@@ -122,13 +122,13 @@ mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
 }
 
 //Mapping for the "node labeled Computing"
-mapping String::TypeComputing2boxNode(): GRAPH::Node{
+mapping TypeComputing2boxNode(in region: Region): GRAPH::Node{
 	label := "Computing";
 	shape := GRAPH::Shape::BOX;
 }
 
 //Mapping for the "node labeled Storage"
-mapping String::TypeStorage2boxNode(): GRAPH::Node{
+mapping TypeStorage2boxNode(in region: Region): GRAPH::Node{
 	label := "Storage";
 	shape := GRAPH::Shape::BOX;
 }
@@ -168,7 +168,7 @@ mapping CCL::Region::region2boxNode() : GRAPH::Node {
 //#######################################
 
 //Adds an edge from a source node to an targetNode
-helper addEdgeToNode(inout sourceNode: GRAPH::Node, in targetNode: GRAPH::Node){
+mapping addEdgeToNode(inout sourceNode: GRAPH::Node, in targetNode: GRAPH::Node): GRAPH::Edge{
 	var newEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= targetNode};
 	sourceNode.outEdges += newEdge;
 }

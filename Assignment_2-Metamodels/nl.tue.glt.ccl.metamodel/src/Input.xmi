@@ -9,47 +9,51 @@
       label="Resource 1">
     <machineImages
         xsi:type="ccl:ComputingImage"
-        label="comp 1"
-        vcpu="4"
-        memory="8"
-        storageSize="256"/>
+        label="Computing machine image 1.1 (California)"
+        vcpu="23"
+        memory="21"
+        storageSize="22"/>
     <machineImages
         xsi:type="ccl:ComputingImage"
-        label="Comp 1.2"
-        vcpu="2"
-        memory="16"
-        storageSize="256"
-        os="UBUNTU"/>
+        label="Computing machine image 1.2 (California)"
+        vcpu="33"
+        memory="31"
+        storageSize="32"
+        os="WINDOWS"/>
     <machineImages
         xsi:type="ccl:StorageImage"
-        label="stor 1"
-        vcpu="4"
-        memory="7"
-        storageSize="5"
-        storageType="SSD"/>
+        label="Storage machine image 1.1 (California)"
+        vcpu="12"
+        memory="10"
+        storageSize="11"
+        storageType="SSD"
+        dbEngine="POSTGRESQL"/>
   </resources>
   <resources
       label="Resource 2">
     <machineImages
         xsi:type="ccl:StorageImage"
         region="FRANKFURT"
-        label="storage 2.1"
-        vcpu="5"
-        memory="5"
-        storageSize="5"/>
+        label="Storage machine image 2.1 (Frankfurt)"
+        vcpu="6"
+        memory="4"
+        storageSize="5"
+        dbEngine="ORACLE"/>
     <machineImages
         xsi:type="ccl:ComputingImage"
         region="FRANKFURT"
-        label="comp 2"
-        vcpu="4"
-        memory="2"
-        storageSize="4"/>
+        label="Computing machine image 2.1 (Frankfurt)"
+        vcpu="3"
+        memory="1"
+        storageSize="2"
+        os="REDHAT"/>
     <machineImages
         xsi:type="ccl:StorageImage"
         region="FRANKFURT"
-        label="storage 2.2"
-        vcpu="6"
-        memory="5"
-        storageSize="6"/>
+        label="Storage machine image 2.2 (Frankfurt)"
+        vcpu="9"
+        memory="7"
+        storageSize="8"
+        dbEngine="MARIADB"/>
   </resources>
 </ccl:CloudResources>

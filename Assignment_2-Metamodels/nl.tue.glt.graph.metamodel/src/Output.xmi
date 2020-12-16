@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graph:Graph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:graph="http://glt.tue.nl/graph" xsi:schemaLocation="http://glt.tue.nl/graph ../model/graph.ecore">
+  <nodes label="Resource 1">
+    <outEdges target="//@nodes.10"/>
+    <outEdges target="//@nodes.2"/>
+    <outEdges target="//@nodes.12"/>
+  </nodes>
+  <nodes label="Resource 2">
+    <outEdges target="//@nodes.8"/>
+    <outEdges target="//@nodes.5"/>
+    <outEdges target="//@nodes.14"/>
+  </nodes>
+  <nodes label="Computing machine image 1.2 (California)">
+    <outEdges style="DASHED" target="//@nodes.18"/>
+    <outEdges style="DASHED" target="//@nodes.17"/>
+    <outEdges style="DASHED" target="//@nodes.4"/>
+  </nodes>
+  <nodes label="CALIFORNIA">
+    <outEdges target="//@nodes.16"/>
+    <outEdges target="//@nodes.26"/>
+  </nodes>
+  <nodes label="31 GB" shape="OVAL"/>
+  <nodes label="Computing machine image 2.1 (Frankfurt)">
+    <outEdges style="DASHED" target="//@nodes.21"/>
+    <outEdges style="DASHED" target="//@nodes.20"/>
+    <outEdges style="DASHED" target="//@nodes.7"/>
+  </nodes>
+  <nodes label="FRANKFURT">
+    <outEdges target="//@nodes.24"/>
+    <outEdges target="//@nodes.19"/>
+  </nodes>
+  <nodes label="1 GB" shape="OVAL"/>
+  <nodes label="Storage machine image 2.1 (Frankfurt)">
+    <outEdges style="DASHED" target="//@nodes.25"/>
+    <outEdges style="DASHED" target="//@nodes.9"/>
+  </nodes>
+  <nodes label="4 GB" shape="OVAL"/>
+  <nodes label="Computing machine image 1.1 (California)">
+    <outEdges style="DASHED" target="//@nodes.23"/>
+    <outEdges style="DASHED" target="//@nodes.22"/>
+    <outEdges style="DASHED" target="//@nodes.11"/>
+  </nodes>
+  <nodes label="21 GB" shape="OVAL"/>
+  <nodes label="Storage machine image 1.1 (California)">
+    <outEdges style="DASHED" target="//@nodes.27"/>
+    <outEdges style="DASHED" target="//@nodes.13"/>
+  </nodes>
+  <nodes label="10 GB" shape="OVAL"/>
+  <nodes label="Storage machine image 2.2 (Frankfurt)">
+    <outEdges style="DASHED" target="//@nodes.28"/>
+    <outEdges style="DASHED" target="//@nodes.15"/>
+  </nodes>
+  <nodes label="7 GB" shape="OVAL"/>
+  <nodes label="Computing">
+    <outEdges target="//@nodes.10"/>
+    <outEdges target="//@nodes.2"/>
+  </nodes>
+  <nodes label="WINDOWS" shape="OVAL"/>
+  <nodes label="33 cores" shape="OVAL"/>
+  <nodes label="Computing">
+    <outEdges target="//@nodes.5"/>
+  </nodes>
+  <nodes label="REDHAT" shape="OVAL"/>
+  <nodes label="3 cores" shape="OVAL"/>
+  <nodes label="LINUX" shape="OVAL"/>
+  <nodes label="23 cores" shape="OVAL"/>
+  <nodes label="Storage">
+    <outEdges target="//@nodes.8"/>
+    <outEdges target="//@nodes.14"/>
+  </nodes>
+  <nodes label="ORACLE" shape="OVAL"/>
+  <nodes label="Storage">
+    <outEdges target="//@nodes.12"/>
+  </nodes>
+  <nodes label="POSTGRESQL" shape="OVAL"/>
+  <nodes label="MARIADB" shape="OVAL"/>
+</graph:Graph>

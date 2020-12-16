@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ccl:CloudResources
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ccl="http://glt.tue.nl/ccl"
+    xsi:schemaLocation="http://glt.tue.nl/ccl ../model/ccl.ecore">
+  <resources
+      label="Resource 1">
+    <machineImages
+        xsi:type="ccl:ComputingImage"
+        label="comp 1"
+        vcpu="4"
+        memory="8"
+        storageSize="256"/>
+    <machineImages
+        xsi:type="ccl:ComputingImage"
+        label="Comp 1.2"
+        vcpu="2"
+        memory="16"
+        storageSize="256"
+        os="UBUNTU"/>
+    <machineImages
+        xsi:type="ccl:StorageImage"
+        label="stor 1"
+        vcpu="4"
+        memory="7"
+        storageSize="5"
+        storageType="SSD"/>
+  </resources>
+  <resources
+      label="Resource 2">
+    <machineImages
+        xsi:type="ccl:StorageImage"
+        region="FRANKFURT"
+        label="storage 2.1"
+        vcpu="5"
+        memory="5"
+        storageSize="5"/>
+    <machineImages
+        xsi:type="ccl:ComputingImage"
+        region="FRANKFURT"
+        label="comp 2"
+        vcpu="4"
+        memory="2"
+        storageSize="4"/>
+    <machineImages
+        xsi:type="ccl:StorageImage"
+        region="FRANKFURT"
+        label="storage 2.2"
+        vcpu="6"
+        memory="5"
+        storageSize="6"/>
+  </resources>
+</ccl:CloudResources>

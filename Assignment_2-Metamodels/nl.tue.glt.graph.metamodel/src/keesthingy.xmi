@@ -2,71 +2,71 @@
 <graph:Graph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:graph="http://glt.tue.nl/graph" xsi:schemaLocation="http://glt.tue.nl/graph ../model/graph.ecore">
   <nodes label="Resource 1">
     <outEdges target="//@nodes.8"/>
-    <outEdges target="//@nodes.2"/>
-    <outEdges target="//@nodes.11"/>
+    <outEdges target="//@nodes.10"/>
+    <outEdges target="//@nodes.5"/>
   </nodes>
   <nodes label="Resource 2">
-    <outEdges target="//@nodes.5"/>
-    <outEdges target="//@nodes.13"/>
-    <outEdges target="//@nodes.10"/>
+    <outEdges target="//@nodes.14"/>
+    <outEdges target="//@nodes.12"/>
+    <outEdges target="//@nodes.2"/>
   </nodes>
-  <nodes label="Comp 1.2">
-    <outEdges style="DASHED" target="//@nodes.17"/>
-    <outEdges style="DASHED" target="//@nodes.16"/>
-    <outEdges style="DASHED" target="//@nodes.4"/>
-  </nodes>
-  <nodes label="CALIFORNIA">
-    <outEdges target="//@nodes.15"/>
-    <outEdges target="//@nodes.23"/>
-  </nodes>
-  <nodes label="16 GB" shape="OVAL"/>
-  <nodes label="storage 2.1">
+  <nodes label="storage 2.2">
     <outEdges style="DASHED" target="//@nodes.22"/>
-    <outEdges style="DASHED" target="//@nodes.7"/>
+    <outEdges style="DASHED" target="//@nodes.4"/>
   </nodes>
   <nodes label="FRANKFURT">
     <outEdges target="//@nodes.21"/>
     <outEdges target="//@nodes.20"/>
   </nodes>
   <nodes label="5 GB" shape="OVAL"/>
-  <nodes label="comp 1">
-    <outEdges style="DASHED" target="//@nodes.19"/>
-    <outEdges style="DASHED" target="//@nodes.18"/>
-    <outEdges style="DASHED" target="//@nodes.9"/>
-  </nodes>
-  <nodes label="8 GB" shape="OVAL"/>
-  <nodes label="storage 2.2">
+  <nodes label="stor 1">
     <outEdges style="DASHED" target="//@nodes.22"/>
     <outEdges style="DASHED" target="//@nodes.7"/>
   </nodes>
-  <nodes label="stor 1">
-    <outEdges style="DASHED" target="//@nodes.22"/>
-    <outEdges style="DASHED" target="//@nodes.12"/>
+  <nodes label="CALIFORNIA">
+    <outEdges target="//@nodes.15"/>
+    <outEdges target="//@nodes.23"/>
   </nodes>
   <nodes label="7 GB" shape="OVAL"/>
-  <nodes label="comp 2">
+  <nodes label="comp 1">
+    <outEdges style="DASHED" target="//@nodes.17"/>
+    <outEdges style="DASHED" target="//@nodes.16"/>
+    <outEdges style="DASHED" target="//@nodes.9"/>
+  </nodes>
+  <nodes label="8 GB" shape="OVAL"/>
+  <nodes label="Comp 1.2">
     <outEdges style="DASHED" target="//@nodes.19"/>
     <outEdges style="DASHED" target="//@nodes.18"/>
-    <outEdges style="DASHED" target="//@nodes.14"/>
+    <outEdges style="DASHED" target="//@nodes.11"/>
+  </nodes>
+  <nodes label="16 GB" shape="OVAL"/>
+  <nodes label="comp 2">
+    <outEdges style="DASHED" target="//@nodes.17"/>
+    <outEdges style="DASHED" target="//@nodes.16"/>
+    <outEdges style="DASHED" target="//@nodes.13"/>
   </nodes>
   <nodes label="2 GB" shape="OVAL"/>
+  <nodes label="storage 2.1">
+    <outEdges style="DASHED" target="//@nodes.22"/>
+    <outEdges style="DASHED" target="//@nodes.4"/>
+  </nodes>
   <nodes label="Computing">
     <outEdges target="//@nodes.8"/>
-    <outEdges target="//@nodes.2"/>
+    <outEdges target="//@nodes.10"/>
   </nodes>
-  <nodes label="UBUNTU" shape="OVAL"/>
-  <nodes label="2 cores" shape="OVAL"/>
   <nodes label="LINUX" shape="OVAL"/>
   <nodes label="4 cores" shape="OVAL"/>
+  <nodes label="UBUNTU" shape="OVAL"/>
+  <nodes label="2 cores" shape="OVAL"/>
   <nodes label="Computing">
-    <outEdges target="//@nodes.13"/>
+    <outEdges target="//@nodes.12"/>
   </nodes>
   <nodes label="Storage">
-    <outEdges target="//@nodes.5"/>
-    <outEdges target="//@nodes.10"/>
+    <outEdges target="//@nodes.14"/>
+    <outEdges target="//@nodes.2"/>
   </nodes>
   <nodes label="MYSQL" shape="OVAL"/>
   <nodes label="Storage">
-    <outEdges target="//@nodes.11"/>
+    <outEdges target="//@nodes.5"/>
   </nodes>
 </graph:Graph>

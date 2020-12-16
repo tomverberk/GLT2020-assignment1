@@ -4,256 +4,200 @@ modeltype GRAPH uses 'http://glt.tue.nl/graph';
 
 transformation NewTransformation(in ccl : CCL, out GRAPH);
 
+//Main method that starts the conversion process
 main() {
 	ccl.rootObjects()[CCL::CloudResources]->map ccl2graph();
 }
 
+//Method that maps a cloudresource to a graph and adds all the later created nodes to the nodes of the graph
 mapping CCL::CloudResources::ccl2graph() : GRAPH::Graph {
+	//Add the resource to the node
     nodes := self.resources -> map resource2boxNode();
+    
+    //Add for each machineImage, the machineimage, the region and the memory to the nodes
+    //Note that these will have been created in the previous step
     var machineImages := getMachineImages();
     machineImages -> forEach(machineImage){
         nodes += machineImage -> map machineImage2boxNode();
         nodes += machineImage.region.map region2boxNode();
         nodes += machineImage.memory.toString().map memory2Node();
 	};
+	//Add for each computingImage the node with label "Computing", the osNode and the vcpuNode
 	var computingImages := getComputingImage();
     computingImages -> forEach(computingImage){
-    	nodes += computingImage.label.map TypeComputing2boxNode();
-        nodes += computingImage.os.toString().map os2Node();
+    	nodes += map TypeComputing2boxNode(computingImage.region);
+        nodes += computingImage.os.map os2Node();
         nodes += computingImage.vcpu.toString().map vcpu2Node();
     };
+    //Add for each storageImage the node with label "Storage" and the dbEngineNode
     var storageImages := getStorageImage();
     storageImages -> forEach(storageImage){
-    	nodes += storageImage.label.map TypeStorage2boxNode();
-        nodes += storageImage.dbEngine.toString().map dbEngine2Node();
+    	nodes += map TypeStorage2boxNode(storageImage.region);
+        nodes += storageImage.dbEngine.map dbEngine2Node();
     }
-    
-    
-
 }
 
-/*
-For each cloud resource (containing a collection of machine images), a box node shall be
-created labeled with the cloud resource label. There shall be outgoing solid edges from this
-node to the nodes created from the machine images contained in the cloud resource
-*/
+//Method that maps a resource. 
+// And constructs edges between a resource and its corresponding machine images
+
 mapping CCL::Resource::resource2boxNode() : GRAPH::Node {
+	//Set the attributes of this node
 	shape := GRAPH::Shape::BOX;
 	label := self.label;
+	//Loop over the machineImages and map them
 	var machineImages := self.machineImages -> map machineImage2boxNode();
 	//make edges from the resource to all the machine images
 	machineImages -> forEach(machineImage){
 		var toAddEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= machineImage};
 		outEdges += toAddEdge;
 	}
-	
 }
 
-/*
-For each region in the source model, a node in the result graph shall be created with label
-the name of the region. Recall that each machine image is associated to one region. Region
-nodes have box shape
-
-Each region node is connected to two other nodes (box-shaped): one labeled ‘Storage’ and
-one labeled ‘Computing’. The edges from a region node to these nodes are of solid style.
-These two nodes will further be connected to nodes that represent machine images of the
-given kind located in the region
-
-*/
-
-/*
-For each machine image in the source model, a box node is created labeled with the
-machine image label. There is solid edge from the node that indicates the kind of the image
-to the node created from the image (see the previous bullet item)
-*/
+//General method that disjuncts each machineImage into either a storageImage or ComputingImage
 
 mapping CCL::MachineImage::machineImage2boxNode() : GRAPH::Node
 disjuncts CCL::StorageImage::storageattr2nodes, CCL::ComputingImage::computingattr2nodes{
 }
 
-	
-
-/*
-For each node created from a storage image, there exist dashed outgoing edges to oval
-nodes that show (as labels) the type of the database engine and the size of the storage
-*/
+//Method that maps a storageImages to a node.
+// It also maps the corresponding attributes of the storageImages to nodes in the graph
+// And creates edges between them.
 mapping CCL::StorageImage::storageattr2nodes() : GRAPH::Node {
+	//Set the correct attributes of this node
 	label := self.label.toString();
 	shape := GRAPH::Shape::BOX;
 	
-	var typeNode := self.label.map TypeStorage2boxNode();
+	//map to a node with label "Storage" an add this node to the outedges of that created node
+	var typeNode := map TypeStorage2boxNode(self.region);
+	addEdgeToNode(typeNode, result);
 	
-//	//Construct a type of note which will display "Storage"
-//	var typeOfNode = object GRAPH::Node{label := "Storage"; shape:= GRAPH::Shape::BOX };
-//	
-//	//Construct an edge from the type of node to this node
-//	var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
-//	typeOfNode.outEdges += typeEdge;
-	
-	var dbEngineNode = self.dbEngine.toString().map dbEngine2Node();
+	//Create a node for the DBengine of this storageImage and add a edge from the DBEngineNode to this storageImageNode		
+	var dbEngineNode = self.dbEngine.map dbEngine2Node();
 	var dbEngineEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= dbEngineNode;};
 	outEdges += dbEngineEdge;
 	
+	//Create a node for the memory of this storageImage and add a edge from the memoryNode to this storageImageNode	
 	var memoryNode = self.memory.toString().map memory2Node();
-	//var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
 	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= memoryNode;};
 	outEdges += memoryEdge;
 	
+	//Map to the region of this node and add an edge from the region to the earlier created type of this node 
+	// (This is the node with label "Storage")
 	var region := self.region.map region2boxNode();
-	addEdgeToRegion(region, typeNode);
-	
+	addEdgeToNode(region, typeNode);
 }
 
-
-
-/*
-For each node created from a computing image, there exist dashed outgoing edges to oval
-nodes that show (as labels) the operating system of the image, the number of processor
-cores, and the memory size
-*/
+// Method that maps a computingImages to a node.
+// It also maps the corresponding attributes of the computingImages to nodes in the graph
+// And creates edges between them.
 mapping CCL::ComputingImage::computingattr2nodes() : GRAPH::Node {
+	//Set the correct attributes of this node
 	label := self.label.toString();
 	shape := GRAPH::Shape::BOX;
-	//object GRAPH::Node{label := "Computing"; shape:= GRAPH::Shape::BOX };
-	//var typeEdge = object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= result};
 	
-	var typeNode := self.label.map TypeComputing2boxNode();
-	//var typeNode := self.label.oclAsType(self.label).map TypeComputing2boxNode();
+	//map to a node with label "Computing" an add this node to the outedges of that created node	
+	var typeNode := map TypeComputing2boxNode(self.region);
+	addEdgeToNode(typeNode, result);
 	
-	//Construct an edge from the type of node to this node
-	
-	//typeOfNode += typeEdge;
-	
+	//Create a node for the vcpu of this computingImage and add a edge from the cpuNode to this computingImagenode
 	var cpuNode = self.vcpu.toString().map vcpu2Node();
-	//var cpuNode := object GRAPH::Node{label := self.vcpu.toString(); shape:= GRAPH::Shape::OVAL};
 	var cpuEdge := object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= cpuNode;};
 	outEdges += cpuEdge;
 	
-	var osNode = self.os.toString().map os2Node();
-	//var osNode := object GRAPH::Node{label := self.os.toString() + " cores"; shape:= GRAPH::Shape::OVAL };
+	//Create a node for the os of this computingImage and add a edge from the osNode to this computingImagesNode
+	var osNode = self.os.map os2Node();
 	var osEdge := object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= osNode;};
 	outEdges += osEdge;
 	
+	//Create a node for the memory of this computingImage and add a edge from the memoryNode to this computingImagesNode
 	var memoryNode = self.memory.toString().map memory2Node();
-	//var memoryNode = object GRAPH::Node{label := self.memory.toString() + " GB"; shape:= GRAPH::Shape::OVAL };
 	var memoryEdge = object GRAPH::Edge{style := GRAPH::Style::DASHED; target:= memoryNode;};
 	outEdges += memoryEdge;
 	
-	
+	//Map to the region of this node and add an edge from the region to the earlier created type of this node 
+	// (This is the node with label "Computing")
 	var region := self.region.map region2boxNode();
-	addEdgeToRegion(region, typeNode);
+	addEdgeToNode(region, typeNode);
 	
 }
 
-mapping String::TypeComputing2boxNode(): GRAPH::Node{
-	label := "COMPUTING";
+//Mapping for the "node labeled Computing"
+mapping TypeComputing2boxNode(in region: Region): GRAPH::Node{
+	label := "Computing";
 	shape := GRAPH::Shape::BOX;
-	var machineLabel = self.getNodefromLabel();
-	var typeEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= machineLabel};
-	outEdges += typeEdge;
 }
 
-mapping String::TypeStorage2boxNode(): GRAPH::Node{
-	label := "STORAGE";
+//Mapping for the "node labeled Storage"
+mapping TypeStorage2boxNode(in region: Region): GRAPH::Node{
+	label := "Storage";
 	shape := GRAPH::Shape::BOX;
-	var machineLabel = self.getNodefromLabel();
-	var typeEdge := object GRAPH::Edge{style := GRAPH::Style::DOTTED; target:= machineLabel};
-	outEdges += typeEdge;
 }
 
-mapping String::dbEngine2Node(): GRAPH::Node{
-	label := self; 
+//Mapping for a dbNode
+mapping CCL::DBEngine::dbEngine2Node(): GRAPH::Node{
+	label := self.toString(); 
 	shape := GRAPH::Shape::OVAL 
 }
 
+//Mapping for a vcpuNode
 mapping String::vcpu2Node() : GRAPH::Node {
 	label := self + " cores"; 
 	shape := GRAPH::Shape::OVAL 
 }
 
+//Mapping for a memoryNode
 mapping String::memory2Node() : GRAPH::Node {
 	label := self  + " GB"; 
 	shape := GRAPH::Shape::OVAL 
 }
 
-mapping CCL::MachineImage::storageSize2Node() : GRAPH::Node {
-	
-}
-
-mapping CCL::MachineImage::storageType2Node() : GRAPH::Node {
-	
-}
-
-mapping String::os2Node() : GRAPH::Node {
-	label := self; 
+//Mapping for a os2Node
+mapping CCL::OperatingSystem::os2Node() : GRAPH::Node {
+	label := self.toString(); 
 	shape := GRAPH::Shape::OVAL;
 }
 
+//Mapping for a Region
 mapping CCL::Region::region2boxNode() : GRAPH::Node {
 	label := self.toString();
 	shape := GRAPH::Shape::BOX;
-//	var targetNode := self.label.map TypeComputing2boxNode();
-//	var Edge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= targetNode};
-//	outEdges += Edge;
 }
 
 //#######################################
 // HELPERS
 //#######################################
 
-helper addEdgeToRegion(inout region: GRAPH::Node, in type: GRAPH::Node){
-	var newEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= type};
-	region.outEdges += newEdge;
+//Adds an edge from a source node to an targetNode
+helper addEdgeToNode(inout sourceNode: GRAPH::Node, in targetNode: GRAPH::Node){
+	//Check if this outEdge already exists for this node (to avoid duplicate Edges)
+	var isNew := true;
+	sourceNode.outEdges -> forEach(outEdge){
+		if(outEdge.target = targetNode){
+			isNew := false;
+		};
+	};
+	//If the edge is indeed new add the edge
+	if(isNew){
+		var newEdge := object GRAPH::Edge{style := GRAPH::Style::SOLID; target:= targetNode};
+		sourceNode.outEdges += newEdge;
+	};
 }
-
-
 
 //#######################################
 // QUERIES
 //#######################################
 
-
-
-query getResources() : Sequence(CCL::Resource) {
-	return CCL::Resource.allInstances()->asSequence()
-}
-
-//query String::getStorageComputingNodeFromRegion(): GRAPH::Node {
-//		var machineImageNodes = getMachineImageNodeFromRegion();
-//}
-//
-//query String::getMachineImageNodeFromRegion(): CCL::StorageImage {
-//	var MIs = getStorageImage();
-//	MIs -> forEach(MI){
-//		if(MI.r = self){
-//			return node;
-//		}
-//	};
-//	return null;
-//}
-
-query String::getNodefromLabel(): GRAPH::Node {
-	var nodes = getNodes();
-	nodes -> forEach(node){
-		if(node.label = self){
-			return node;
-		}
-	};
-	return null;
-}
-
+//Returns all the MachineImages
 query getMachineImages() : Sequence(CCL::MachineImage) {
 	return CCL::MachineImage.allInstances()->asSequence()
 }
 
-query getNodes(): Sequence(GRAPH::Node){
-	return GRAPH::Node.allInstances()->asSequence();
-}
-
+//Returns all the computingImages
 query getComputingImage() : Sequence(CCL::ComputingImage) {
 	return CCL::ComputingImage.allInstances()->asSequence()
 }
 
+//Returns all the storageImages
 query getStorageImage() : Sequence(CCL::StorageImage) {
 	return CCL::StorageImage.allInstances()->asSequence()
 }

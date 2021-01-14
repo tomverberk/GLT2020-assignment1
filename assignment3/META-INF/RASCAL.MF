@@ -1,7 +1,7 @@
 Manifest-Version: 0.0.1
 Main-Function: main
 Courses: courses
-Project-Name: glt2020-ccl
+Project-Name: assignment3
 Require-Libraries: 
 Main-Module: Plugin
 Source: src

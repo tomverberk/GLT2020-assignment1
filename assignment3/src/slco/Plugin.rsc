@@ -1,9 +1,9 @@
-module ccl::Plugin
+module sclo::Plugin
 
 import util::IDE;
-import ccl::Parser;
-import ccl::Check;
-import ccl::CST2AST;
+import slco::Parser;
+import slco::Check;
+import slco::CST2AST;
 import ParseTree;
 
 /*
@@ -15,7 +15,7 @@ bool checkWellformedness(loc fil) {
 	// Parsing
 	
 	//Resource is actually a program :)
-	&T resource = parserCCL(fil);
+	&T resource = parserSLCO(fil);
 	// Transform the parse tree into an abstract syntax tree
 	&T ast = cst2ast(resource);
 	// Check the well-formedness of the program
@@ -29,7 +29,7 @@ bool checkWellformedness(loc fil) {
 * If there are syntactic errors in the program, no highlighting will be shown in the editor.
 */
 void main() {
-	registerLanguage("CCL - GLT", "ccl", Tree(str _, loc path) {
-		return parserCCL(path);
+	registerLanguage("QVTO - GLT", "qvto", Tree(str _, loc path) {
+		return parserQVTO(path);
   	});
 }

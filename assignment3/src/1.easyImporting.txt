@@ -1,8 +1,8 @@
-import qvto::AST;
-import qvto::Check;
-import qvto::CST2AST;
-import qvto::Parser;
-import qvto::Plugin;
-import qvto::Syntax;
+import slco::AST;
+import slco::Check;
+import slco::CST2AST;
+import slco::Parser;
+import slco::Plugin;
+import slco::Syntax;
 import util::IDE;
 import ParseTree;

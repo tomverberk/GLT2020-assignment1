@@ -10,7 +10,7 @@ model SimpleCalculator {
 			Integer a
 			Integer b
 			
-			Initial S
+			initial S
 			
 			transitions
 			read_calculate from S to S {
@@ -35,12 +35,12 @@ model SimpleCalculator {
 			transitions
 			
 			send_receive from Start to Wait {
-			send input(1, 2) to out;
-			receive result(r) from in
+				send input(1, 2) to out;
+				receive result(r) from in
 			}
 		
 		delay from Wait to Start {
-			after 1500 ms
+				after 1500 ms
 			}
 		}
 	}

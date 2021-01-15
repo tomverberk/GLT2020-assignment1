@@ -18,29 +18,31 @@ start syntax Program = "model" Model model;
 // A model has an ID clasess objects and channels
 syntax Model 
 = Id modelId "{" 
-"classes" Class+ classes 
-"objects" Object+ objects
-"channels" Channel+ channels
+"classes" Class* classes 
+"objects" Object* objects
+"channels" Channel* channels
 "}";
 
 // A class has an ID ports and statemachines
 syntax Class 
 = Id classId "{" 
-ports Id+ portIds
-"state machines" StateMachine stateMachines
+"ports" Id* portIds
+"state machines" StateMachine* stateMachines
 "}";
 
 //Assumption we have at least one Variable
-syntax StateMachine = Id stateMachineId "{" 
-"variables" Variable+ variables 
-States states 
-"transitions" Transition+ transitions
-"}";
+syntax StateMachine 
+= Id stateMachineId "{" 
+"variables" Variable* variables 
+"initial" States* states 
+"transitions" Transition* transitions "}";
 
 syntax Variable = VariableType variableType Id variableId;
 syntax VariableType = "Integer"|"String";
 
-syntax States = "initial" Id stateId ("state" Id stateId)*;
+syntax States 
+= Id initialId //Of stateId 
+| "state" Id stateId;
 
 
 //Okay het probleem is dat de volgorde van send en receive uitmaakt voor de code
@@ -49,23 +51,34 @@ syntax Transition
 = Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody transitionBody "}";
 
 syntax TransitionBody 
-=SendInputAction sendInputAction ";" ReceiveResultAction receiveResultAction
-| ReceiveInputAction receiveInputAction ";" SendResultAction sendResultAction
-| WaitAction waitAction;
+= "send" SendAction sendInputAction ";" !>> "}"
+| "receive" ReceiveAction receiveInputAction ";" !>> "}"
+| "after" WaitAction waitAction ";" !>> "}"
+| "send" SendAction sendInputAction !>> ";"
+| "receive" ReceiveAction receiveInputAction !>> ";"
+| "after" WaitAction waitAction !>> ";";
 
 //Ik weet niet zeker of we dit op moeten delen maar het klinkt logisch
-syntax SendInputAction = "send input(" InputVariable+ inputVariables ") to" Id portId;
-syntax SendResultAction = "send result(" InputId+ inputIds ") to" Id portId;
-syntax ReceiveInputAction = "receive input(" InputId+ inputIds ") to" Id portId;
-syntax ReceiveResultAction = "receive result(" InputId+ inputIds ") to" Id portId;
-syntax ReceiveAction = "receive" ("input"|"result")  ;
-syntax WaitAction = "after" Integer "ms";
+//SEND en RECEIVE WERKT NOG NIET
+syntax SendAction 
+= Id actionId "(" OutputVariable+ outputVariable ") to" Id portId;
+
+syntax ReceiveAction 
+= Id actionId "(" InputId+ inputIds ") from" Id portId;
+
+syntax WaitAction 
+= "after" Integer "ms";
 
 // ------------------------ einde onzekerheden en kloten met de Transitions -----------------//
 
-syntax InputVariable = 
-Input id "," !>> ")"
-| Input id !>> ",";
+syntax OutputVariable 
+= Id id
+| Operator operatorId;
+
+syntax Operator
+= "+" 
+| "-" 
+| ",";
 
 //Dit is of een string of een integer of iets anders, wacht is er iets anders idk probably niet
 syntax Input = Integer | String;

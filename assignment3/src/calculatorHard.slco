@@ -10,11 +10,11 @@ model SimpleCalculator {
 			Integer a
 			Integer b
 			
-			Initial S
+			initial S
 			
 			transitions
 			read_calculate from S to S {
-				receive add(a,b) from in;
+				receive add(a, b) from in;
 				send sum(a + b) to out
 			}
 		}
@@ -29,7 +29,7 @@ model SimpleCalculator {
 			transitions
 			read_calculate from T to T {
 				receive subtract(c,d) from in;
-				send difference(c-d) to out
+				send difference(c - d) to out
 			}
 		}
 	}
@@ -46,14 +46,13 @@ model SimpleCalculator {
 			state Wait
 			
 			transitions
-			
 			send_receive from Start to Wait {
-			send add(1, 2) to out;
-			receive sum(r) from in
+				send add(1, 2) to out;
+				receive sum(r) from in
 			}
 		
-		delay from Wait to Start {
-			after 1500 ms
+			delay from Wait to Start {
+				after 1500 ms
 			}
 		}
 	
@@ -65,9 +64,9 @@ model SimpleCalculator {
 			transitions
 		
 			send_receive from Start1 to Start1 {
-			send subtract(4,3) to out;
-			receive difference(q) from in;
-			after 1600 ms
+				send subtract(4,3) to out;
+				receive difference(q) from in;
+				after 1600 ms
 			}
 		}
 	}

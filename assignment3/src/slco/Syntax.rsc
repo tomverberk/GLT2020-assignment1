@@ -48,7 +48,7 @@ syntax States
 //Okay het probleem is dat de volgorde van send en receive uitmaakt voor de code
 // ------------------------ begin onzekerheden en kloten met de Transitions -----------------//
 syntax Transition 
-= Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody transitionBody "}";
+= Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBodyTT* transitionBody "}";
 
 syntax TransitionBody 
 = "send" SendAction sendInputAction ";" !>> "}"
@@ -57,6 +57,15 @@ syntax TransitionBody
 | "send" SendAction sendInputAction !>> ";"
 | "receive" ReceiveAction receiveInputAction !>> ";"
 | "after" WaitAction waitAction !>> ";";
+
+syntax TransitionBodyTT
+= TransitionLineTT transitionLine ";" !>> "}"
+| TransitionLineTT transitionLine !>> ";";
+
+syntax TransitionLineTT
+= "send" SendAction | 
+"receive" ReceiveAction |
+"after" WaitActionTT;
 
 //Ik weet niet zeker of we dit op moeten delen maar het klinkt logisch
 //SEND en RECEIVE WERKT NOG NIET
@@ -68,6 +77,9 @@ syntax ReceiveAction
 
 syntax WaitAction 
 = "after" Integer "ms";
+
+syntax WaitActionTT
+= Integer "ms";
 
 // ------------------------ einde onzekerheden en kloten met de Transitions -----------------//
 

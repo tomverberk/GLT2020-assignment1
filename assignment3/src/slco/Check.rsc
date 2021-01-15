@@ -19,3 +19,35 @@ import IO;
 * Define a function per each verification defined in the PDF (Section 3.2.)
 */
 
+// ------ Creation of the type-environment ------ ///
+// Create a mapping between variables and types
+alias TENV = tuple[ map[AId, AVariable] symbols, list[tuple[loc l, str msg]] errors];
+
+// Used to add Errors to the type-environment
+TENV addError(TENV env, loc l, str msg) = env[errors = env.errors + <l, msg>];
+
+str required(AVariable v, str got) = "Required <getName(v)>, got <got>";
+str required(AVariable v1, AVariable v2) = required(v1, getName(v2));
+
+// ------- End creation of the type-environment ----- ///
+
+//We are seeing a natural number, give an error if we are not expecting a natural number
+TENV checkExp(exp:natCon(int N), TYPE req, TENV env) =
+req == natural() ? env :
+addError(env, exp@location, required(req, "natural"));
+
+TENV checkExp(exp:strCon(str S), TYPE req, TENV env) =
+req == string() ? env :
+addError(env, exp@location, required(req, "string"));
+
+//IDENTIFYER
+TENV checkExp(exp:id(Id Id), TYPE req, TENV env) {
+	//First check if the identifier exists in the type environment
+	if(!env.symbols[Id]?){
+		return addError(env, exp@location, "Undeclared variable <Id>");
+	}
+	//Next check if the required type is the type we have optained
+	tpid = env.symbols[Id];
+	return req == tpid ? env : addError(env, exp@location, required(req, tpid));
+}
+

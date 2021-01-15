@@ -1,4 +1,4 @@
-module sclo::Plugin
+module slco::Plugin
 
 import util::IDE;
 import slco::Parser;

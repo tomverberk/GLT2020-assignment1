@@ -1,7 +1,7 @@
-module sclo::CST2AST
+module slco::CST2AST
 
-import sclo::AST;
-import sclo::Syntax;
+import slco::AST;
+import slco::Syntax;
 import String;
 
 /*

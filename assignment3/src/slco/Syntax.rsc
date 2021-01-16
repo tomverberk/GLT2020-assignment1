@@ -46,48 +46,34 @@ syntax VariableType
 syntax State
 = Id stateId;
 
-
-//Okay het probleem is dat de volgorde van send en receive uitmaakt voor de code
-// ------------------------ begin onzekerheden en kloten met de Transitions -----------------//
+// Transitions
 syntax Transition 
-= Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBodyTT* transitionBody "}";
+= Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody* transitionBody "}";
 
-syntax TransitionBody 
-= "send" SendAction sendInputAction ";" !>> "}"
-| "receive" ReceiveAction receiveInputAction ";" !>> "}"
-| "after" WaitAction waitAction ";" !>> "}"
-| "send" SendAction sendInputAction !>> ";"
-| "receive" ReceiveAction receiveInputAction !>> ";"
-| "after" WaitAction waitAction !>> ";";
+syntax TransitionBody
+= TransitionLine transitionLine ";" !>> "}"
+| TransitionLine transitionLine !>> ";";
 
-syntax TransitionBodyTT
-= TransitionLineTT transitionLine ";" !>> "}"
-| TransitionLineTT transitionLine !>> ";";
-
-syntax TransitionLineTT
+syntax TransitionLine
 = "send" SendAction 
 | "receive" ReceiveAction
-| "after" WaitActionTT;
+| "after" WaitAction;
 
-//Ik weet niet zeker of we dit op moeten delen maar het klinkt logisch
+// Transition actions
 syntax SendAction 
-= Id actionId "(" OutputVariable+ outputVariable ") to" Id portId;
+= Id actionId "(" Parameter outputVariable (Operator operator Parameter outputVariable)* ") to" Id portId;
 
 syntax ReceiveAction 
-= Id actionId "(" InputId+ inputIds ") from" Id portId;
+= Id actionId "(" Parameter inputVariable (Operator operator Parameter inputVariable)* ") from" Id portId;
 
-syntax WaitAction 
-= "after" Integer "ms";
+syntax WaitAction
+= Integer "ms" !>> ";"
+| Integer "ms" ";" !>> "}";
 
-syntax WaitActionTT
-= Integer "ms";
-
-// ------------------------ einde onzekerheden en kloten met de Transitions -----------------//
-
-syntax OutputVariable 
+// Passed parameters
+syntax Parameter 
 = Id id
-| Integer integer
-| Operator operatorId;
+| Integer integer;
 
 syntax Operator
 = "+" 
@@ -96,10 +82,6 @@ syntax Operator
 
 //Dit is of een string of een integer of iets anders, wacht is er iets anders idk probably niet
 syntax Input = Integer | String;
-
-syntax InputId =
-Id idVariableId "," !>> ")"
-| Id idVariableId !>> ",";
 
 //Object declaration
 syntax Object = Id objectId ":" Id classId;

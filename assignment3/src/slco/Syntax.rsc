@@ -34,15 +34,17 @@ syntax Class
 syntax StateMachine 
 = Id stateMachineId "{" 
 "variables" Variable* variables 
-"initial" States* states 
+"initial" State state ("state" State state)* 
 "transitions" Transition* transitions "}";
 
 syntax Variable = VariableType variableType Id variableId;
-syntax VariableType = "Integer"|"String";
 
-syntax States 
-= Id initialId //Of stateId 
-| "state" Id stateId;
+syntax VariableType 
+= "Integer"
+|"String";
+
+syntax State
+= Id stateId;
 
 
 //Okay het probleem is dat de volgorde van send en receive uitmaakt voor de code
@@ -63,12 +65,11 @@ syntax TransitionBodyTT
 | TransitionLineTT transitionLine !>> ";";
 
 syntax TransitionLineTT
-= "send" SendAction | 
-"receive" ReceiveAction |
-"after" WaitActionTT;
+= "send" SendAction 
+| "receive" ReceiveAction
+| "after" WaitActionTT;
 
 //Ik weet niet zeker of we dit op moeten delen maar het klinkt logisch
-//SEND en RECEIVE WERKT NOG NIET
 syntax SendAction 
 = Id actionId "(" OutputVariable+ outputVariable ") to" Id portId;
 
@@ -85,6 +86,7 @@ syntax WaitActionTT
 
 syntax OutputVariable 
 = Id id
+| Integer integer
 | Operator operatorId;
 
 syntax Operator
@@ -103,7 +105,7 @@ Id idVariableId "," !>> ")"
 syntax Object = Id objectId ":" Id classId;
 
 //channel declaration
-syntax Channel = Id channelId "(" VariableType* variableTypes ") sync between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." portIdTarget;
+syntax Channel = Id channelId "(" VariableType variableTypes ("," VariableType variableTypes)* ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
 
 
 

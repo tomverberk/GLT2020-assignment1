@@ -28,7 +28,7 @@ model SimpleCalculator {
 			
 			transitions
 			read_calculate from T to T {
-				receive subtract(c,d) from in;
+				receive subtract(c, d) from in;
 				send difference(c - d) to out
 			}
 		}

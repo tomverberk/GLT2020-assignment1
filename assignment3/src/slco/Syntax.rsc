@@ -61,10 +61,13 @@ syntax TransitionLine
 
 // Transition actions
 syntax SendAction 
-= Id actionId "(" Parameter outputVariable (Operator operator Parameter outputVariable)* ") to" Id portId;
+= Id actionId "(" Parameter outputVariable Combination* ") to" Id portId;
 
 syntax ReceiveAction 
-= Id actionId "(" Parameter inputVariable (Operator operator Parameter inputVariable)* ") from" Id portId;
+= Id actionId "(" Parameter inputVariable Combination* ") from" Id portId;
+
+syntax Combination 
+= Operator operator Parameter outputVariable;
 
 syntax WaitAction
 = Integer "ms" !>> ";"

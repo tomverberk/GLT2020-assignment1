@@ -61,6 +61,8 @@ module slco::AST
  = Aparameter(AId aParameterId)
  | integer(); 
  
+ 
+// TODO geen idee hoe we dit moeten doen
  data AOperator
  = aOperator();
  

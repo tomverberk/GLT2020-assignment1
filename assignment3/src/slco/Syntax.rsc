@@ -1,5 +1,7 @@
 module slco::Syntax
 
+lexical Natural = [0-9]+ !>> [0-9];
+
 //extend lang::std::Id;
 //extend lang::std::Layout;
 /*
@@ -13,7 +15,7 @@ module slco::Syntax
 //lexical Boolean = "true" | "false";
 //
 //// Start of the program, with the word resource
-start syntax Program = "model" //Model model
+start syntax Program = nat: "model" Natural  //Model model
 ;
 
 //// A model has an ID clasess objects and channels

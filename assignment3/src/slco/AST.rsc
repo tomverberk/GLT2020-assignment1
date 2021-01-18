@@ -13,7 +13,7 @@ module slco::AST
  //	= string() | integer() | boolean();
  	
  data Program
- = program();
+ = nat(int nat);
  
 // data Model
 // = Model(Id modelId, list[Class] classes, list[Object] objects, list[Channel] channels);

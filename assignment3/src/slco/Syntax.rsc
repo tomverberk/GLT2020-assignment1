@@ -8,13 +8,6 @@ extend lang::std::Layout;
  Op het moment heb ik deze veel te groot gemaakt, zodat we straks kunnen inkorten waar handig
 */
 
-
-
-
-lexical NotString = [];
-
-
-
 lexical String = [A-Za-z0-9_\-]+;
 lexical Integer = [0] | [+\-]?[1-9][0-9]*;
 lexical Boolean = "true" | "false";
@@ -25,7 +18,7 @@ start syntax Program = "model" Model model;
 // A model has an ID clasess objects and channels
 syntax Model 
 = Id modelId "{" 
-//"classes" Class* classes 
+"classes" Class* classes 
 "objects" Object* objects
 "channels" Channel* channels
 "}";
@@ -41,7 +34,7 @@ syntax Class
 syntax StateMachine 
 = Id stateMachineId "{" 
 "variables" Variable* variables 
-"initial" Id initialState ("state" Id states)* 
+"initial" Id initialState ("state" Id)* states 
 "transitions" Transition* transitions "}";
 
 syntax Variable = VariableType variableType Id variableId;
@@ -55,7 +48,7 @@ syntax State
 
 // Transitions
 syntax Transition 
-= Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody* transitionBody "}";
+= Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody* transitionBodies "}";
 
 syntax TransitionBody
 = TransitionLine transitionLine ";" !>> "}"
@@ -68,16 +61,10 @@ syntax TransitionLine
 
 // Transition actions
 syntax SendAction 
-= Id actionId "(" Parameter outputVariable Combination* ") to" Id portId;
+= Id actionId "(" Parameter outputVariable Combination* combinations ") to" Id portId;
 
 syntax ReceiveAction 
-= Id actionId "(" Parameter inputVariable Combination* ") from" Id portId;
-
-
-
-
-
-
+= Id actionId "(" Parameter inputVariable Combination* combinations ") from" Id portId;
 
 syntax Combination 
 = Operator operator Parameter outputVariable;
@@ -88,7 +75,7 @@ syntax WaitAction
 
 // Passed parameters
 syntax Parameter 
-= Id id
+= Id parameterId
 | Integer integer;
 
 syntax Operator
@@ -103,7 +90,7 @@ syntax Input = Integer | String;
 syntax Object = Id objectId ":" Id classId;
 
 //channel declaration
-syntax Channel = Id channelId "(" VariableType variableTypes ("," VariableType variableTypes)* ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
+syntax Channel = Id channelId "(" VariableType variableTypes ("," VariableType)* variableTypes ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
 
 
 

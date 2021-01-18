@@ -8,10 +8,8 @@ module slco::AST
  
  // Datatypes
 
- data AType = string();
  
-
- data Type(loc src = |tmp:///|)
+ data AType(loc src = |tmp:///|)
  	= string() | integer() | boolean();
  	
  data Program
@@ -24,7 +22,7 @@ module slco::AST
  = Class(Id classId, list[Id] portIds, list[StateMachine] stateMachines);
  
  data StateMachine
- = StateMachine(Id stateMachineId, list[Id] variableIds, Id initialState, list[Id] stateIds, list[Transition] transitions);
+ = StateMachine(Id stateMachineId, list[Variable] variables, Id initialState, list[Id] states, list[Transition] transitions);
  
  data Variable
  = Variable(VariableType variableType, Id variableId);
@@ -44,24 +42,24 @@ module slco::AST
  = TransitionBody(TransitionLine transitionLine); 
  
  data TransitionLine
- = TranstionLine(SendAction sendction)
- | TranstionLine(ReceiveAction receivection)
- | TranstionLine(WaitAction waitction);
+ = TranstionLine(SendAction sendAction)
+ | TranstionLine(ReceiveAction receiveAction)
+ | TranstionLine(WaitAction waitAction);
  
  data SendAction 
- = Sendction(Id sendctionId, Parameter parameter, list[Combination combination], Id portId );
+ = SendAction(Id actionId, Parameter outputVariable, list[Combination] combinations, Id portId );
  
  data ReceiveAction
- = Receivection(Id sendctionId, Parameter parameter, list[Combination combination], Id portId );
+ = ReceiveAction(Id actionId, Parameter inputVariable, list[Combination] combinations, Id portId );
  
  data Combination
- = Combination(Operator operator, Parameter parameter);
+ = Combination(Operator operator, Parameter outputVariable);
  
  data WaitAction
  = integer();
  
  data Parameter
- = parameter(Id parameterId)
+ = Parameter(Id parameterId)
  | integer(); 
  
 // TODO geen idee hoe we dit moeten doen

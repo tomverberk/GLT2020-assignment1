@@ -70,7 +70,7 @@ module slco::AST
  Aobject(AId aObjectId, AId aClassId);
  
  data AChannel = 
- Achannel(AId aChannelId, AVariableType aVriableType, list[AVariableType] aVariableTypes, 
+ Achannel(AId aChannelId, AVariableType aVariableType, list[AVariableType] aVariableTypes, 
  AId aObjectIdSource, AId aPortIdSource, 
  AId aObjectIdTarget, AId aPortIdTarget);
  

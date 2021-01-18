@@ -9,14 +9,16 @@ module slco::AST
  // Datatypes
 
  
- data AType(loc src = |tmp:///|)
+ data Type(loc src = |tmp:///|)
  	= string() | integer() | boolean();
  	
  data Program
- = Program (Model model);
+ = program(Id hallo);
+ anno loc Program@Location;
  
  data Model
  = Model(Id modelId, list[Class] classes, list[Object] objects, list[Channel] channels);
+ anno loc Model@Location; 
  
  data Class 
  = Class(Id classId, list[Id] portIds, list[StateMachine] stateMachines);
@@ -65,6 +67,10 @@ module slco::AST
 // TODO geen idee hoe we dit moeten doen
  data Operator
  = Operator();
+ 
+ data Input 
+ = Integer() |
+ String();
 
  data Object = 
  Object(Id objectId, Id classId);
@@ -75,4 +81,23 @@ module slco::AST
  Id objectIdTarget, Id portIdTarget);
  
  data Id
-= id(str name);
+= Id(str name);
+
+anno loc Type@location;                   
+anno loc Program@location;
+anno loc Model@location;
+anno loc Class@location;
+anno loc StateMachine@location;
+anno loc Variable@location;     
+anno loc VariableType@location;     
+anno loc State@location;     
+anno loc Transition@location;     
+anno loc TransitionLine@location;     
+anno loc SendAction@location;     
+anno loc ReceiveAction@location;     
+anno loc WaitAction@location;     
+anno loc Parameter@location;     
+anno loc Operator@location;     
+anno loc Input@location;     
+anno loc Object@location;     
+anno loc Channel@location;       

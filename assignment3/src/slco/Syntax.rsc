@@ -11,9 +11,10 @@ extend lang::std::Layout;
 lexical String = [A-Za-z0-9_\-]+;
 lexical Integer = [0] | [+\-]?[1-9][0-9]*;
 lexical Boolean = "true" | "false";
-
-// Start of the program, with the word resource
-start syntax Program = "model" Model model;
+//
+//// Start of the program, with the word resource
+start syntax Program = "model" Id hey //Model model
+;
 
 // A model has an ID clasess objects and channels
 syntax Model 

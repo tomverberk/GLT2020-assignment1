@@ -8,11 +8,12 @@ module slco::AST
  
  // Datatypes
 
- data AType(loc src = |tmp:///|)
- 	= string() | integer() | boolean();
+
+ //data Type(loc src = |tmp:///|)
+ //	= string() | integer() | boolean();
  	
- data aProgram
- = Aprogram (AModel aModel);
+ data AProgram
+ = aProgram(AModel model);
  
  data AModel
  = Amodel(AId aModelId, list[AClass] aClasses, list[AObject] aObjects, list[AChannel] aChannels);
@@ -24,7 +25,7 @@ module slco::AST
  = AstateMachine(AId aStateMachineId, list[AId] aVariableIds, AId aInitialState, list[AId] aStateIds, list[ATransition] aTransitions);
  
  data AVariable
- = Avariable(AVariableType aVariableType, AId aVariableId);
+ = Avariable(AVariableType aVariableType, AId VariableId);
  
  data AVariableType
  = string() 
@@ -61,7 +62,6 @@ module slco::AST
  = Aparameter(AId aParameterId)
  | integer(); 
  
- 
 // TODO geen idee hoe we dit moeten doen
  data AOperator
  = aOperator();
@@ -75,4 +75,4 @@ module slco::AST
  AId aObjectIdTarget, AId aPortIdTarget);
  
  data AId
-= Aid(str name);
+= Id(str name);

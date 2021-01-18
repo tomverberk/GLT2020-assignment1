@@ -6,6 +6,6 @@ import slco::Syntax;
 
 import ParseTree;
 
-public Program implode(Program p) = implode(#Program, p); 
+public AProgram implode(Program p) = implode(#AProgram, p); 
 
-public Program load(loc l) = implode(parserSLCO(l));
+public AProgram load(loc l) = implode(parserSLCO(l));

@@ -1,6 +1,7 @@
 module slco::Check
 
 import slco::AST;
+import Node;
 import IO;
 
 /*

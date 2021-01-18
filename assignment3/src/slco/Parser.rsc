@@ -11,4 +11,4 @@ import ParseTree;
  */
  
  // The function parserCCL requires a location, then it will parse the file it got and checks it with the syntax at the start location #Program.
- public Program parserSLCO(loc l) = parse(#Program, l);
+ public Program parserSLCO(loc l) = parse(#Program, l); 

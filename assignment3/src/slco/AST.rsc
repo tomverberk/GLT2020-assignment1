@@ -1,78 +1,80 @@
 module slco::AST
 
 /*
- * Define Abstract Syntax for slco
+ * Define bstract Syntax for slco
  *
  * - make sure there is an almost one-to-one correspondence with the grammar (Syntax.rsc)
  */
  
  // Datatypes
 
- data AType(loc src = |tmp:///|)
+ data AType = string();
+ 
+
+ data Type(loc src = |tmp:///|)
  	= string() | integer() | boolean();
  	
- data aProgram
- = Aprogram (AModel aModel);
+ data Program
+ = Program (Model model);
  
- data AModel
- = Amodel(AId aModelId, list[AClass] aClasses, list[AObject] aObjects, list[AChannel] aChannels);
+ data Model
+ = Model(Id modelId, list[Class] classes, list[Object] objects, list[Channel] channels);
  
- data AClass 
- = Aclass(AId aClassId, list[AId] aPortIds, list[AStateMachine] aStateMachines);
+ data Class 
+ = Class(Id classId, list[Id] portIds, list[StateMachine] stateMachines);
  
- data AStateMachine
- = AstateMachine(AId aStateMachineId, list[AId] aVariableIds, AId aInitialState, list[AId] aStateIds, list[ATransition] aTransitions);
+ data StateMachine
+ = StateMachine(Id stateMachineId, list[Id] variableIds, Id initialState, list[Id] stateIds, list[Transition] transitions);
  
- data AVariable
- = Avariable(AVariableType aVariableType, AId aVariableId);
+ data Variable
+ = Variable(VariableType variableType, Id variableId);
  
- data AVariableType
+ data VariableType
  = string() 
  | integer();
  
- data AState
- = Astate(AId aStateId);
+ data State
+ = State(Id stateId);
  
- data ATransition
- = Atransition(AId aTransitionId, AId aStateIdBegin, AId aStateIdEnd, list[ATransitionBody] aTransitionBodies);
+ data Transition
+ = Transition(Id transitionId, Id stateIdBegin, Id stateIdEnd, list[TransitionBody] transitionBodies);
  
  //TODO DIT IS MOEILIJK
- data ATransitionBody
- = AtransitionBody(ATransitionLine aTransitionLine); 
+ data TransitionBody
+ = TransitionBody(TransitionLine transitionLine); 
  
- data ATransitionLine
- = AtranstionLine(ASendAction aSendAction)
- | AtranstionLine(AReceiveAction aReceiveAction)
- | AtranstionLine(AWaitAction aWaitAction);
+ data TransitionLine
+ = TranstionLine(SendAction sendction)
+ | TranstionLine(ReceiveAction receivection)
+ | TranstionLine(WaitAction waitction);
  
- data ASendAction 
- = AsendAction(AId aSendActionId, AParameter aParameter, list[ACombination aCombination], AId aPortId );
+ data SendAction 
+ = Sendction(Id sendctionId, Parameter parameter, list[Combination combination], Id portId );
  
- data AReceiveAction
- = AreceiveAction(AId aSendActionId, AParameter aParameter, list[ACombination aCombination], AId aPortId );
+ data ReceiveAction
+ = Receivection(Id sendctionId, Parameter parameter, list[Combination combination], Id portId );
  
- data ACombination
- = Acombination(AOperator aOperator, AParameter aParameter);
+ data Combination
+ = Combination(Operator operator, Parameter parameter);
  
- data AWaitAction
+ data WaitAction
  = integer();
  
- data AParameter
- = Aparameter(AId aParameterId)
+ data Parameter
+ = parameter(Id parameterId)
  | integer(); 
  
- 
 // TODO geen idee hoe we dit moeten doen
- data AOperator
- = aOperator();
+ data Operator
+ = Operator();
+
+ data Object = 
+ Object(Id objectId, Id classId);
  
- data AObject = 
- Aobject(AId aObjectId, AId aClassId);
+ data Channel = 
+ Channel(Id channelId, VariableType variableType, list[VariableType] variableTypes, 
+ Id objectIdSource, Id portIdSource, 
+ Id objectIdTarget, Id portIdTarget);
  
- data AChannel = 
- Achannel(AId aChannelId, AVariableType aVriableType, list[AVariableType] aVariableTypes, 
- AId aObjectIdSource, AId aPortIdSource, 
- AId aObjectIdTarget, AId aPortIdTarget);
- 
- data AId
-= Aid(str name);
+ data Id
+= id(str name);

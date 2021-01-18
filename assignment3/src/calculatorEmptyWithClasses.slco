@@ -8,6 +8,8 @@ model SimpleCalculator {
 		Main {
 			variables
 			
+			initial
+			
 			transitions
 		}
 		
@@ -19,6 +21,8 @@ model SimpleCalculator {
 		state machines
 		Loop {
 			variables
+			
+			initial
 			
 			transitions
 		}

@@ -13,7 +13,7 @@ extend lang::std::Layout;
 */
 
 lexical Natural = [0-9]+ !>> [0-9];
-lexical Id = Id: ([a-z0-9] !<< [a-z][a-z0-9]* !>> [a-z0-9]);
+//lexical Id = Id: ([a-z0-9] !<< [a-z][a-z0-9]* !>> [a-z0-9]);
 lexical String = [A-Za-z0-9_\-]+;
 lexical Integer = Integer: [0] | [+\-]?[1-9][0-9]*;
 //lexical Boolean = "true" | "false";

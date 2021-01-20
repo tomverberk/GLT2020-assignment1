@@ -28,7 +28,7 @@ module slco::AST
  );
  
  data Class 
- = Class(Id classId ,list[str] portIds, list[StateMachine] stateMachines
+ = Class(Id classId ,list[Id] portIds, list[StateMachine] stateMachines
  );
  
  data StateMachine
@@ -39,7 +39,7 @@ module slco::AST
  = Variable(Id variableType, Id variableId);
 // 
  data VariableType
-= VariableType(Id id);
+= Integer() | String();
  
  data Transition
  = Transition(Id transitionId, Id stateIdBegin, Id stateIdEnd, list[TransitionBody] transitionBodies

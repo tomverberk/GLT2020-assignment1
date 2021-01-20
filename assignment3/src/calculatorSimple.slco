@@ -2,13 +2,11 @@ model SimpleCalculator {
 	classes
 	
 	Calculator {
-		ports in, out,
+		ports in out
 		
 		state machines
 		Main {
 			variables
-			Integer: a
-			Integer: b
 			
 			initial S
 			
@@ -22,12 +20,12 @@ model SimpleCalculator {
 	}
 	
 	User {
-		ports in, out,
+		ports in out
 		
 		state machines
 		Loop {
 			variables
-			Integer: r
+			Integer r
 			
 			initial Start
 			state Wait

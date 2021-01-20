@@ -32,7 +32,7 @@ Id modelId "{" "classes" Class* classes
 // A class has an ID ports and statemachines
 syntax Class = Class:
 Id classId "{" 
-"ports" (String ",")* portIds
+"ports" Id* portIds
 "state machines" StateMachine* stateMachines
 "}";
 
@@ -44,10 +44,11 @@ Id stateMachineId "{"
 "transitions" Transition* transitions 
 "}";
 //
-syntax Variable = Variable: Id variableType ":" Id variableId;
+syntax Variable = Variable: VariableType variableType Id variableId;
 ////
-syntax VariableType = VariableType: 
-Id id;
+syntax VariableType =  
+Integer: "Integer" | 
+String: "String";
 
 //// Transitions
 syntax Transition  = Transition:

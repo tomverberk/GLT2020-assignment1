@@ -15,82 +15,89 @@ lexical Integer = Integer: [0] | [+\-]?[1-9][0-9]*;
 //lexical Boolean = "true" | "false";
 //
 //// Start of the program, with the word resource
-start syntax Program =  Program:"model" Model model;
+start syntax Program =  Program: "model" Model model;
 
 
 // A model has an ID clasess objects and channels
-syntax Model 
-= Model: String modelId "{" 
-"classes" Class* classes 
+syntax Model = Model: 
+String modelId "{" "classes" Class* classes 
 "objects" Object* objects
 "channels" Channel* channels
 "}";
 
 // A class has an ID ports and statemachines
-syntax Class 
-= Id classId "{" 
-//"ports" Id* portIds
-//"state machines" StateMachine* stateMachines
+syntax Class = Class:
+String classId "{" 
+"ports" (String ",")* portIds
+"state machines" StateMachine* stateMachines
 "}";
 
-////Assumption we have at least one Variable
-//syntax StateMachine 
-//= Id stateMachineId "{" 
-//"variables" Variable* variables 
-//"initial" Id initialState ("state" Id)* states 
-//"transitions" Transition* transitions "}";
+//Assumption we have at least one Variable
+syntax StateMachine = StateMachine :
+Id stateMachineId "{" 
+"variables" Variable* variables 
+"initial" String initialState ("state" String)* states 
+"transitions" Transition* transitions 
+"}";
 //
-//syntax Variable = VariableType variableType Id variableId;
-//
-syntax VariableType =
-Id id;
+syntax Variable = Variable: String variableType ":" String variableId;
+////
+syntax VariableType = VariableType: 
+String id;
 
 //// Transitions
-//syntax Transition 
-//= Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody* transitionBodies "}";
+syntax Transition  = Transition:
+String transitionId "from" String stateIdBegin "to" String stateIdEnd "{" TransitionBody* transitionBodies 
+"}";
+
 //
-//syntax TransitionBody
-//= TransitionLine transitionLine; // ";" !>> "}"
-////| TransitionLine transitionLine !>> ";";
+syntax TransitionBody
+= TransitionBody: TransitionLine transitionLine ";" !>> "}"
+| TransitionBody: TransitionLine transitionLine !>> ";";
+
+syntax TransitionLine
+= TransitionLine: "send" SendAction sendAction
+| TransitionLine: "receive" ReceiveAction receiveAction
+| TransitionLine: "after" WaitAction waitAction;
 //
-//syntax TransitionLine
-//= "send" SendAction sendAction
-//| "receive" ReceiveAction receiveAction
-//| "after" WaitAction waitAction;
+// Transition actions
+syntax SendAction 
+= SendAction: String actionId 
+"(" Parameter outputVariable Combination* combinations 
+") to" String portId;
+
+syntax ReceiveAction 
+= ReceiveAction: String actionId "(" Parameter inputVariable Combination* combinations ") from" String portId;
 //
-//// Transition actions
-//syntax SendAction 
-//= Id actionId "(" Parameter outputVariable Combination* combinations ") to" Id portId;
+syntax Combination 
+= Combination: Operator operator Parameter outputVariable;
 //
-//syntax ReceiveAction 
-//= Id actionId "(" Parameter inputVariable Combination* combinations ") from" Id portId;
-//
-//syntax Combination 
-//= //Operator operator 
-//Parameter outputVariable;
-//
-//syntax WaitAction
-//= Integer number "ms"; // !>> ";"
-////| Integer "ms" ";" !>> "}";
+
+//Waarom staat dit hier allemaal bij
+syntax WaitAction
+= WaitAction: Integer number "ms"; // !>> ";"
+//| Integer "ms" ";" !>> "}";
 
 // Passed parameters
-//syntax Parameter 
-//= Id parameterId;
-//| Integer integer;
+syntax Parameter 
+= Parameter: Integer integer 
+| Parameter: String parameterId ;
 
-//syntax Operator
-//= "+" 
-//| "-" 
-//| ",";
+syntax Operator
+= Operator: "+" 
+| Operator: "-" 
+| Operator: ",";
 
 //Dit is of een string of een integer of iets anders, wacht is er iets anders idk probably niet
 //syntax Input = Integer | String;
 
 //Object declaration
-syntax Object = Id objectId ":" Id classId;
+syntax Object = Object :
+String objectId ":" String classId;
 //
 //channel declaration
-syntax Channel = Id channelId "(" VariableType variableTypes ("," VariableType)* variableTypes ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
+syntax Channel = Channel:
+String channelId "(" VariableType variableTypes ("," VariableType)* variableTypes ")" "sync" "between" String objectIdSource "." String portIdSource "and" String objectIdTarget "." String portIdTarget;
 
 
 

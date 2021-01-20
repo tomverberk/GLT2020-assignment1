@@ -7,15 +7,17 @@ model SimpleCalculator {
 		state machines
 		Main {
 			variables
-			Integer: a
-			Integer: b
+			Integer: kaas
+			
 			
 			initial S
+			state a
 			
 			transitions
-			read_calculate from S to S {
-				receive input(a,b) from in;
-				send result(a + b) to out
+			stuff_things from b to c {
+			send input(a + b) to kaas;
+			receive input(a + b) from kaas;
+			after 1500 ms
 			}
 		}
 		
@@ -27,21 +29,13 @@ model SimpleCalculator {
 		state machines
 		Loop {
 			variables
-			Integer: r
+			Integer: pizza
+			Integer: a
 			
 			initial Start
-			state Wait
+			state a
 			
 			transitions
-			
-			send_receive from Start to Wait {
-				send input(a, b) to out;
-				receive result(r) from in
-			}
-		
-		delay from Wait to Start {
-				after 1500 ms
-			}
 		}
 	}
 	

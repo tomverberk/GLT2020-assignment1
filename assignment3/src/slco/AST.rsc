@@ -15,70 +15,80 @@ module slco::AST
  data Program
  = Program(Model model);
  
+
+
+ 
  data Model
- = Model(str modelId , list[Class]classes , list[Object] objects, list[Channel] channels
+ = Model(str modelId , list[Class] classes , list[Object] objects
+ ,list[Channel] channels
  );
  
  data Class 
- = Class(Id classId //,list[Id] portIds, list[Id] stateMachines
+ = Class(str classId ,list[str] portIds, list[StateMachine] stateMachines
  );
  
-// data StateMachine
-// = StateMachine(Id stateMachineId, list[Variable] variables, Id initialState, list[Id] states, list[Transition] transitions);
+ data StateMachine
+ = StateMachine(str stateMachineId, list[Variable] variables, str initialState, list[str] states ,list[Transition] transitions
+ );
 // 
-// data Variable
-// = Variable(VariableType variableType, Id variableId);
+ data Variable
+ = Variable(str variableType, str variableId);
 // 
  data VariableType
-= VariableType(Id id);
+= VariableType(str id);
  
- //data Transition
- //= Transition(Id transitionId, Id stateIdBegin, Id stateIdEnd, list[TransitionBody] transitionBodies);
- //
- ////TODO DIT IS MOEILIJK
- //data TransitionBody
- //= TransitionBody(TransitionLine transitionLine); //misschien vind ie dit niet leuk
- //
- //data TransitionLine
- //= TranstionLine(SendAction sendAction)
- //| TranstionLine(ReceiveAction receiveAction)
- //| TranstionLine(WaitAction waitAction);
- //
- //data SendAction 
- //= SendAction(Id actionId, Parameter outputVariable, list[Combination] combinations, Id portId );
- //
- //data ReceiveAction
- //= ReceiveAction(Id actionId, Parameter inputVariable, list[Combination] combinations, Id portId );
- //
- //data Combination
- //= Combination(	//Operator operator, 
- //Parameter outputVariable);
- //
- //data WaitAction
- //= WaitAction(int number);
+ data Transition
+ = Transition(str transitionId, str stateIdBegin, str stateIdEnd, list[TransitionBody] transitionBodies
+ );
  
- //data Parameter
- //= Parameter(Id parameterId);
-// | integer(); 
+ 
+ //TODO DIT IS MOEILIJK
+ data TransitionBody
+ = TransitionBody(TransitionLine transitionLine); //misschien vind ie dit niet leuk
+ //
+ data TransitionLine
+ = TransitionLine(SendAction sendAction)
+ | TransitionLine(ReceiveAction receiveAction)
+ | TransitionLine(WaitAction waitAction);
+ //
+ data SendAction 
+ = SendAction(str actionId, Parameter outputVariable, list[Combination] combinations, 
+ str portId );
+ 
+ data ReceiveAction
+ = ReceiveAction(str actionId, Parameter inputVariable, list[Combination] combinations, str portId );
+ 
+ data Combination
+ = Combination(Operator operator, 
+ Parameter outputVariable);
+ //
+ data WaitAction
+ = WaitAction(int number);
+ 
+ data Parameter
+ = Parameter(int integer)
+ |  Parameter(str parameterId);
  
 // TODO geen idee hoe we dit moeten doen
- //data Operator
- //= Operator();
+ data Operator
+ = Operator();
  
  //data Input 
  //= Integer() |
  //String();
 
  data Object = 
- Object(Id objectId, Id classId);
+ Object(str objectId, str classId);
  
  data Channel = 
- Channel(Id channelId, VariableType variableType, list[VariableType] variableTypes, 
- Id objectIdSource, Id portIdSource, 
- Id objectIdTarget, Id portIdTarget);
+ Channel(str channelId, VariableType variableType, list[VariableType] variableTypes, 
+ str objectIdSource, str portIdSource, 
+ str objectIdTarget, str portIdTarget);
  
- data Id
-= Id(str name);
+ //  data Id
+//= Id(str name);
+ 
+
 
 //anno loc Type@location;                   
 //anno loc Program@location;

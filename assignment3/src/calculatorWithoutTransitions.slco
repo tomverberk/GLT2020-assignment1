@@ -7,18 +7,11 @@ model SimpleCalculator {
 		state machines
 		Main {
 			variables
-			Integer: kaas
 			
 			
 			initial S
-			state a
 			
 			transitions
-			stuff_things from b to c {
-			send input(a + b) to kaas;
-			receive input(a + b) from kaas;
-			after 1500 ms
-			}
 		}
 		
 	}
@@ -29,21 +22,14 @@ model SimpleCalculator {
 		state machines
 		Loop {
 			variables
-			Integer: pizza
-			Integer: a
 			
 			initial Start
-			state a
 			
 			transitions
 		}
 	}
 	
 	objects
-	c: Calculator
-	u: User
 	
 	channels
-	c0(Integer, Integer) sync between u.out and c.in
-	c1(Integer) sync between c.out and u.in
 }

@@ -1,7 +1,7 @@
 module slco::AST
 
 /*
- * Define bstract Syntax for slco
+ * Define bIdact Syntax for slco
  *
  * - make sure there is an almost one-to-one correspondence with the grammar (Syntax.rsc)
  */
@@ -10,8 +10,12 @@ module slco::AST
 
  
  //data Type(loc src = |tmp:///|)
- //	= string() | integer() | boolean();
+ //	= Iding() | integer() | boolean();
  	
+ public data TYPE = natural() | Iding(); 
+ 
+ public alias Id = str;
+ 
  data Program
  = Program(Model model);
  
@@ -19,26 +23,26 @@ module slco::AST
 
  
  data Model
- = Model(str modelId , list[Class] classes , list[Object] objects
+ = Model(Id modelId , list[Class] classes , list[Object] objects
  ,list[Channel] channels
  );
  
  data Class 
- = Class(str classId ,list[str] portIds, list[StateMachine] stateMachines
+ = Class(Id classId ,list[str] portIds, list[StateMachine] stateMachines
  );
  
  data StateMachine
- = StateMachine(str stateMachineId, list[Variable] variables, str initialState, list[str] states ,list[Transition] transitions
+ = StateMachine(Id stateMachineId, list[Variable] variables, Id initialState, list[Id] states ,list[Transition] transitions
  );
 // 
  data Variable
- = Variable(str variableType, str variableId);
+ = Variable(Id variableType, Id variableId);
 // 
  data VariableType
-= VariableType(str id);
+= VariableType(Id id);
  
  data Transition
- = Transition(str transitionId, str stateIdBegin, str stateIdEnd, list[TransitionBody] transitionBodies
+ = Transition(Id transitionId, Id stateIdBegin, Id stateIdEnd, list[TransitionBody] transitionBodies
  );
  
  
@@ -52,11 +56,11 @@ module slco::AST
  | TransitionLine(WaitAction waitAction);
  //
  data SendAction 
- = SendAction(str actionId, Parameter outputVariable, list[Combination] combinations, 
- str portId );
+ = SendAction(Id actionId, Parameter outputVariable, list[Combination] combinations, 
+ Id portId );
  
  data ReceiveAction
- = ReceiveAction(str actionId, Parameter inputVariable, list[Combination] combinations, str portId );
+ = ReceiveAction(Id actionId, Parameter inputVariable, list[Combination] combinations, Id portId );
  
  data Combination
  = Combination(Operator operator, 
@@ -67,7 +71,7 @@ module slco::AST
  
  data Parameter
  = Parameter(int integer)
- |  Parameter(str parameterId);
+ |  Parameter(Id parameterId);
  
 // TODO geen idee hoe we dit moeten doen
  data Operator
@@ -78,15 +82,12 @@ module slco::AST
  //String();
 
  data Object = 
- Object(str objectId, str classId);
+ Object(Id objectId, Id classId);
  
  data Channel = 
- Channel(str channelId, VariableType variableType, list[VariableType] variableTypes, 
- str objectIdSource, str portIdSource, 
- str objectIdTarget, str portIdTarget);
- 
- //  data Id
-//= Id(str name);
+ Channel(Id channelId, VariableType variableType, list[VariableType] variableTypes, 
+ Id objectIdSource, Id portIdSource, 
+ Id objectIdTarget, Id portIdTarget);
  
 
 

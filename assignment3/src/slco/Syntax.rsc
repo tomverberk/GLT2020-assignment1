@@ -1,15 +1,19 @@
 module slco::Syntax
 
-lexical Natural = [0-9]+ !>> [0-9];
+import Prelude;
+
 
 extend lang::std::Id;
 extend lang::std::Layout;
+
 /*
  * Define concrete syntax for SLCO. The language's specification is available in the PDF (Section 3)
  
  Op het moment heb ik deze veel te groot gemaakt, zodat we straks kunnen inkorten waar handig
 */
 
+lexical Natural = [0-9]+ !>> [0-9];
+lexical Id = Id: ([a-z0-9] !<< [a-z][a-z0-9]* !>> [a-z0-9]);
 lexical String = [A-Za-z0-9_\-]+;
 lexical Integer = Integer: [0] | [+\-]?[1-9][0-9]*;
 //lexical Boolean = "true" | "false";
@@ -20,14 +24,14 @@ start syntax Program =  Program: "model" Model model;
 
 // A model has an ID clasess objects and channels
 syntax Model = Model: 
-String modelId "{" "classes" Class* classes 
+Id modelId "{" "classes" Class* classes 
 "objects" Object* objects
 "channels" Channel* channels
 "}";
 
 // A class has an ID ports and statemachines
 syntax Class = Class:
-String classId "{" 
+Id classId "{" 
 "ports" (String ",")* portIds
 "state machines" StateMachine* stateMachines
 "}";
@@ -36,18 +40,18 @@ String classId "{"
 syntax StateMachine = StateMachine :
 Id stateMachineId "{" 
 "variables" Variable* variables 
-"initial" String initialState ("state" String)* states 
+"initial" Id initialState ("state" Id)* states 
 "transitions" Transition* transitions 
 "}";
 //
-syntax Variable = Variable: String variableType ":" String variableId;
+syntax Variable = Variable: Id variableType ":" Id variableId;
 ////
 syntax VariableType = VariableType: 
-String id;
+Id id;
 
 //// Transitions
 syntax Transition  = Transition:
-String transitionId "from" String stateIdBegin "to" String stateIdEnd "{" TransitionBody* transitionBodies 
+Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody* transitionBodies 
 "}";
 
 //
@@ -62,12 +66,12 @@ syntax TransitionLine
 //
 // Transition actions
 syntax SendAction 
-= SendAction: String actionId 
+= SendAction: Id actionId 
 "(" Parameter outputVariable Combination* combinations 
-") to" String portId;
+") to" Id portId;
 
 syntax ReceiveAction 
-= ReceiveAction: String actionId "(" Parameter inputVariable Combination* combinations ") from" String portId;
+= ReceiveAction: Id actionId "(" Parameter inputVariable Combination* combinations ") from" Id portId;
 //
 syntax Combination 
 = Combination: Operator operator Parameter outputVariable;
@@ -81,7 +85,7 @@ syntax WaitAction
 // Passed parameters
 syntax Parameter 
 = Parameter: Integer integer 
-| Parameter: String parameterId ;
+| Parameter: Id parameterId ;
 
 syntax Operator
 = Operator: "+" 
@@ -89,15 +93,15 @@ syntax Operator
 | Operator: ",";
 
 //Dit is of een string of een integer of iets anders, wacht is er iets anders idk probably niet
-//syntax Input = Integer | String;
+//syntax Input = Integer | Id;
 
 //Object declaration
 syntax Object = Object :
-String objectId ":" String classId;
+Id objectId ":" Id classId;
 //
 //channel declaration
 syntax Channel = Channel:
-String channelId "(" VariableType variableTypes ("," VariableType)* variableTypes ")" "sync" "between" String objectIdSource "." String portIdSource "and" String objectIdTarget "." String portIdTarget;
+Id channelId "(" VariableType variableTypes ("," VariableType)* variableTypes ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
 
 
 

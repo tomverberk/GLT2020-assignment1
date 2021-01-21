@@ -19,30 +19,33 @@ module slco::AST
  data Program
  = Program(Model model);
  
+ public data SLCOId = 
+ 	id(Id name);
+ 
 
 
  
  data Model
- = Model(Id modelId , list[Class] classes , list[Object] objects
+ = Model(SLCOId modelId , list[Class] classes , list[Object] objects
  ,list[Channel] channels
  );
  
  data Class 
- = Class(Id classId ,list[Id] portIds, list[StateMachine] stateMachines
+ = Class(SLCOId classId ,list[SLCOId] portIds, list[StateMachine] stateMachines
  );
  
  data StateMachine
- = StateMachine(Id stateMachineId, list[Variable] variables, Id initialState, list[Id] states ,list[Transition] transitions
+ = StateMachine(SLCOId stateMachineId, list[Variable] variables, SLCOId initialState, list[SLCOId] states ,list[Transition] transitions
  );
 // 
  data Variable
- = Variable(Type tp, Id variableId);
+ = Variable(Type tp, SLCOId variableId);
 // 
  data Type
 = Integer() | String();
  
  data Transition
- = Transition(Id transitionId, Id stateIdBegin, Id stateIdEnd, list[TransitionBody] transitionBodies
+ = Transition(SLCOId transitionId, SLCOId stateIdBegin, SLCOId stateIdEnd, list[TransitionBody] transitionBodies
  );
  
  
@@ -56,11 +59,10 @@ module slco::AST
  | TransitionLine(WaitAction waitAction);
  //
  data SendAction 
- = SendAction(Id actionId, Comb combinations, 
- Id portId );
+ = SendAction(SLCOId actionId, Comb combinations, SLCOId portId );
  
  data ReceiveAction
- = ReceiveAction(Id actionId, Comb combinations, Id portId );
+ = ReceiveAction(SLCOId actionId, Comb combinations, SLCOId portId );
  
  //data Combination
  //= Combination(Operator operator, 
@@ -80,7 +82,7 @@ module slco::AST
  
  data Parameter
  = Parameter(int integer)
- |  Parameter(Id parameterId);
+ |  Parameter(SLCOId parameterId);
  
 // TODO geen idee hoe we dit moeten doen
  data Operator
@@ -91,12 +93,12 @@ module slco::AST
  //String();
 
  data Object = 
- Object(Id objectId, Id classId);
+ Object(SLCOId objectId, SLCOId classId);
  
  data Channel = 
- Channel(Id channelId, Type tp, list[Type] types, 
- Id objectIdSource, Id portIdSource, 
- Id objectIdTarget, Id portIdTarget);
+ Channel(SLCOId channelId, Type tp, list[Type] types, 
+ SLCOId objectIdSource, SLCOId portIdSource, 
+ SLCOId objectIdTarget, SLCOId portIdTarget);
  
 
 

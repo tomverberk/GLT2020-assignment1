@@ -11,7 +11,7 @@ model SimpleCalculator {
 			initial S
 			
 			transitions
-			read_calculate from S to S {
+			readcalculate from S to S {
 				receive input(a) from in;
 				send result(a + b) to out;
 			}
@@ -32,7 +32,7 @@ model SimpleCalculator {
 			
 			transitions
 			
-			send_receive from Start to Wait {
+			sendreceive from Start to Wait {
 				send input( a, b ) to out;
 				receive result(a) from in;
 			}

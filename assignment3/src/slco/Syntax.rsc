@@ -20,30 +20,33 @@ lexical Integer = Integer: [0] | [+\-]?[1-9][0-9]*;
 //// Start of the program, with the word resource
 start syntax Program =  Program: "model" Model model;
 
+syntax SLCOId = 
+id: Id name;
+
 
 // A model has an ID clasess objects and channels
 syntax Model = Model: 
-Id modelId "{" "classes" Class* classes 
+SLCOId modelId "{" "classes" Class* classes 
 "objects" Object* objects
 "channels" Channel* channels
 "}";
 
 // A class has an ID ports and statemachines
 syntax Class = Class:
-Id classId "{" 
-"ports" Id* portIds
+SLCOId classId "{" 
+"ports" SLCOId* portIds
 "state machines" StateMachine* stateMachines
 "}";
 
 //Assumption we have at least one Variable
 syntax StateMachine = StateMachine :
-Id stateMachineId "{" 
+SLCOId stateMachineId "{" 
 "variables" Variable* variables 
-"initial" Id initialState ("state" Id)* states 
+"initial" SLCOId initialState ("state" SLCOId)* states 
 "transitions" Transition* transitions 
 "}";
 //
-syntax Variable = Variable: Type type Id variableId;
+syntax Variable = Variable: Type type SLCOId variableId;
 ////
 syntax Type =  
 Integer: "Integer" | 
@@ -51,7 +54,7 @@ String: "String";
 
 //// Transitions
 syntax Transition  = Transition:
-Id transitionId "from" Id stateIdBegin "to" Id stateIdEnd "{" TransitionBody* transitionBodies 
+SLCOId transitionId "from" SLCOId stateIdBegin "to" SLCOId stateIdEnd "{" TransitionBody* transitionBodies 
 "}";
 
 //
@@ -66,12 +69,12 @@ syntax TransitionLine
 //
 // Transition actions
 syntax SendAction 
-= SendAction: Id actionId 
+= SendAction: SLCOId actionId 
 "(" Combination combination 
-") to" Id portId;
+") to" SLCOId portId;
 
 syntax ReceiveAction 
-= ReceiveAction: Id actionId "(" Combination combination ") from" Id portId;
+= ReceiveAction: SLCOId actionId "(" Combination combination ") from" SLCOId portId;
 //
 
 syntax Combination 
@@ -93,7 +96,7 @@ syntax WaitAction
 // Passed parameters
 syntax Parameter 
 = Parameter: Integer integer 
-| Parameter: Id parameterId ;
+| Parameter: SLCOId parameterId ;
 
 syntax Operator
 = Operator: "+" 
@@ -105,11 +108,11 @@ syntax Operator
 
 //Object declaration
 syntax Object = Object :
-Id objectId ":" Id classId;
+SLCOId objectId ":" SLCOId classId;
 //
 //channel declaration
 syntax Channel = Channel:
-Id channelId "(" Type type ("," Type)* types ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
+SLCOId channelId "(" Type type ("," Type)* types ")" "sync" "between" SLCOId objectIdSource "." SLCOId portIdSource "and" SLCOId objectIdTarget "." SLCOId portIdTarget;
 
 
 

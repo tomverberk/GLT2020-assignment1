@@ -43,7 +43,7 @@ req == String() ? env :
 addError(env, exp@location, required(req, "string"));
 
 //IDENTIFYER
-TENV checkExp(exp:id(Id id), Type req, TENV env) {
+TENV checkExp(exp:str(str id), Type req, TENV env) {
 	//First check if the identifier exists in the type environment
 	if(!env.symbols[Id]?){
 		return addError(env, exp@location, "Undeclared variable <Id>");

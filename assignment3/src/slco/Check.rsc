@@ -1,6 +1,7 @@
 module slco::Check
 
 import slco::AST;
+import Node;
 import IO;
 
 /*
@@ -21,27 +22,27 @@ import IO;
 
 // ------ Creation of the type-environment ------ ///
 // Create a mapping between variables and types
-alias TENV = tuple[ map[AId, AVariable] symbols, list[tuple[loc l, str msg]] errors];
+alias TENV = tuple[ map[Id, Type] symbols, list[tuple[loc l, str msg]] errors];
 
 // Used to add Errors to the type-environment
 TENV addError(TENV env, loc l, str msg) = env[errors = env.errors + <l, msg>];
 
-str required(AVariable v, str got) = "Required <getName(v)>, got <got>";
-str required(AVariable v1, AVariable v2) = required(v1, getName(v2));
+//basic operation
+str required(Type t, str got) = "Required <getName(t)>, got <got>";
+str required(Type t1, Type t2) = required(t1, getName(t2));
 
 // ------- End creation of the type-environment ----- ///
 
-//We are seeing a natural number, give an error if we are not expecting a natural number
-TENV checkExp(exp:natCon(int N), TYPE req, TENV env) =
-req == natural() ? env :
-addError(env, exp@location, required(req, "natural"));
+//We are seeing a integer number, give an error if we are not expecting an integer number
+TENV checkComb(exp:intCon(int N), Type req, TENV env) =
+req == Integer() ? env :
+addError(env, exp@location, required(req, "integer"));  
 
-TENV checkExp(exp:strCon(str S), TYPE req, TENV env) =
-req == string() ? env :
+TENV checkComb(exp:strCon(str S), Type req, TENV env) =
+req == String() ? env :
 addError(env, exp@location, required(req, "string"));
 
-//IDENTIFYER
-TENV checkExp(exp:id(Id Id), TYPE req, TENV env) {
+TENV checkComb(exp:id(Id Id), Type req, TENV env) {
 	//First check if the identifier exists in the type environment
 	if(!env.symbols[Id]?){
 		return addError(env, exp@location, "Undeclared variable <Id>");
@@ -50,4 +51,19 @@ TENV checkExp(exp:id(Id Id), TYPE req, TENV env) {
 	tpid = env.symbols[Id];
 	return req == tpid ? env : addError(env, exp@location, required(req, tpid));
 }
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:add(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:sub(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:comma(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
 

@@ -1,11 +1,8 @@
-
 /slco/
-/calculatorEmpty.slco
-/calculatorEmptyWithClasses.slco
-/calculatorEmptyWithoutClasses.slco
-/1.easyImporting.txt
-/calculatorHard.slco
+/empty.slco
+/calculatorEmptyWithEmptyClasses
+/calculatorEmptyWithEmptyClasses.slco
+/calculatorWithoutTransitions
+/calculatorWithoutTransitions.slco
 /calculatorSimple.slco
-/slco/
-/bin/
-/testfile.slco
+/calculatorEmptyWithClasses.slco

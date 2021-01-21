@@ -1,0 +1,34 @@
+model SimpleCalculator {
+	classes
+	
+	Calculator {
+		ports
+		
+		state machines
+		Main {
+			variables
+			
+			initial S
+			
+			transitions
+		}
+		
+	}
+	
+	User {
+		ports
+		
+		state machines
+		Loop {
+			variables
+			
+			initial S
+			
+			transitions
+		}
+	}
+	
+	objects
+	
+	channels
+}

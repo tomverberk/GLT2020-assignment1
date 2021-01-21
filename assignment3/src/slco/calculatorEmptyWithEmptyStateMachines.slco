@@ -11,10 +11,6 @@ model SimpleCalculator {
 			initial S
 			
 			transitions
-			readcalculate from S to S {
-				receive input(a, b) from in;
-				send result(a + b) to out;
-			}
 		}
 		
 	}
@@ -32,14 +28,6 @@ model SimpleCalculator {
 			
 			transitions
 			
-			sendreceive from Start to Wait {
-				send input( a, b ) to out;
-				receive result(a) from in;
-			}
-		
-		delay from Wait to Start {
-				after 1500 ms
-			}
 		}
 	}
 	

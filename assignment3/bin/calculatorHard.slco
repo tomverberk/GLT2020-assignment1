@@ -1,0 +1,80 @@
+model SimpleCalculator {
+	classes
+	
+	Calculator {
+		ports in out
+		
+		state machines
+		Addition {
+			variables
+			Integer a
+			Integer b
+			
+			initial S
+			
+			transitions
+			read_calculate from S to S {
+				receive add(a, b) from in;
+				send sum(a + b) to out
+			}
+		}
+		
+		Subtraction {
+			variables
+			Integer c
+			Integer d
+			
+			initial T
+			
+			transitions
+			read_calculate from T to T {
+				receive subtract(c, d) from in;
+				send difference(c - d) to out
+			}
+		}
+	}
+	
+	User {
+		ports in out
+		
+		state machines
+		Add {
+			variables
+			Integer r
+			
+			initial Start
+			state Wait
+			
+			transitions
+			send_receive from Start to Wait {
+				send add(1, 2) to out;
+				receive sum(r) from in
+			}
+		
+			delay from Wait to Start {
+				after 1500 ms
+			}
+		}
+	
+		Subtract {
+			variables
+			Integer q
+		
+			initial Start1
+			transitions
+		
+			send_receive from Start1 to Start1 {
+				send subtract(4,3) to out;
+				receive difference(q) from in;
+				after 1600 ms
+			}
+		}
+	}
+	objects
+	c: Calculator
+	u: User
+	
+	channels
+	c0(Integer, Integer) sync between u.out and c.in
+	c1(Integer) sync between c.out and u.in
+}

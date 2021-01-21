@@ -12,7 +12,7 @@ module slco::AST
  //data Type(loc src = |tmp:///|)
  //	= String() | integer() | boolean();
  	
- public data TYPE = natural() | Iding(); 
+ //public data TYPE = natural() | Iding(); 
  
  public alias Id = str;
  
@@ -67,7 +67,7 @@ module slco::AST
  //Parameter outputVariable);
  
  public data Comb
-     = natCon(int iVal)
+     = intCon(int iVal)
      | strCon(str string)
      | add(Comb left, Comb right)
      | sub(Comb left, Comb right)
@@ -100,20 +100,22 @@ module slco::AST
  
 
 
-//anno loc Type@location;                   
-//anno loc Program@location;
-//anno loc Model@location;
-//anno loc Class@location;
-//anno loc StateMachine@location;
-//anno loc Variable@location;     
-//anno loc VariableType@location;        
-//anno loc Transition@location;     
-//anno loc TransitionLine@location;     
-//anno loc SendAction@location;     
-//anno loc ReceiveAction@location;     
-//anno loc WaitAction@location;     
-//anno loc Parameter@location;     
-////anno loc Operator@location;     
-////anno loc Input@location;     
-//anno loc Object@location;     
-//anno loc Channel@location;       
+anno loc Type@location;                   
+anno loc Program@location;
+anno loc Model@location;
+anno loc Class@location;
+anno loc StateMachine@location;
+//anno loc strCon@location;
+//anno loc intCon@location;
+anno loc Variable@location;     
+anno loc Type@location;        
+anno loc Transition@location;     
+anno loc TransitionLine@location;     
+anno loc SendAction@location;     
+anno loc ReceiveAction@location;     
+anno loc WaitAction@location;     
+anno loc Parameter@location;     
+anno loc Operator@location;     
+anno loc Comb@location;     
+anno loc Object@location;     
+anno loc Channel@location;       

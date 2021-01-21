@@ -34,16 +34,15 @@ str required(Type t1, Type t2) = required(t1, getName(t2));
 // ------- End creation of the type-environment ----- ///
 
 //We are seeing a integer number, give an error if we are not expecting an integer number
-TENV checkExp(exp:intCon(int N), Type req, TENV env) =
+TENV checkComb(exp:intCon(int N), Type req, TENV env) =
 req == Integer() ? env :
 addError(env, exp@location, required(req, "integer"));  
 
-TENV checkExp(exp:strCon(str S), Type req, TENV env) =
+TENV checkComb(exp:strCon(str S), Type req, TENV env) =
 req == String() ? env :
 addError(env, exp@location, required(req, "string"));
 
-//IDENTIFYER
-TENV checkExp(exp:str(str id), Type req, TENV env) {
+TENV checkComb(exp:id(Id Id), Type req, TENV env) {
 	//First check if the identifier exists in the type environment
 	if(!env.symbols[Id]?){
 		return addError(env, exp@location, "Undeclared variable <Id>");
@@ -52,4 +51,19 @@ TENV checkExp(exp:str(str id), Type req, TENV env) {
 	tpid = env.symbols[Id];
 	return req == tpid ? env : addError(env, exp@location, required(req, tpid));
 }
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:add(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:sub(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:comma(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
 

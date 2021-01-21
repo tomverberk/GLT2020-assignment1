@@ -12,7 +12,7 @@ model SimpleCalculator {
 			
 			transitions
 			readcalculate from S to S {
-				receive input(a) from in;
+				receive input(a, b) from in;
 				send result(a + b) to out;
 			}
 		}

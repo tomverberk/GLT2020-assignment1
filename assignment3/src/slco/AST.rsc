@@ -10,7 +10,7 @@ module slco::AST
 
  
  //data Type(loc src = |tmp:///|)
- //	= Iding() | integer() | boolean();
+ //	= String() | integer() | boolean();
  	
  public data TYPE = natural() | Iding(); 
  
@@ -36,9 +36,9 @@ module slco::AST
  );
 // 
  data Variable
- = Variable(Id variableType, Id variableId);
+ = Variable(Type tp, Id variableId);
 // 
- data VariableType
+ data Type
 = Integer() | String();
  
  data Transition
@@ -56,15 +56,24 @@ module slco::AST
  | TransitionLine(WaitAction waitAction);
  //
  data SendAction 
- = SendAction(Id actionId, Parameter outputVariable, list[Combination] combinations, 
+ = SendAction(Id actionId, Comb combinations, 
  Id portId );
  
  data ReceiveAction
- = ReceiveAction(Id actionId, Parameter inputVariable, list[Combination] combinations, Id portId );
+ = ReceiveAction(Id actionId, Comb combinations, Id portId );
  
- data Combination
- = Combination(Operator operator, 
- Parameter outputVariable);
+ //data Combination
+ //= Combination(Operator operator, 
+ //Parameter outputVariable);
+ 
+ public data Comb
+     = natCon(int iVal)
+     | strCon(str string)
+     | add(Comb left, Comb right)
+     | sub(Comb left, Comb right)
+     | comma(Comb left, Comb right)
+     ;
+ 
  //
  data WaitAction
  = WaitAction(int number);
@@ -85,7 +94,7 @@ module slco::AST
  Object(Id objectId, Id classId);
  
  data Channel = 
- Channel(Id channelId, VariableType variableType, list[VariableType] variableTypes, 
+ Channel(Id channelId, Type tp, list[Type] types, 
  Id objectIdSource, Id portIdSource, 
  Id objectIdTarget, Id portIdTarget);
  

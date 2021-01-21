@@ -44,9 +44,9 @@ Id stateMachineId "{"
 "transitions" Transition* transitions 
 "}";
 //
-syntax Variable = Variable: VariableType variableType Id variableId;
+syntax Variable = Variable: Type type Id variableId;
 ////
-syntax VariableType =  
+syntax Type =  
 Integer: "Integer" | 
 String: "String";
 
@@ -68,14 +68,22 @@ syntax TransitionLine
 // Transition actions
 syntax SendAction 
 = SendAction: Id actionId 
-"(" Parameter outputVariable Combination* combinations 
+"(" Combination combination 
 ") to" Id portId;
 
 syntax ReceiveAction 
-= ReceiveAction: Id actionId "(" Parameter inputVariable Combination* combinations ") from" Id portId;
+= ReceiveAction: Id actionId "(" Combination combination ") from" Id portId;
 //
+
 syntax Combination 
-= Combination: Operator operator Parameter outputVariable;
+   = strCon: String string
+   | natCon: Natural natcon
+   | bracket "(" Combination e ")"
+   > left comma: Combination lhs "," Combination rhs
+   > left ( add: Combination lhs "+" Combination rhs
+          | sub: Combination lhs "-" Combination rhs
+          )
+  ;
 //
 
 //Waarom staat dit hier allemaal bij
@@ -102,7 +110,7 @@ Id objectId ":" Id classId;
 //
 //channel declaration
 syntax Channel = Channel:
-Id channelId "(" VariableType variableTypes ("," VariableType)* variableTypes ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
+Id channelId "(" Type type ("," Type)* types ")" "sync" "between" Id objectIdSource "." Id portIdSource "and" Id objectIdTarget "." Id portIdTarget;
 
 
 

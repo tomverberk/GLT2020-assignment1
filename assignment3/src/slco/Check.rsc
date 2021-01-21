@@ -22,13 +22,14 @@ import IO;
 
 // ------ Creation of the type-environment ------ ///
 // Create a mapping between variables and types
-alias TENV = tuple[ map[AId, AVariable] symbols, list[tuple[loc l, str msg]] errors];
+alias TENV = tuple[ map[Id, Variable] symbols, list[tuple[loc l, str msg]] errors];
 
 // Used to add Errors to the type-environment
 TENV addError(TENV env, loc l, str msg) = env[errors = env.errors + <l, msg>];
 
-str required(AVariable v, str got) = "Required <getName(v)>, got <got>";
-str required(AVariable v1, AVariable v2) = required(v1, getName(v2));
+//basic operation
+str required(Variable v, str got) = "Required <getName(v)>, got <got>";
+str required(Variable v1, Variable v2) = required(v1, getName(v2));
 
 // ------- End creation of the type-environment ----- ///
 

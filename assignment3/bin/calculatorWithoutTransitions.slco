@@ -1,0 +1,41 @@
+model SimpleCalculator {
+	classes
+	
+	Calculator {
+		ports in, out,
+		
+		state machines
+		Main {
+			variables
+			
+			
+			
+			initial S
+			
+			
+			transitions
+			read_calculate from S to S {
+				receive input(a,b) from in;
+				send result(a + b) to out;
+			}
+		}
+		
+	}
+	
+	User {
+		ports in, out,
+		
+		state machines
+		Loop {
+			variables
+			
+			initial Start
+			
+			transitions
+		}
+	}
+	
+	objects
+	
+	channels
+}

@@ -4,9 +4,7 @@ import slco::Parser;
 import slco::AST;
 import slco::Syntax;
 import IO;
-import util::Math;
 import slco::Load;
-
 
 /*
 Module compiles the SLCO code to executable python code.
@@ -56,33 +54,35 @@ str createModel(Model model) {
 	return pythonCode;
 }
 
+str getInputVars(StateMachine sm) {
+	str input_vars = "";
+	for (Variable var <- sm.variables) {
+		input_vars += ", <var.variableId.name>";
+	}
+	return input_vars;
+}
+
 str createClass(Class class) {
 	str pythonCode = "# Class\n";
 	pythonCode += "class <class.classId.name>:\n";
-	int cnt = 0;
-	for (SLCOId id <- class.portIds) {
-		str count = toString(cnt);
-		pythonCode += "\tport<count> = <id.name>\n";
-		cnt += 1;
-	}
+	pythonCode += "\tports = {}\n";
+	pythonCode += "\tstates = {}\n";
 	pythonCode += "\n";
 	
+	pythonCode += "\tdef __init__(self, ports, initial_states, state_machines):\n)";
+	pythonCode += "\tfor port in ports:\n\t\tports[port] = port\n\tcnt = 0\n\twhile cnt \< len(initial_states):\n\t\tself.states[state_machines[cnt]] = initial_states[cnt]\n\t\tcnt += 1\n\n";
+	
 	for (StateMachine sm <- class.stateMachines) {
-		pythonCode += "\tdef <sm.stateMachineId.name>():\n";
+		str input_vars = "";
+		input_vars += getInputVars(sm);
+		pythonCode += "\tdef <sm.stateMachineId.name>(self<input_vars>):\n";
 		cnt = 0;
 		for (Variable var <- sm.variables) {
 		// Switch van maken met de types
 			pythonCode += "\t\tvar<cnt> = <var.variableId.name>\n";
 			cnt += 1;
 		}
-		pythonCode += "\n";
-	
-		for (Variable var <- sm.variables) {
-		// Switch van maken met de types
-			pythonCode += "\t\tvar<cnt> = <var.variableId.name>\n";
-			cnt += 1;
-		}
-		
+		pythonCode += "\n";	
 	}
 	
 	return pythonCode;
@@ -96,7 +96,7 @@ str createChannel(Channel channel) {
 	
 	pythonCode += "\t# sync function between ports...\n";
 	pythonCode += "\tdef sync(self, <channel.objectIdSource.name>, <channel.objectIdTarget.name>):\n";
-	pythonCode += "\t\t <channel.objectIdTarget.name>.states[\"<channel.portIdTarget.name>\"]= <channel.objectIdSource.name>.states[\"<channel.portIdSource.name>\"]";
+	pythonCode += "\t\t <channel.objectIdTarget.name>.states[\"<channel.portIdTarget.name>\"]= <channel.objectIdSource.name>.states[\"<channel.portIdSource.name>\"]\n";
 	return pythonCode;
 }
 
@@ -143,5 +143,6 @@ str initializeObjects(Model model) {
 		pythonCode += "\t<obj.objectId.name> = <obj.classId.name>(ports<obj.classId.name>, state_machines<obj.classId.name>, initial_states<obj.classId.name>)\n";
 	}
 	
+	pythonCode += "\t# Below you can add the commands you would like to execute on the channels\n";
 	return pythonCode;
 }

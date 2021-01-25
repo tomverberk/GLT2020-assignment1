@@ -39,10 +39,10 @@ module slco::AST
  );
 //
  data Variable
- = Variable(Type tp, SLCOId variableId);
+ = Variable(Type tp, Id variableId);
 //
  data Type
-= Integer() | String();
+= Integer() | String() | State() | Port();
 
  data Transition
  = Transition(SLCOId transitionId, SLCOId stateIdBegin, SLCOId stateIdEnd, list[TransitionBody] transitionBodies

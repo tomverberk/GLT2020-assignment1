@@ -46,7 +46,7 @@ SLCOId stateMachineId "{"
 "transitions" Transition* transitions 
 "}";
 //
-syntax Variable = Variable: Type type SLCOId variableId;
+syntax Variable = Variable: Type type Id variableId;
 ////
 syntax Type =  
 Integer: "Integer" | 

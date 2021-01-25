@@ -26,6 +26,13 @@ alias TENV = tuple[ map[Id, Type] symbols, list[tuple[loc l, str msg]] errors];
 
 // Used to add Errors to the type-environment
 TENV addError(TENV env, loc l, str msg) = env[errors = env.errors + <l, msg>];
+//TENV addVariables(TENV env, list[Variable] decls) = env + newVariables(decls);
+TENV addVariables(TENV env, list[Variable] decls) = 
+<(variableId : tp | Variable(Type tp, Id variableId) <- decls) + env.symbols, []>;
+TENV addStates(TENV env, list[SLCOId] states) = 
+<(variableId : State() | id(Id variableId) <- states) + env.symbols, []>;
+TENV addPorts(TENV env, list[SLCOId] ports) =
+<(variableId : State() | id(Id variableId) <- ports) + env.symbols, []>;
 
 //basic operation
 str required(Type t, str got) = "Required <getName(t)>, got <got>";
@@ -42,13 +49,13 @@ TENV checkComb(exp:strCon(str S), Type req, TENV env) =
 req == String() ? env :
 addError(env, exp@location, required(req, "string"));
 
-TENV checkComb(exp:id(Id Id), Type req, TENV env) {
+TENV checkComb(exp:id(Id name), Type req, TENV env) {
 	//First check if the identifier exists in the type environment
-	if(!env.symbols[Id]?){
-		return addError(env, exp@location, "Undeclared variable <Id>");
+	if(!env.symbols[name]?){
+		return addError(env, exp@location, "Undeclared variable <name>");
 	}
 	//Next check if the required type is the type we have optained
-	tpid = env.symbols[Id];
+	tpid = env.symbols[name]; 
 	return req == tpid ? env : addError(env, exp@location, required(req, tpid));
 }
 
@@ -77,20 +84,40 @@ TENV checkSLCOId(stat: id(Id name), TENV env) {
 
 //Iterate over statements and for each statement 
 TENV checkIds(list[SLCOId] ids1 , TENV tenv){
-	for(S <- ids1) {
-		env = checkSLCOId(S, env);
-	} 
+	//for(S <- ids1) {
+	//	//env = checkSLCOId(S, env);
+	//} 
+	return tenv;
+}
+
+TENV CheckIds(Program p, TENV tenv){
 	return tenv;
 }
 
 
-//Build up the type environments (being ports, integers, states)
-TENV createEnvironment(list[Variable] decls){
-	//TENV tenv = (Id : tp | decl(SLCOId variableId, Type tp) <- Decls), []);
-	//return tenv;
-	//<(Id : tp | decl(SLCOId variableId, Type tp) <- Decls), [])>;
+TENV CreateEnvironmentFromProgram(Program p){
+	TENV tenv;
+	return tenv;
 }
-	//[]
-
  
+//Build up the type environments (being ports, integers, states)
+//TENV createEnvironment(list[Variable] decls) {
+//		(Id : tp | Variable(SLCOId variableId, TYPE tp) <- decls), [];
+//	}
+//
+//TENV createEnvironment(list[Variable] decls, TENV tenv){
+//	
+//	(Id : tp | Variable(SLCOId variableId, TYPE tp) <- decls), [];
+// 
+//}
+
+public TENV checkProgram(Program p){
+	//if(Program(Model model) := P){
+	TENV env = CreateEnvironmentFromProgram(p);
+	return CheckIds(p, env);
+	//} else {
+	//throw "Cannot Happen";
+}
+
+
 

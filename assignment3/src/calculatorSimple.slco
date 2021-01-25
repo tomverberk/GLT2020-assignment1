@@ -26,6 +26,7 @@ model SimpleCalculator {
 		Loop {
 			variables
 			Integer r
+			String kaas
 			
 			initial Start
 			state Wait

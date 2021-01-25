@@ -32,7 +32,7 @@ TENV addVariables(TENV env, list[Variable] decls) =
 TENV addStates(TENV env, list[SLCOId] states) = 
 <(variableId : State() | id(Id variableId) <- states) + env.symbols, []>;
 TENV addPorts(TENV env, list[SLCOId] ports) =
-<(variableId : State() | id(Id variableId) <- ports) + env.symbols, []>;
+<(variableId : Port() | id(Id variableId) <- ports) + env.symbols, []>;
 
 //basic operation
 str required(Type t, str got) = "Required <getName(t)>, got <got>";

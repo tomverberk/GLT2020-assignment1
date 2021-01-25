@@ -1,16 +1,20 @@
 module slco::Compile
 
+import slco::Parser;
 import slco::AST;
 import slco::Syntax;
 import IO;
 import util::Math;
+import ParseTree;
 
 
 /*
 Module compiles the SLCO code to executable python code.
 */
 
-void compile(Program program) {
+void parseCompile(loc l) = compile(parserSLCO(l)); 
+
+void compile(slco::Syntax::Program program) {
 	writeFile(program.src[extension="py"].top, program2Python(program));
 	return;
 }
@@ -25,28 +29,30 @@ str program2Python(Program program) {
 	// Might want to loop over all models, if more models in one file
 	python += createModel(program.model);	
 
+	println(python);
 	return python;
 }
 
 str createModel(Model model) {
+	str pythonCode = "";
 	println("Create classes");
-	str pythonCode = "# Defining classes\n";
+	pythonCode = "# Defining classes\n";
 
 	for (Class class <- model.classes) {
 		pythonCode += createClass(class);
-		pythoncode += "\n";
+		pythonCode += "\n";
 	}
 	
 	for (Channel channel <- model.channels)
 	{
-		pythoncode += createChannel(channel);
-		pythoncode += "\n";
+		pythonCode += createChannel(channel);
+		pythonCode += "\n";
 	}
-	pythoncode += "\n";
+	pythonCode += "\n";
 	
 
-	pythoncode += initializeObjects(model);
-	pythoncode += "\n";
+	pythonCode += initializeObjects(model);
+	pythonCode += "\n";
 	
 	return pythonCode;
 }
@@ -131,11 +137,12 @@ str initializeObjects(Model model) {
 		class_init += "\tstate_machines<class.classId> = [<sms>]\n";
 		class_init += "\tinitial_states<class.classId> = [<is>]\n";
 		class_init += "\n";
+		pythonCode += class_init;
 	}
 	
 	for (Object obj <- model.objects) {
-		class_init += "\t<obj.objectId> = <obj.classId>(ports<obj.classId>, state_machines<obj.classId>, initial_states<class.classId>)\n";
+		pythonCode += "\t<obj.objectId> = <obj.classId>(ports<obj.classId>, state_machines<obj.classId>, initial_states<obj.classId>)\n";
 	}
 	
-	return class_init;
+	return pythonCode;
 }

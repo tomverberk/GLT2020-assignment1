@@ -5,17 +5,18 @@ import slco::AST;
 import slco::Syntax;
 import IO;
 import util::Math;
-import ParseTree;
+import slco::Load;
 
 
 /*
 Module compiles the SLCO code to executable python code.
 */
 
-void parseCompile(loc l) = compile(parserSLCO(l)); 
+void parseCompile(loc l) = compile(load(l)); 
 
-void compile(slco::Syntax::Program program) {
-	writeFile(program.src[extension="py"].top, program2Python(program));
+void compile(Program program) {
+	writeFile(|project://assignment3/src/joejoe.py|, program2Python(program));
+	println("Done...");
 	return;
 }
 
@@ -28,8 +29,6 @@ str program2Python(Program program) {
 	//create method for creating the classes
 	// Might want to loop over all models, if more models in one file
 	python += createModel(program.model);	
-
-	println(python);
 	return python;
 }
 
@@ -59,28 +58,28 @@ str createModel(Model model) {
 
 str createClass(Class class) {
 	str pythonCode = "# Class\n";
-	pythonCode += "class <class.classId>\n";
+	pythonCode += "class <class.classId.name>:\n";
 	int cnt = 0;
 	for (SLCOId id <- class.portIds) {
 		str count = toString(cnt);
-		pythonCode += "\tport<count> = <id>\n";
+		pythonCode += "\tport<count> = <id.name>\n";
 		cnt += 1;
 	}
 	pythonCode += "\n";
 	
 	for (StateMachine sm <- class.stateMachines) {
-		pythonCode += "\tdef <sm.stateMachineId>():\n";
+		pythonCode += "\tdef <sm.stateMachineId.name>():\n";
 		cnt = 0;
 		for (Variable var <- sm.variables) {
 		// Switch van maken met de types
-			pythonCode += "\t\tvar<cnt> = <var.variableId>\n";
+			pythonCode += "\t\tvar<cnt> = <var.variableId.name>\n";
 			cnt += 1;
 		}
 		pythonCode += "\n";
 	
 		for (Variable var <- sm.variables) {
 		// Switch van maken met de types
-			pythonCode += "\t\tvar<cnt> = <var.variableId>\n";
+			pythonCode += "\t\tvar<cnt> = <var.variableId.name>\n";
 			cnt += 1;
 		}
 		
@@ -91,13 +90,13 @@ str createClass(Class class) {
 
 str createChannel(Channel channel) {
 	str pythonCode = "";
-	pythonCode += "class <channel.channelId>:\n";
+	pythonCode += "class <channel.channelId.name>:\n";
 	pythonCode += "\tdef __init__(self):\n";
 	pythonCode += "\t\treturn\n\n";
 	
 	pythonCode += "\t# sync function between ports...\n";
-	pythonCode += "\tdef sync(self, <channel.objectIdSource>, <channel.objectIdTarget>):\n";
-	pythonCode += "\t\t <channel.objectIdTarget>.states[\"<channel.portIdTarget>\"]= <channel.objectIdSource>.states[\"<channel.portIdSource>\"]";
+	pythonCode += "\tdef sync(self, <channel.objectIdSource.name>, <channel.objectIdTarget.name>):\n";
+	pythonCode += "\t\t <channel.objectIdTarget.name>.states[\"<channel.portIdTarget.name>\"]= <channel.objectIdSource.name>.states[\"<channel.portIdSource.name>\"]";
 	return pythonCode;
 }
 
@@ -115,33 +114,33 @@ str initializeObjects(Model model) {
 		str ports = "";
 		for (SLCOId portId <- class.portIds) {
 			if (count == 0) {
-				ports += "\"<portId>\"";
+				ports += "\"<portId.name>\"";
 			} else {
-				ports += ", \"<portId>\"";
+				ports += ", \"<portId.name>\"";
 			}
 		}
-		class_init += "\tports<class.classId> = [<ports>]\n";
+		class_init += "\tports<class.classId.name> = [<ports>]\n";
 		
 		count = 0;
 		str sms = "";
 		str is = "";
 		for (StateMachine sm <- class.stateMachines) {
 			if (count == 0) {
-				sms += "\"<sm.stateMachineId>\"";
-				is += "\"<sm.initialState>\"";
+				sms += "\"<sm.stateMachineId.name>\"";
+				is += "\"<sm.initialState.name>\"";
 			} else {
-				sms += ", \"<sm.stateMachineId>\"";
-				is += ", \"<sm.initialState>\"";
+				sms += ", \"<sm.stateMachineId.name>\"";
+				is += ", \"<sm.initialState.name>\"";
 			}
 		}
-		class_init += "\tstate_machines<class.classId> = [<sms>]\n";
-		class_init += "\tinitial_states<class.classId> = [<is>]\n";
+		class_init += "\tstate_machines<class.classId.name> = [<sms>]\n";
+		class_init += "\tinitial_states<class.classId.name> = [<is>]\n";
 		class_init += "\n";
 		pythonCode += class_init;
 	}
 	
 	for (Object obj <- model.objects) {
-		pythonCode += "\t<obj.objectId> = <obj.classId>(ports<obj.classId>, state_machines<obj.classId>, initial_states<obj.classId>)\n";
+		pythonCode += "\t<obj.objectId.name> = <obj.classId.name>(ports<obj.classId.name>, state_machines<obj.classId.name>, initial_states<obj.classId.name>)\n";
 	}
 	
 	return pythonCode;

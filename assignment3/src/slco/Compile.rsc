@@ -23,13 +23,7 @@ str program2Python(Program program) {
 	
 	//create method for creating the classes
 	// Might want to loop over all models, if more models in one file
-	python += createModel(program.model);
-	
-	// Define the main method
-	python += "# Initialize the classes\n";
-	python += "def makeModel():\n";
-	// call all methods from main:
-	
+	python += createModel(program.model);	
 
 	return python;
 }
@@ -58,7 +52,7 @@ str createModel(Model model) {
 }
 
 str createClass(Class class) {
-	pythonCode = "# Class\n";
+	str pythonCode = "# Class\n";
 	pythonCode += "class <class.classId>\n";
 	int cnt = 0;
 	for (SLCOId id <- class.portIds) {
@@ -90,9 +84,58 @@ str createClass(Class class) {
 }
 
 str createChannel(Channel channel) {
+	str pythonCode = "";
+	pythonCode += "class <channel.channelId>:\n";
+	pythonCode += "\tdef __init__(self):\n";
+	pythonCode += "\t\treturn\n\n";
 	
+	pythonCode += "\t# sync function between ports...\n";
+	pythonCode += "\tdef sync(self, <channel.objectIdSource>, <channel.objectIdTarget>):\n";
+	pythonCode += "\t\t <channel.objectIdTarget>.states[\"<channel.portIdTarget>\"]= <channel.objectIdSource>.states[\"<channel.portIdSource>\"]";
+	return pythonCode;
 }
 
+// Initializes the classes
 str initializeObjects(Model model) {
+	str pythonCode = "";
+	// Define the main method
+	pythonCode += "# Initialize the classes\n";
+	pythonCode += "def makeModel():\n";
+	// call all methods from main:
 	
+	for (Class class <- model.classes) {
+		str class_init = "";
+		int count = 0;
+		str ports = "";
+		for (SLCOId portId <- class.portIds) {
+			if (count == 0) {
+				ports += "\"<portId>\"";
+			} else {
+				ports += ", \"<portId>\"";
+			}
+		}
+		class_init += "\tports<class.classId> = [<ports>]\n";
+		
+		count = 0;
+		str sms = "";
+		str is = "";
+		for (StateMachine sm <- class.stateMachines) {
+			if (count == 0) {
+				sms += "\"<sm.stateMachineId>\"";
+				is += "\"<sm.initialState>\"";
+			} else {
+				sms += ", \"<sm.stateMachineId>\"";
+				is += ", \"<sm.initialState>\"";
+			}
+		}
+		class_init += "\tstate_machines<class.classId> = [<sms>]\n";
+		class_init += "\tinitial_states<class.classId> = [<is>]\n";
+		class_init += "\n";
+	}
+	
+	for (Object obj <- model.objects) {
+		class_init += "\t<obj.objectId> = <obj.classId>(ports<obj.classId>, state_machines<obj.classId>, initial_states<class.classId>)\n";
+	}
+	
+	return class_init;
 }

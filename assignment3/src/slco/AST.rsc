@@ -32,7 +32,7 @@ module slco::AST
  );
 
  data StateMachine
- = StateMachine(SLCOId stateMachineId, list[Variable] variables, SLCOId initialState, list[SLCOId] states ,list[Transition] transitions
+ = StateMachine(SLCOId stateMachineId, list[Variable] variables, SLCOId initialState, list[SLCOId] states, list[Transition] transitions
  );
 //
  data Variable

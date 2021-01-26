@@ -2,6 +2,8 @@
 # Necessary inputs:
 import time
 
+import queue
+
 # Defining classes
 # Class
 class Calculator:
@@ -17,6 +19,11 @@ class Calculator:
 		cnt += 1
 
 	def Main(self):
+		if self.states["Main"] == S:
+			in_var = self.ports["in]
+			print(in_var)
+			self.states["Main"] = "S"
+
 
 
 # Class
@@ -32,25 +39,44 @@ class User:
 		self.states[state_machines[cnt]] = initial_states[cnt]
 		cnt += 1
 
-	def Loop(self, r):
-		var0 = r
+	def Loop(self, r = 1):
+		if self.states["Loop"] == Start:
+			in_var = self.ports["in]
+			print(in_var)
+			self.states["Loop"] = "Wait"
+
+		elif self.states["Loop"] == "Wait":
+			time.sleep(1.5)			self.states["Loop"] = "Start"
+
 
 
 class c0:
 	def __init__(self):
-		return
+		self.q = queue.Queue(maxsize=0)
 
-	# sync function between ports...
-	def sync(self, u, c):
-		 c.states["in"]= u.states["out"]
+	def addQueue(self, u):
+		self.q1.put(u.ports["out"])
+
+	# getQueue function between ports...
+	def getQueue(self, c):
+		 c.states["in"]= self.q.get()
+
+	def queueEmpty(self):
+		return self.q.empty()
 
 class c1:
 	def __init__(self):
-		return
+		self.q = queue.Queue(maxsize=0)
 
-	# sync function between ports...
-	def sync(self, c, u):
-		 u.states["in"]= c.states["out"]
+	def addQueue(self, c):
+		self.q1.put(c.ports["out"])
+
+	# getQueue function between ports...
+	def getQueue(self, u):
+		 u.states["in"]= self.q.get()
+
+	def queueEmpty(self):
+		return self.q.empty()
 
 
 # Initialize the classes

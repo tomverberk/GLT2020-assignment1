@@ -291,6 +291,10 @@ str initializeObjects(Model model) {
 		pythonCode += "\t<obj.objectId.name> = <obj.classId.name>(ports<obj.classId.name>, state_machines<obj.classId.name>, initial_states<obj.classId.name>)\n";
 	}
 	
+	for (Channel ch <- model.channels) {
+		pythonCode += "\t<ch.channelId.name> = <ch.channelId.name>()\n";
+	}
+	
 	pythonCode += "\t# Below you can add the commands you would like to execute on the channels\n";
 	return pythonCode;
 }

@@ -98,4 +98,6 @@ def makeModel():
 
 	c = Calculator(portsCalculator, state_machinesCalculator, initial_statesCalculator)
 	u = User(portsUser, state_machinesUser, initial_statesUser)
+	c0 = c0()
+	c1 = c1()
 	# Below you can add the commands you would like to execute on the channels

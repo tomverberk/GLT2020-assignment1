@@ -34,6 +34,7 @@ TENV addVariables(TENV env, list[Variable] decls) =
 TENV addId(Type tp, TENV env, SLCOId Id) =
 <(Id.name : tp) + env.symbols, []>;
 
+// #TODE CHANGE THIS TO MAKE SURE THAT WE CHECK THAT THE VARIABLE DOES NOT YET EXISTS
 TENV addIds(Type tp, TENV env, list[SLCOId] Ids) =
 <(variableId : tp | id(Id variableId) <- Ids) + env.symbols, []>;
 
@@ -56,20 +57,21 @@ str required(Type t1, Type t2) = required(t1, getName(t2));
 //reqType == idType ? env :
 //addError(env, idType@location, required(reqType, idType));  
 
-TENV checkComb(exp:strCon(str S), Type req, TENV env) =
-req == String() ? env :
-addError(env, exp@location, required(req, "string"));
+TENV CheckComb(Comb combinations, TENV env){
+	return env;
+	//Dit is de enige die nog gedaan moet worden
+}
 
 TENV CheckId(SLCOId id, Type req, TENV env) {
 	//First check if the identifier exists in the type environment
 	if(!env.symbols[id.name]?){
-		return addError(env, id@location, "Undeclared variable");
+		return addError(env, id@location, "Undeclared variable <id.name>");
 	}
 	//return addError(env, id@location, "Undeclared variable");
 	//Next check if the required type is the type we have optained
 	tpid = env.symbols[id.name]; 
 	if(tpid != req){
-		env = addError(env, exp@location, required(req,tpid)); 
+		env = addError(env, id@location, required(req,tpid)); 
 	}
 	
 	return env;
@@ -86,10 +88,18 @@ TENV checkIds(Program p, TENV tenv){
 				tenv = CheckId(t.stateIdEnd, State(), tenv);
 				for(b <- t.transitionBodies){
 					line = b.transitionLine;
-					
-					//Hier heb ik nu nog even geen zin in.
+					switch(line){
+						case TransitionLine(SendAction sendAction): { 
+							tenv = CheckComb(sendAction.combinations, tenv);
+							tenv = CheckId(sendAction.portId, Port(), tenv);
+						}
+						case TransitionLine(ReceiveAction receiveAction): {
+							tenv = CheckComb(receiveAction.combinations, tenv);
+							tenv = CheckId(receiveAction.portId, Port(), tenv);
+						}
+						case TransitionLine(WaitAction waitAction): ; //Do nothing
+						}
 				};
-				//return addError(tenv, t.stateIdBegin@location, "Undeclared variable");
 			};
 		};
 	};
@@ -105,18 +115,6 @@ TENV checkIds(Program p, TENV tenv){
 		tenv = CheckId(channel.portIdTarget, Port(), tenv);
 		
 	};
-	return tenv;
-}
-
-//TENV checkSLCOId(stat: id(Id name), TENV env) {
-//	if(!env.symbols[name]?)
-//		return addError(env, stat@location, "Undeclared variable <name>");
-//	tpid = env.symbols[name];
-//	//return env;
-//	return checkId(Exp, tpid, env);
-//}
-
-TENV CheckIds(Program p, TENV tenv){
 	return tenv;
 }
 
@@ -150,31 +148,30 @@ TENV addIdsOfClass(Class c, TENV tenv){
 			tenv = addIds(State(), tenv, sm.states);
 			for(t <- sm.transitions){
 				tenv = addId(Transition(), tenv, t.transitionId);
-				//tenv = addError(tenv, "gekke locatie", "gekke error");
+				for(b <- t.transitionBodies){
+					line = b.transitionLine;
+					//Add ActionId's
+					switch(line){
+						case TransitionLine(SendAction sendAction): { 
+							tenv = addId(Action(), tenv, sendAction.actionId);
+						}
+						case TransitionLine(ReceiveAction receiveAction): {
+							tenv = addId(Action(), tenv, receiveAction.actionId);
+
+						}
+						case TransitionLine(WaitAction waitAction): ; //Do nothing
+						}
+				};
 			}
 		};
 		return tenv;
 }
  
-//Build up the type environments (being ports, integers, states)
-//TENV createEnvironment(list[Variable] decls) {
-//		(Id : tp | Variable(SLCOId variableId, TYPE tp) <- decls), [];
-//	}
-//
-//TENV createEnvironment(list[Variable] decls, TENV tenv){
-//	
-//	(Id : tp | Variable(SLCOId variableId, TYPE tp) <- decls), [];
-// 
-//}
 
 public TENV checkProgram(Program p){
-	//if(Program(Model model) := P){
 	TENV env = CreateEnvironmentFromProgram(p);
 	env = checkIds(p, env);
 	return env;
-	//return CheckIds(p, env);
-	//} else {
-	//throw "Cannot Happen";
 }
 
 

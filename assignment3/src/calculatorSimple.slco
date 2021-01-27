@@ -11,7 +11,7 @@ model SimpleCalculator {
 			initial S
 			
 			transitions
-			readcalculate from G to S {
+			readcalculate from S to S {
 				receive input(a, b) from in;
 				send result(a + b) to out;
 			}
@@ -20,7 +20,7 @@ model SimpleCalculator {
 	}
 	
 	User {
-		ports in out
+		ports in out c
 		
 		state machines
 		Loop {
@@ -35,7 +35,7 @@ model SimpleCalculator {
 			transitions
 			
 			sendreceive from Start to Wait {
-				send input( a, b ) to out;
+				send input( a, b ) to c;
 				receive result(a) from in;
 			}
 		

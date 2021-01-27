@@ -2,8 +2,8 @@ import slco::AST;
 import slco::Syntax;
 import slco::Load;
 import slco::Parser;
-
 import slco::Check;
+
 import slco::CST2AST;
 
 import slco::Plugin;
@@ -12,3 +12,19 @@ import util::IDE;
 import ParseTree;
 
 load(#Program, |project://assignment3/src/calculatorWithoutClasses.slco|);
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:add(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:sub(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
+
+//Make sure the two parts have the same type
+TENV checkExp(exp:comma(Comb E1, Comb E2), Type req, TENV env) =
+	req == Integer() || req == String() ?checkExp(E1, req, checkExp(E2, req, env))
+					 				  : addError(env, exp@location, required(req, "Integer or String"));
+

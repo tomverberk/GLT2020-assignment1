@@ -23,16 +23,25 @@ import IO;
 // ------ Creation of the type-environment ------ ///
 // Create a mapping between variables and types
 alias TENV = tuple[ map[Id, Type] symbols, list[tuple[loc l, str msg]] errors];
+alias OENV = map[Id, Id];
 
 // Used to add Errors to the type-environment
 TENV addError(TENV env, loc l, str msg) = env[errors = env.errors + <l, msg>];
 //TENV addVariables(TENV env, list[Variable] decls) = env + newVariables(decls);
 TENV addVariables(TENV env, list[Variable] decls) = 
 <(variableId : tp | Variable(Type tp, Id variableId) <- decls) + env.symbols, []>;
-TENV addStates(TENV env, list[SLCOId] states) = 
-<(variableId : State() | id(Id variableId) <- states) + env.symbols, []>;
-TENV addPorts(TENV env, list[SLCOId] ports) =
-<(variableId : Port() | id(Id variableId) <- ports) + env.symbols, []>;
+TENV addId(Type tp, TENV env, SLCOId id) =
+<(variableId : tp | id(Id variableId) <- id) + env.symbols, []>;
+TENV addIds(Type tp, TENV env, list[SLCOId] Ids) =
+<(variableId : tp | id(Id variableId) <- Ids) + env.symbols, []>;
+
+TENV InitializeWithModel(SLCOId model) =                                                 
+<( Id : Model()  | id(Id Id) <- model), []>;
+
+//OENV addObject(SLCOId classId, OENV oenv, SLCOId objectId) =
+//<(variableId : classId | id(Id variableId) <- objectId) + oenv>;
+ 
+
 
 //basic operation
 str required(Type t, str got) = "Required <getName(t)>, got <got>";
@@ -97,7 +106,37 @@ TENV CheckIds(Program p, TENV tenv){
 
 TENV CreateEnvironmentFromProgram(Program p){
 	TENV tenv;
+	Model m = p.model;
+	tenv = InitializeWithModel(m.modelId); 
+	for(object <- m.objects) {
+		tenv = addId(Class(), tenv, object.objectId);
+		for(c <- m.classes){
+				// this must happen exactly once
+				if(object.classId == c.classId){
+					tenv = addIdsOfClass(c, tenv);
+				}
+			}
+	}
+	for(channel <- m.channels){
+		tenv = addId(Channel(), tenv, channel.channelId);
+	}
+	
 	return tenv;
+}
+
+TENV addIdsOfClass(Class c, TENV tenv){
+		//addId(Class(), tenv, c.classId);
+		tenv = addIds(Port(), tenv, c.portIds);
+		for(sm <- c.stateMachines){
+			tenv = addId(StateMachine(), tenv, sm.stateMachineId);
+			tenv = addVariables(tenv, sm.variables);
+			tenv = addId(State(), tenv, sm.initialState);
+			tenv = addIds(State(), tenv, sm.states);
+			for(t <- sm.transitions){
+				tenv = addId(Transition(), tenv, sm.initialState);
+			}
+		};
+		return tenv;
 }
  
 //Build up the type environments (being ports, integers, states)

@@ -9,22 +9,30 @@ import queue
 class Calculator:
 	ports = {}
 	states = {}
+	send_input = False
 
 	def __init__(self, portsInput, initial_states, state_machines):
 		for port in portsInput:
-			self.ports[port] = port
+			self.ports[port] = None
 		cnt = 0
 		while cnt < len(initial_states):
-			self.states[state_machines[cnt]] = None
+			self.states[state_machines[cnt]] = initial_states[cnt]
 			cnt += 1
+			self.send_input = False
 
 	def Main(self):
-		if self.states["Main"] == "S":
+		print("Start transition system: Main...")
+		if self.states['Main'] == 'S':
 			in_var = self.ports["in"]
 			a = in_var[0]
 			b = in_var[1]
-			out_var = [a + b]
-			self.ports["out"] = out_var
+			print("Receiving from port: in")
+			self.send_input = False
+			if not self.send_input:
+				out_var = [a + b]
+				self.ports["out"] = out_var
+				print("Sending to port: out")
+				self.send_input = True
 			self.states["Main"] = "S"
 
 
@@ -32,32 +40,40 @@ class Calculator:
 class User:
 	ports = {}
 	states = {}
+	send_input = False
 
 	def __init__(self, portsInput, initial_states, state_machines):
 		for port in portsInput:
-			self.ports[port] = port
+			self.ports[port] = None
 		cnt = 0
 		while cnt < len(initial_states):
-			self.states[state_machines[cnt]] = None
+			self.states[state_machines[cnt]] = initial_states[cnt]
 			cnt += 1
+			self.send_input = False
 
 	def Loop(self):
-		if self.states["Loop"] == "Start":
-			out_var = ["a", "b"]
-			self.ports["out"] = out_var
+		print("Start transition system: Loop...")
+		if self.states['Loop'] == 'Start':
+			if not self.send_input:
+				out_var = ["a", "b"]
+				self.ports["out"] = out_var
+				print("Sending to port: out")
+				self.send_input = True
 			in_var = self.ports["in"]
 			if in_var is None:
 				print("No input yet received, still in same state")
 				return
-			print(in_var)
+			print("Receiving from port: in")
+			self.ports["in"] = None
+			self.send_input = False
 			self.states["Loop"] = "Wait"
-		elif self.states["Loop"] == "Wait":
+		elif self.states['Loop'] =='Wait':
 			time.sleep(1.5)
 			print("Waited 1.5 seconds")
 			self.states["Loop"] = "Start"
 
 
-class c0:
+class Channelc0:
 	def __init__(self):
 		self.q = queue.Queue(maxsize=0)
 
@@ -66,12 +82,17 @@ class c0:
 
 	# getQueue function between ports...
 	def getQueue(self, c):
-		 c.states["in"]= self.q.get()
+		c.ports["in"] = self.q.get()
 
+	# sync between queues
+	def sync(self, u, c):
+		self.addQueue(u)
+		self.getQueue(c)
+		print("Sync between source: u and target: c...")
 	def queueEmpty(self):
 		return self.q.empty()
 
-class c1:
+class Channelc1:
 	def __init__(self):
 		self.q = queue.Queue(maxsize=0)
 
@@ -80,8 +101,13 @@ class c1:
 
 	# getQueue function between ports...
 	def getQueue(self, u):
-		 u.states["in"]= self.q.get()
+		u.ports["in"] = self.q.get()
 
+	# sync between queues
+	def sync(self, c, u):
+		self.addQueue(c)
+		self.getQueue(u)
+		print("Sync between source: c and target: u...")
 	def queueEmpty(self):
 		return self.q.empty()
 
@@ -96,8 +122,18 @@ def makeModel():
 	state_machinesUser = ["Loop"]
 	initial_statesUser = ["Start"]
 
-	c = Calculator(portsCalculator, state_machinesCalculator, initial_statesCalculator)
-	u = User(portsUser, state_machinesUser, initial_statesUser)
-	c0 = c0()
-	c1 = c1()
+	c = Calculator(portsCalculator, initial_statesCalculator, state_machinesCalculator)
+	u = User(portsUser, initial_statesUser, state_machinesUser)
+	c0 = Channelc0()
+	c1 = Channelc1()
 	# Below you can add the commands you would like to execute on the channels
+
+
+	# Can be used for the simple calculator example:
+	u.Loop()
+	c0.sync(u,c)
+	c.Main()
+	c1.sync(c, u)
+	u.Loop()
+	u.Loop()
+makeModel()

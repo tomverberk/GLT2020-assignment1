@@ -11,7 +11,7 @@ model SimpleCalculator {
 			initial S
 			
 			transitions
-			readcalculate from S to S {
+			readcalculate from G to S {
 				receive input(a, b) from in;
 				send result(a + b) to out;
 			}
@@ -27,6 +27,7 @@ model SimpleCalculator {
 			variables
 			Integer r
 			String kaas
+			String gerry
 			
 			initial Start
 			state Wait

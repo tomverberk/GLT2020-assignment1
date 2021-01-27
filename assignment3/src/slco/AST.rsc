@@ -42,7 +42,7 @@ module slco::AST
  = Variable(Type tp, Id variableId);
 //
  data Type
-= Integer() | String() | State() | Port() | Class() | Model() | StateMachine() | Transition() | Channel();
+= Integer() | String() | State() | Port() | Class() | Model() | StateMachine() | Transition() | Channel() | Object();
 
  data Transition
  = Transition(SLCOId transitionId, SLCOId stateIdBegin, SLCOId stateIdEnd, list[TransitionBody] transitionBodies
@@ -121,3 +121,4 @@ anno loc Operator@location;
 anno loc Comb@location;
 anno loc Object@location;
 anno loc Channel@location;
+anno loc SLCOId@location;

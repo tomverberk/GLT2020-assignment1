@@ -10,5 +10,7 @@ import slco::Plugin;
 
 import util::IDE;
 import ParseTree;
+import slco::Compile;
 
+parseCompile(|project://assignment3/src/calculatorSimple.slco|);
 load(#Program, |project://assignment3/src/calculatorWithoutClasses.slco|);

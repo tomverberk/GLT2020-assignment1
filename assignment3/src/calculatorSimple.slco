@@ -37,7 +37,7 @@ model SimpleCalculator {
 				receive result(a) from in;
 			}
 		
-		delay from Wait to Start {
+			delay from Wait to Start {
 				after 1500 ms
 			}
 		}

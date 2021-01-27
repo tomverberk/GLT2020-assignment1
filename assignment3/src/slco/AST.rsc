@@ -16,14 +16,11 @@ module slco::AST
 
  public alias Id = str;
 
- data Program
+ data Program(loc src = |tmp:///|)
  = Program(Model model);
 
  public data SLCOId =
  	id(Id name);
-
-
-
 
  data Model
  = Model(SLCOId modelId , list[Class] classes , list[Object] objects
@@ -31,11 +28,11 @@ module slco::AST
  );
 
  data Class
- = Class(SLCOId classId ,list[SLCOId] portIds, list[StateMachine] stateMachines
+ = Class(SLCOId classId, list[SLCOId] portIds, list[StateMachine] stateMachines
  );
 
  data StateMachine
- = StateMachine(SLCOId stateMachineId, list[Variable] variables, SLCOId initialState, list[SLCOId] states ,list[Transition] transitions
+ = StateMachine(SLCOId stateMachineId, list[Variable] variables, SLCOId initialState, list[SLCOId] states, list[Transition] transitions
  );
 //
  data Variable

@@ -1,0 +1,20 @@
+model SimpleCalculator {
+	classes
+	
+	Calculator {
+		ports
+		
+		state machines
+		
+	}
+	
+	User {
+		ports
+		
+		state machines
+	}
+	
+	objects
+	
+	channels
+}

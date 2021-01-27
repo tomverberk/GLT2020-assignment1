@@ -1,6 +1,7 @@
 module slco::Check
 
 import slco::AST;
+import slco::Load;
 import Node;
 import IO;
 
@@ -105,9 +106,8 @@ TENV CheckIds(Program p, TENV tenv){
 
 
 TENV CreateEnvironmentFromProgram(Program p){
-	TENV tenv;
 	Model m = p.model;
-	tenv = InitializeWithModel(m.modelId); 
+	TENV tenv = InitializeWithModel(m.modelId); 
 	for(object <- m.objects) {
 		tenv = addId(Class(), tenv, object.objectId);
 		for(c <- m.classes){
@@ -133,7 +133,7 @@ TENV addIdsOfClass(Class c, TENV tenv){
 			tenv = addId(State(), tenv, sm.initialState);
 			tenv = addIds(State(), tenv, sm.states);
 			for(t <- sm.transitions){
-				tenv = addId(Transition(), tenv, sm.initialState);
+				tenv = addId(Transition(), tenv, t.transitionId);
 			}
 		};
 		return tenv;
@@ -153,10 +153,14 @@ TENV addIdsOfClass(Class c, TENV tenv){
 public TENV checkProgram(Program p){
 	//if(Program(Model model) := P){
 	TENV env = CreateEnvironmentFromProgram(p);
-	return CheckIds(p, env);
+	return env;
+	//return CheckIds(p, env);
 	//} else {
 	//throw "Cannot Happen";
 }
+
+
+public list[tuple[loc l, str msg]] checkProgram(str txt) = checkProgram(load(txt)).errors;
 
 
 

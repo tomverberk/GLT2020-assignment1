@@ -10,7 +10,7 @@ model SimpleCalculator {
 			Integer a
 			Integer b
 			
-			initial S
+			initial a
 			
 			transitions
 			read_calculate from S to S {

@@ -29,14 +29,46 @@ alias OENV = map[Id, Id];
 // Used to add Errors to the type-environment
 TENV addError(TENV env, loc l, str msg) = env[errors = env.errors + <l, msg>];
 //TENV addVariables(TENV env, list[Variable] decls) = env + newVariables(decls);
-TENV addVariables(TENV env, list[Variable] decls) = 
-<(variableId : tp | Variable(Type tp, Id variableId) <- decls) + env.symbols, []>;
-TENV addId(Type tp, TENV env, SLCOId Id) =
-<(Id.name : tp) + env.symbols, []>;
+//TENV addVariables(TENV env, list[Variable] decls) = 
+//<(variableId : tp | Variable(Type tp, Id variableId) <- decls) + env.symbols, []>;
+TENV addIdToENV(Type tp, TENV env, SLCOId Id) =
+<(Id.name : tp) + env.symbols, env.errors>;
 
 // #TODE CHANGE THIS TO MAKE SURE THAT WE CHECK THAT THE VARIABLE DOES NOT YET EXISTS
-TENV addIds(Type tp, TENV env, list[SLCOId] Ids) =
-<(variableId : tp | id(Id variableId) <- Ids) + env.symbols, []>;
+//TENV addIdsToENV(Type tp, TENV env, list[SLCOId] Ids) =
+//<(variableId : tp | id(Id variableId) <- Ids) + env.symbols, []>;
+TENV addVariables(TENV env, list[Variable] variables){
+	for(variable <- variables){
+		SLCOId id = variable.variableId;
+		env = CheckIdExists(env, id);
+		env = addIdToENV(variable.tp, env, id);
+	};
+	return env;
+}
+
+
+TENV addId(Type tp, TENV env, SLCOId id){
+	env = CheckIdExists(env, id);
+	env = addIdToENV(tp, env, id);
+	//return addError(env, id@location, "Already declared variable <id.name>");
+	return env;
+}
+
+TENV addIds(Type tp, TENV env, list[SLCOId] Ids){
+	for(id <- Ids){
+		env = addId(tp, env, id);
+	};
+	return env;
+}
+
+TENV CheckIdExists(TENV env, SLCOId Id){
+	if(env.symbols[Id.name]?){
+		return addError(env, Id@location, "Already declared variable <Id.name>");
+	}
+	//return addError(env, Id@location, "Already declared variable <Id.name>");
+	return env;
+}
+
 
 TENV InitializeWithModel(SLCOId model) =                                                 
 <( Id : Model()  | id(Id Id) <- model), []>;
@@ -57,10 +89,26 @@ str required(Type t1, Type t2) = required(t1, getName(t2));
 //reqType == idType ? env :
 //addError(env, idType@location, required(reqType, idType));  
 
-TENV CheckComb(Comb combinations, TENV env){
-	return env;
-	//Dit is de enige die nog gedaan moet worden
+TENV checkComb(combinations:intCon(int N), Type req, TENV env) =                              
+  req == Integer() ? env : addError(env, combinations@location, required(req, "Integer"));
+
+TENV checkComb(combinations:IdCon(SLCOId Id), Type req, TENV env) {                              
+  	return CheckId(Id, req, env);
 }
+
+//WE ONLY ADD AND SUBSTRACT STRINGS
+TENV checkComb(combinations:add(Comb E1, Comb E2), Type req, TENV env) =                        
+  req == Integer() ? checkComb(E1, Integer(), checkComb(E2, Integer(), env))
+                   : addError(env, combinations@location, required(req, "natural"));
+  
+TENV checkComb(combinations:sub(Comb E1, Comb E2), Type req, TENV env) =                      
+  req == Integer() ? checkComb(E1, Integer(), checkComb(E2, Integer(), env))
+                   : addError(env, combinations@location, required(req, "natural"));
+
+//WE CAN SEND BOTH ID's and Integers
+TENV checkComb(combinations:comma(Comb E1, Comb E2), Type req, TENV env) =                    
+ 	checkComb(E1, req, checkComb(E2, req, env));
+
 
 TENV CheckId(SLCOId id, Type req, TENV env) {
 	//First check if the identifier exists in the type environment
@@ -90,11 +138,11 @@ TENV checkIds(Program p, TENV tenv){
 					line = b.transitionLine;
 					switch(line){
 						case TransitionLine(SendAction sendAction): { 
-							tenv = CheckComb(sendAction.combinations, tenv);
+							tenv = checkComb(sendAction.combinations, Integer(), tenv);
 							tenv = CheckId(sendAction.portId, Port(), tenv);
 						}
 						case TransitionLine(ReceiveAction receiveAction): {
-							tenv = CheckComb(receiveAction.combinations, tenv);
+							tenv = checkComb(receiveAction.combinations, Integer(), tenv);
 							tenv = CheckId(receiveAction.portId, Port(), tenv);
 						}
 						case TransitionLine(WaitAction waitAction): ; //Do nothing

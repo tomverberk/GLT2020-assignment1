@@ -39,7 +39,7 @@ module slco::AST
  );
 //
  data Variable
- = Variable(Type tp, Id variableId);
+ = Variable(Type tp, SLCOId variableId);
 //
  data Type
 = Integer() | String() | State() | Port() | Class() | Model() | StateMachine() | Transition() | Channel() | Object() | Action();
@@ -70,7 +70,7 @@ module slco::AST
 
  public data Comb
      = intCon(int iVal)
-     | strCon(str string)
+     | IdCon(SLCOId combId)
      | add(Comb left, Comb right)
      | sub(Comb left, Comb right)
      | comma(Comb left, Comb right)

@@ -46,7 +46,7 @@ SLCOId stateMachineId "{"
 "transitions" Transition* transitions 
 "}";
 //
-syntax Variable = Variable: Type type Id variableId;
+syntax Variable = Variable: Type type SLCOId variableId;
 ////
 syntax Type =  
 Integer: "Integer" | 
@@ -79,7 +79,7 @@ syntax ReceiveAction
 
 syntax Combination 
    = intCon: Integer iVal
-   | strCon: String string
+   | IdCon: SLCOId combId
    | bracket "(" Combination e ")"
    > left comma: Combination lhs "," Combination rhs
    > left ( add: Combination lhs "+" Combination rhs

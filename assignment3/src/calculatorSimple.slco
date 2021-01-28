@@ -2,34 +2,38 @@ model SimpleCalculator {
 	classes
 	
 	Calculator {
-		ports in out
+		ports inC outC
 		
 		state machines
 		Main {
 			variables
+			Integer o
 			
-			initial S
+			initial K
 			
 			transitions
-			readcalculate from S to S {
-				receive input(a, b) from in;
-				send result(a + b) to out;
+			readcalculate from K to K	 {
+				receive inputC(a, b) from inC;
+				send resultC(a + b) to outC;
 			}
 		}
 		
 	}
 	
 	User {
-		ports in out
+		ports in out 
 		
 		state machines
 		Loop {
 			variables
-			Integer r
+			Integer a
+			Integer b
+			Integer g
+			String  onthunohuo
 			
 			initial Start
 			state Wait
-			
+
 			transitions
 			
 			sendreceive from Start to Wait {

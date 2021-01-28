@@ -79,7 +79,7 @@ syntax ReceiveAction
 
 syntax Combination 
    = intCon: Integer iVal
-   | strCon: String string
+   | IdCon: SLCOId combId
    | bracket "(" Combination e ")"
    > left comma: Combination lhs "," Combination rhs
    > left ( add: Combination lhs "+" Combination rhs

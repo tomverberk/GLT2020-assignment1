@@ -39,7 +39,7 @@ module slco::AST
  = Variable(Type tp, SLCOId variableId);
 //
  data Type
-= Integer() | String();
+= Integer() | String() | State() | Port() | Class() | Model() | StateMachine() | Transition() | Channel() | Object() | Action();
 
  data Transition
  = Transition(SLCOId transitionId, SLCOId stateIdBegin, SLCOId stateIdEnd, list[TransitionBody] transitionBodies
@@ -67,7 +67,7 @@ module slco::AST
 
  public data Comb
      = intCon(int iVal)
-     | strCon(str string)
+     | IdCon(SLCOId combId)
      | add(Comb left, Comb right)
      | sub(Comb left, Comb right)
      | comma(Comb left, Comb right)
@@ -118,3 +118,4 @@ anno loc Operator@location;
 anno loc Comb@location;
 anno loc Object@location;
 anno loc Channel@location;
+anno loc SLCOId@location;

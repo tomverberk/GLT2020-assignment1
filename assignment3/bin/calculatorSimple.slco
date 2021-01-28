@@ -7,7 +7,7 @@ model SimpleCalculator {
 		state machines
 		Main {
 			variables
-			Integer k
+			Integer o
 			
 			initial K
 			
@@ -29,6 +29,7 @@ model SimpleCalculator {
 			Integer a
 			Integer b
 			Integer g
+			String  onthunohuo
 			
 			initial Start
 			state Wait

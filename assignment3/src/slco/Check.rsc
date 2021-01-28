@@ -21,39 +21,33 @@ import IO;
 * Define a function per each verification defined in the PDF (Section 3.2.)
 */
 
-// ------ Creation of the type-environment ------ ///
+// ------ BEGIN Creation of the type-environment and standard functions------ ///
 // Create a mapping between variables and types
 alias TENV = tuple[ map[Id, Type] symbols, list[tuple[loc l, str msg]] errors];
-alias OENV = map[Id, Id];
 
 // Used to add Errors to the type-environment
 TENV addError(TENV env, loc l, str msg) = env[errors = env.errors + <l, msg>];
-//TENV addVariables(TENV env, list[Variable] decls) = env + newVariables(decls);
-//TENV addVariables(TENV env, list[Variable] decls) = 
-//<(variableId : tp | Variable(Type tp, Id variableId) <- decls) + env.symbols, []>;
-TENV addIdToENV(Type tp, TENV env, SLCOId Id) =
-<(Id.name : tp) + env.symbols, env.errors>;
 
-// #TODE CHANGE THIS TO MAKE SURE THAT WE CHECK THAT THE VARIABLE DOES NOT YET EXISTS
-//TENV addIdsToENV(Type tp, TENV env, list[SLCOId] Ids) =
-//<(variableId : tp | id(Id variableId) <- Ids) + env.symbols, []>;
-TENV addVariables(TENV env, list[Variable] variables){
-	for(variable <- variables){
-		SLCOId id = variable.variableId;
-		env = CheckIdExists(env, id);
-		env = addIdToENV(variable.tp, env, id);
-	};
-	return env;
-}
+//basic operation
+str required(Type t, str got) = "Required <getName(t)>, got <got>";
+str required(Type t1, Type t2) = required(t1, getName(t2));
 
+//Method to ininitalize the TENV with a model
+TENV InitializeWithModel(SLCOId model) =                                                 
+<( Id : Model()  | id(Id Id) <- model), []>;
 
+// ------- End creation of the type-environment and standard functions ----- ///
+
+// ------- Begin methods regarding adding ID's to the environment ----- //
+
+//Method that is responsible for ensuring that the ID is checked and added to the environment
 TENV addId(Type tp, TENV env, SLCOId id){
 	env = CheckIdExists(env, id);
 	env = addIdToENV(tp, env, id);
-	//return addError(env, id@location, "Already declared variable <id.name>");
 	return env;
 }
 
+// Method that loops through list and adds them individually
 TENV addIds(Type tp, TENV env, list[SLCOId] Ids){
 	for(id <- Ids){
 		env = addId(tp, env, id);
@@ -61,33 +55,24 @@ TENV addIds(Type tp, TENV env, list[SLCOId] Ids){
 	return env;
 }
 
+//Method used to actually Add an ID to the ENV
+TENV addIdToENV(Type tp, TENV env, SLCOId Id) =
+<(Id.name : tp) + env.symbols, env.errors>;
+
+
+//Method that checks if the ID initializes is not already in the type environment
 TENV CheckIdExists(TENV env, SLCOId Id){
 	if(env.symbols[Id.name]?){
 		return addError(env, Id@location, "Already declared variable <Id.name>");
 	}
-	//return addError(env, Id@location, "Already declared variable <Id.name>");
 	return env;
 }
 
 
-TENV InitializeWithModel(SLCOId model) =                                                 
-<( Id : Model()  | id(Id Id) <- model), []>;
-
-//OENV addObject(SLCOId classId, OENV oenv, SLCOId objectId) =
-//<(variableId : classId | id(Id variableId) <- objectId) + oenv>;
- 
 
 
-//basic operation
-str required(Type t, str got) = "Required <getName(t)>, got <got>";
-str required(Type t1, Type t2) = required(t1, getName(t2));
 
-// ------- End creation of the type-environment ----- ///
-
-//We are seeing a integer number, give an error if we are not expecting an integer number
-//TENV checkId(Type idType, Type reqType, TENV env) =
-//reqType == idType ? env :
-//addError(env, idType@location, required(reqType, idType));  
+// ------- BEGIN Type environment handling of Combinations ----------- //
 
 TENV checkComb(combinations:intCon(int N), Type req, TENV env) =                              
   req == Integer() ? env : addError(env, combinations@location, required(req, "Integer"));
@@ -96,24 +81,42 @@ TENV checkComb(combinations:IdCon(SLCOId Id), Type req, TENV env) {
   	return CheckId(Id, req, env);
 }
 
-//WE ONLY ADD AND SUBSTRACT STRINGS
+//WE are only doing operations with Integers
 TENV checkComb(combinations:add(Comb E1, Comb E2), Type req, TENV env) =                        
   req == Integer() ? checkComb(E1, Integer(), checkComb(E2, Integer(), env))
-                   : addError(env, combinations@location, required(req, "natural"));
+                   : addError(env, combinations@location, required(req, "Integer"));
   
 TENV checkComb(combinations:sub(Comb E1, Comb E2), Type req, TENV env) =                      
   req == Integer() ? checkComb(E1, Integer(), checkComb(E2, Integer(), env))
-                   : addError(env, combinations@location, required(req, "natural"));
+                   : addError(env, combinations@location, required(req, "Integer"));
 
 //WE CAN SEND BOTH ID's and Integers
 TENV checkComb(combinations:comma(Comb E1, Comb E2), Type req, TENV env) =                    
  	checkComb(E1, req, checkComb(E2, req, env));
 
+// ------- END Type environment handling of Combinations ----------- //
 
+// ------- BEGIN Type environment handling of Variables ---------- //
+//We only implemented Integer Variables, but in the future this can be easily extended to also incorperate Strings etc.
+TENV addVariables(TENV env, list[Variable] variables){
+	for(variable <- variables){
+		//SLCOId id = variable.variableId;
+		//env = CheckIdExists(env, id);
+		//env = addIdToENV(variable.tp, env, id);
+		env = addId(variable.tp, env, variable.variableId);
+	};
+	return env;
+}
+
+// ------- END Type environment handling of Variables ---------- //
+
+// ------- BEGIN Typechecking of Id's in the program ----------- //
+
+// Method that checks if an id inputted in the program exists, and if so checks if it has the right type.
 TENV CheckId(SLCOId id, Type req, TENV env) {
 	//First check if the identifier exists in the type environment
 	if(!env.symbols[id.name]?){
-		return addError(env, id@location, "Undeclared variable <id.name>");
+		return addError(env, id@location, "Undeclared variable <id.name> Type: <req> expected");
 	}
 	//return addError(env, id@location, "Undeclared variable");
 	//Next check if the required type is the type we have optained
@@ -125,8 +128,7 @@ TENV CheckId(SLCOId id, Type req, TENV env) {
 	return env;
 }
 
-
-//Iterate over statements and for each statement 
+//Method that loops over the program and checks if all the ID's are correct
 TENV checkIds(Program p, TENV tenv){
 	Model m = p.model;
 	for(c <- m.classes){
@@ -145,8 +147,7 @@ TENV checkIds(Program p, TENV tenv){
 							tenv = checkComb(receiveAction.combinations, Integer(), tenv);
 							tenv = CheckId(receiveAction.portId, Port(), tenv);
 						}
-						case TransitionLine(WaitAction waitAction): ; //Do nothing
-						}
+					}
 				};
 			};
 		};
@@ -166,7 +167,11 @@ TENV checkIds(Program p, TENV tenv){
 	return tenv;
 }
 
+// ------- END Typechecking of Id's in the program ----------- //
 
+// ------- BEGIN TENV creation of a program --------------- //
+
+// Method that for a program adds the channels, objects, and classes that belong to the object to the Type environment
 TENV CreateEnvironmentFromProgram(Program p){
 	Model m = p.model;
 	TENV tenv = InitializeWithModel(m.modelId); 
@@ -186,6 +191,7 @@ TENV CreateEnvironmentFromProgram(Program p){
 	return tenv;
 }
 
+// Method that adds all the ID's of a certain class to the Type environment.
 TENV addIdsOfClass(Class c, TENV tenv){
 		tenv = addId(Class(), tenv, c.classId);
 		tenv = addIds(Port(), tenv, c.portIds);
@@ -207,14 +213,18 @@ TENV addIdsOfClass(Class c, TENV tenv){
 							tenv = addId(Action(), tenv, receiveAction.actionId);
 
 						}
-						case TransitionLine(WaitAction waitAction): ; //Do nothing
-						}
+					}
 				};
 			}
 		};
 		return tenv;
 }
  
+// ------- BEGIN TENV creation of a program --------------- //
+
+// ------- Begin Standard methods ---------- //
+
+//Method that checks the entire program
 
 public TENV checkProgram(Program p){
 	TENV env = CreateEnvironmentFromProgram(p);
@@ -222,9 +232,12 @@ public TENV checkProgram(Program p){
 	return env;
 }
 
-
+// Method that prints all the errors of the program
 public list[tuple[loc l, str msg]] checkProgram(loc l) = checkProgram(load(l)).errors;
+//Method that prints all the symbols of the Type Environment of the program
 public map[Id, Type] checkTENV(loc l) = checkProgram(load(l)).symbols;
+
+// --------- END Standard methods ------- //
 
 
 

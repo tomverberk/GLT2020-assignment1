@@ -28,6 +28,7 @@ model SimpleCalculator {
 		Loop {
 			variables
 			Integer r
+			String s
 			
 			initial Start
 			state Wait
@@ -35,7 +36,7 @@ model SimpleCalculator {
 			transitions
 			
 			send_receive from Start to Wait {
-			send inputU(1, 2) to out;
+			send inputU(r + 1) to out;
 			receive resultU(r) from in
 			}
 		
@@ -46,7 +47,7 @@ model SimpleCalculator {
 	}
 	
 	objects
-	c: Calculator
+	c: Calculato
 	u: User
 	
 	channels

@@ -177,12 +177,18 @@ TENV CreateEnvironmentFromProgram(Program p){
 	TENV tenv = InitializeWithModel(m.modelId); 
 	for(object <- m.objects) {
 		tenv = addId(Object(), tenv, object.objectId);
+		bool classExists = false;
 		for(c <- m.classes){
 				// this must happen exactly once
 				if(object.classId == c.classId){
 					tenv = addIdsOfClass(c, tenv);
-				}
-			}
+					classExists = true;
+				};
+		};
+		if(!classExists){
+			SLCOId classId = object.classId;
+			tenv = addError(tenv, classId@location, "Class <classId.name> not found");
+		};
 	}
 	for(channel <- m.channels){
 		tenv = addId(Channel(), tenv, channel.channelId);

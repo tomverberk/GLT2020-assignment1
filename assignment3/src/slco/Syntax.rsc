@@ -7,19 +7,18 @@ extend lang::std::Id;
 extend lang::std::Layout;
 
 /*
- * Define concrete syntax for SLCO. The language's specification is available in the PDF (Section 3)
- 
- Op het moment heb ik deze veel te groot gemaakt, zodat we straks kunnen inkorten waar handig
+ * The concrete syntax for SLCO
 */
 
+//Identifying some lexicals
 lexical Natural = [0-9]+ !>> [0-9];
 lexical String = [A-Za-z0-9_\-]+;
 lexical Integer = Integer: [0] | [+\-]?[1-9][0-9]*;
-//lexical Boolean = "true" | "false";
 //
-//// Start of the program, with the word resource
+// Start of the program, with the word resource
 start syntax Program =  Program: "model" Model model;
 
+//Syntax of an SLCOId
 syntax SLCOId = 
 id: Id name;
 
@@ -93,18 +92,10 @@ syntax WaitAction
 = WaitAction: Integer number "ms"; // !>> ";"
 //| Integer "ms" ";" !>> "}";
 
-// Passed parameters
-syntax Parameter 
-= Parameter: Integer integer 
-| Parameter: SLCOId parameterId ;
-
 syntax Operator
 = Operator: "+" 
 | Operator: "-" 
 | Operator: ",";
-
-//Dit is of een string of een integer of iets anders, wacht is er iets anders idk probably niet
-//syntax Input = Integer | Id;
 
 //Object declaration
 syntax Object = Object :

@@ -2,47 +2,45 @@ model SimpleCalculator {
 	classes
 	
 	Calculator {
-		ports inC outC
+		ports in out
 		
 		state machines
 		Main {
 			variables
-			Integer o
+			Integer a
+			Integer b
 			
-			initial K
+			initial S
 			
 			transitions
-			readcalculate from K to K	 {
-				receive inputC(a, b) from inC;
-				send resultC(a + b) to outC;
+			read_calculate from S to S {
+				receive input(a,b) from in;
+				send result(a + b) to out
 			}
 		}
 		
 	}
 	
 	User {
-		ports in out 
+		ports inU outU
 		
 		state machines
 		Loop {
 			variables
-			Integer a
-			Integer b
-			Integer g
-			String  onthunohuo
+			Integer r
 			
 			initial Start
 			state Wait
-
+			
 			transitions
 			
-			sendreceive from Start to Wait {
-				send input( a, b ) to out;
-				receive result(a) from in;
+			send_receive from Start to Wait {
+			send inputU(1, 2) to out;
+			receive resultU(r) from in
 			}
 		
-			delay from Wait to Start {
-				after 1500 ms
+		delay from Wait to Start {
+			after 1500 ms
 			}
 		}
 	}

@@ -285,8 +285,6 @@ str createChannel(Channel channel) {
 	pythonCode += "\t\tself.getQueue(<channel.objectIdTarget.name>)\n";
 	pythonCode += "\t\tprint(\"Sync between source: <channel.objectIdSource.name> and target: <channel.objectIdTarget.name>...\")";
 	pythonCode += "\n";
-	pythonCode += "\tdef queueEmpty(self):\n";
-	pythonCode += "\t\treturn self.q.empty()\n";
 	
 	return pythonCode;
 }

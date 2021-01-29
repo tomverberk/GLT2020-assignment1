@@ -93,8 +93,6 @@ class Channelc0:
 		self.addQueue(u)
 		self.getQueue(c)
 		print("Sync between source: u and target: c...")
-	def queueEmpty(self):
-		return self.q.empty()
 
 class Channelc1:
 	def __init__(self):
@@ -112,8 +110,6 @@ class Channelc1:
 		self.addQueue(c)
 		self.getQueue(u)
 		print("Sync between source: c and target: u...")
-	def queueEmpty(self):
-		return self.q.empty()
 
 
 # Initialize the classes

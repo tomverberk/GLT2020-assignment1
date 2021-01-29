@@ -20,9 +20,9 @@ class Calculator:
 			cnt += 1
 			self.send_input = False
 
-	def Main(self):
-		print("Start transition system: Main...")
-		if self.states['Main'] == 'S':
+	def Addition(self):
+		print("Start transition system: Addition...")
+		if self.states['Addition'] == 'S':
 			in_var = self.ports["in"]
 			print("Receiving from port: in")
 			a = in_var[0]
@@ -35,7 +35,24 @@ class Calculator:
 				self.ports["out"] = out_var
 				print("Sending to port: out")
 				self.send_input = True
-			self.states["Main"] = "S"
+			self.states["Addition"] = "S"
+
+	def Subtraction(self):
+		print("Start transition system: Subtraction...")
+		if self.states['Subtraction'] == 'T':
+			in_var = self.ports["in"]
+			print("Receiving from port: in")
+			c = in_var[0]
+			print(c)
+			d = in_var[1]
+			print(d)
+			self.send_input = False
+			if not self.send_input:
+				out_var = [c - d]
+				self.ports["out"] = out_var
+				print("Sending to port: out")
+				self.send_input = True
+			self.states["Subtraction"] = "T"
 
 
 # Class
@@ -53,28 +70,49 @@ class User:
 			cnt += 1
 			self.send_input = False
 
-	def Loop(self):
-		print("Start transition system: Loop...")
-		if self.states['Loop'] == 'Start':
+	def Add(self):
+		print("Start transition system: Add...")
+		if self.states['Add'] == 'Start':
 			if not self.send_input:
 				out_var = [1, 2]
-				self.ports["outU"] = out_var
-				print("Sending to port: outU")
+				self.ports["out"] = out_var
+				print("Sending to port: out")
 				self.send_input = True
-			in_var = self.ports["inU"]
+			in_var = self.ports["in"]
 			if in_var is None:
 				print("No input yet received, still in same state")
 				return
-			print("Receiving from port: inU")
+			print("Receiving from port: in")
 			r = in_var[0]
 			print(r)
-			self.ports["inU"] = None
+			self.ports["in"] = None
 			self.send_input = False
-			self.states["Loop"] = "Wait"
-		elif self.states['Loop'] == 'Wait':
+			self.states["Add"] = "Wait"
+		elif self.states['Add'] == 'Wait':
 			time.sleep(1.5)
 			print("Waited 1.5 seconds")
-			self.states["Loop"] = "Start"
+			self.states["Add"] = "Start"
+
+	def Subtract(self):
+		print("Start transition system: Subtract...")
+		if self.states['Subtract'] == 'Start1':
+			if not self.send_input:
+				out_var = [4, 3]
+				self.ports["out"] = out_var
+				print("Sending to port: out")
+				self.send_input = True
+			in_var = self.ports["in"]
+			if in_var is None:
+				print("No input yet received, still in same state")
+				return
+			print("Receiving from port: in")
+			q = in_var[0]
+			print(q)
+			self.ports["in"] = None
+			self.send_input = False
+			time.sleep(1.6)
+			print("Waited 1.6 seconds")
+			self.states["Subtract"] = "Start1"
 
 
 class Channelc0:
@@ -82,7 +120,7 @@ class Channelc0:
 		self.q = queue.Queue(maxsize=0)
 
 	def addQueue(self, u):
-		self.q.put(u.ports["outU"])
+		self.q.put(u.ports["out"])
 
 	# getQueue function between ports...
 	def getQueue(self, c):
@@ -103,7 +141,7 @@ class Channelc1:
 
 	# getQueue function between ports...
 	def getQueue(self, u):
-		u.ports["inU"] = self.q.get()
+		u.ports["in"] = self.q.get()
 
 	# sync between queues
 	def sync(self, c, u):
@@ -115,12 +153,12 @@ class Channelc1:
 # Initialize the classes
 def makeModel():
 	portsCalculator = ["in", "out"]
-	state_machinesCalculator = ["Main"]
-	initial_statesCalculator = ["S"]
+	state_machinesCalculator = ["Addition""Subtraction"]
+	initial_statesCalculator = ["S""T"]
 
-	portsUser = ["inU", "outU"]
-	state_machinesUser = ["Loop"]
-	initial_statesUser = ["Start"]
+	portsUser = ["in", "out"]
+	state_machinesUser = ["Add""Subtract"]
+	initial_statesUser = ["Start""Start1"]
 
 	c = Calculator(portsCalculator, initial_statesCalculator, state_machinesCalculator)
 	u = User(portsUser, initial_statesUser, state_machinesUser)

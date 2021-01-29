@@ -15,7 +15,7 @@ void parseCompile(loc l) = compile(load(l));
 
 //Writes the compiled code to a file with extension .py
 void compile(Program program) {
-	writeFile(|project://assignment3/src/joejoe.py|, program2Python(program));
+	writeFile(|project://assignment3/src/calculatorHard.py|, program2Python(program));
 	println("Done...");
 	return;
 }

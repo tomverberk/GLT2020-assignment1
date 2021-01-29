@@ -24,9 +24,11 @@ class Calculator:
 		print("Start transition system: Main...")
 		if self.states['Main'] == 'S':
 			in_var = self.ports["in"]
-			a = in_var[0]
-			b = in_var[1]
 			print("Receiving from port: in")
+			a = in_var[0]
+			print(a)
+			b = in_var[1]
+			print(b)
 			self.send_input = False
 			if not self.send_input:
 				out_var = [a + b]
@@ -55,19 +57,21 @@ class User:
 		print("Start transition system: Loop...")
 		if self.states['Loop'] == 'Start':
 			if not self.send_input:
-				out_var = ["a", "b"]
-				self.ports["out"] = out_var
-				print("Sending to port: out")
+				out_var = [1, 2]
+				self.ports["outU"] = out_var
+				print("Sending to port: outU")
 				self.send_input = True
-			in_var = self.ports["in"]
+			in_var = self.ports["inU"]
 			if in_var is None:
 				print("No input yet received, still in same state")
 				return
-			print("Receiving from port: in")
-			self.ports["in"] = None
+			print("Receiving from port: inU")
+			r = in_var[0]
+			print(r)
+			self.ports["inU"] = None
 			self.send_input = False
 			self.states["Loop"] = "Wait"
-		elif self.states['Loop'] =='Wait':
+		elif self.states['Loop'] == 'Wait':
 			time.sleep(1.5)
 			print("Waited 1.5 seconds")
 			self.states["Loop"] = "Start"
@@ -78,7 +82,7 @@ class Channelc0:
 		self.q = queue.Queue(maxsize=0)
 
 	def addQueue(self, u):
-		self.q.put(u.ports["out"])
+		self.q.put(u.ports["outU"])
 
 	# getQueue function between ports...
 	def getQueue(self, c):
@@ -101,7 +105,7 @@ class Channelc1:
 
 	# getQueue function between ports...
 	def getQueue(self, u):
-		u.ports["in"] = self.q.get()
+		u.ports["inU"] = self.q.get()
 
 	# sync between queues
 	def sync(self, c, u):
@@ -118,7 +122,7 @@ def makeModel():
 	state_machinesCalculator = ["Main"]
 	initial_statesCalculator = ["S"]
 
-	portsUser = ["in", "out"]
+	portsUser = ["inU", "outU"]
 	state_machinesUser = ["Loop"]
 	initial_statesUser = ["Start"]
 

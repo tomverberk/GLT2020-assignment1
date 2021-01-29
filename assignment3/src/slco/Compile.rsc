@@ -69,8 +69,8 @@ str getCombination(Comb comb) {
 			com += "<iVal>";
 			return com;
 		}
-		case strCon(str string): {
-			com += "\"<string>\"";
+		case IdCon(SLCOId combId): {
+			com += "<combId.name>";
 			return com;
 		}
 		case add(Comb left, Comb right): {
@@ -106,8 +106,8 @@ list[str] getCombList(Comb comb, bool boolean) {
 			com += "<iVal>";
 			return com;
 		}
-		case strCon(str string): {
-			com += "<string>";
+		case IdCon(SLCOId combId): {
+			com += "<combId.name>";
 			return com;
 		}
 		case add(Comb left, Comb right): {
@@ -177,11 +177,12 @@ str transitionBody(TransitionBody ts, int count) {
 				int cnt = 0;
 				list[str] comb = getCombList(receiveAction.combinations, false);
 				return_str += "\t\t\tin_var = self.ports[\"<receiveAction.portId.name>\"]\n";
+				return_str += "\t\t\tprint(\"Receiving from port: <receiveAction.portId.name>\")\n";
 				while (cnt < size(comb)) {
 					return_str += "\t\t\t<comb[cnt]> = in_var[<cnt>]\n";
+					return_str += "\t\t\tprint(<comb[cnt]>)\n";
 					cnt += 1;
 				}
-				return_str += "\t\t\tprint(\"Receiving from port: <receiveAction.portId.name>\")\n";
 				return_str += "\t\t\tself.send_input = False\n";
 			} else {
 				return_str += "\t\t\tin_var = self.ports[\"<receiveAction.portId.name>\"]\n";
@@ -190,6 +191,13 @@ str transitionBody(TransitionBody ts, int count) {
 				return_str += "\t\t\t\tprint(\"No input yet received, still in same state\")\n";
 				return_str += "\t\t\t\treturn\n";
 				return_str += "\t\t\tprint(\"Receiving from port: <receiveAction.portId.name>\")\n";
+				cnt = 0;
+				list[str] comb = getCombList(receiveAction.combinations, false);
+				while (cnt < size(comb)) {
+					return_str += "\t\t\t<comb[cnt]> = in_var[<cnt>]\n";
+					return_str += "\t\t\tprint(<comb[cnt]>)\n";
+					cnt += 1;
+				}
 				return_str += "\t\t\tself.ports[\"<receiveAction.portId.name>\"] = None\n";
 				return_str += "\t\t\tself.send_input = False\n";
 			}
@@ -236,7 +244,7 @@ str createClass(Class class) {
 			if (cnt == 0) {
 				pythonCode += "\t\tif self.states[\'<sm.stateMachineId.name>\'] == \'<ts.stateIdBegin.name>\':\n";
 			} else {
-				pythonCode += "\t\telif self.states[\'<sm.stateMachineId.name>\'] ==\'<ts.stateIdBegin.name>\':\n";
+				pythonCode += "\t\telif self.states[\'<sm.stateMachineId.name>\'] == \'<ts.stateIdBegin.name>\':\n";
 			}
 			int count = 0;
 			
